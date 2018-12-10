@@ -1,0 +1,32 @@
+They're Sheep. 
+
+actions: 
+Create Game
+Join Game
+Start Game
+See who you are
+Do you special action: 
+
+
+claim a role
+Vote for who to kill
+Reveal who was killed
+Allow for hunter/dooplganger special action
+Reveal all players
+Reveal winner
+
+(Cute if there was a play by play). 
+
+== Characters ==: 
+Villager (3)
+Werewolf (2)
+Seer
+Robber
+TroubleMaker
+Tanner
+Drunk
+Hunter
+Mason (2)
+Insomniac
+Minion
+Dobble Ganger
