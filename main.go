@@ -6,11 +6,13 @@ import (
 	"log"
 	"os"
 	"strconv"
+
+	"github.com/zingales/theresheep/gamelogic"
 )
 
 func main() {
 	log.Printf("Yo")
-	game, err := CreateGame("Game1")
+	game, err := gamelogic.CreateGame("Game1")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -28,7 +30,7 @@ func main() {
 		}
 
 		for i := 0; i < num; i++ {
-			game.AddPlayer(CreatePlayer("Player" + strconv.Itoa(i)))
+			game.AddPlayer(gamelogic.CreatePlayer("Player" + strconv.Itoa(i)))
 		}
 
 		log.Printf("%i", num)

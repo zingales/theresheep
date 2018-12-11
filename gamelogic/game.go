@@ -1,56 +1,12 @@
-package main
+package gamelogic
 
 import (
 	"errors"
 	"fmt"
 )
 
-type Role int
-
 var InvalidNumberOfPlayersError = errors.New("There is an invalid number of players in this game")
 var InvalidNumberOfRolesError = errors.New("There is an invalid number of players in this game")
-
-const (
-	Unassigned Role = iota
-	Villager
-	Werewolf
-	Seer
-	Robber
-	TroubleMaker
-	Tanner
-	Drunk
-	Hunter
-	Mason
-	Insomniac
-	Minion
-	DobbleGanger
-)
-
-func (role Role) String() string {
-	// declare an array of strings
-	// ... operator counts how many
-	// items in the array (7)
-	names := [...]string{
-		"Unassigned",
-		"Villager",
-		"Werewolf",
-		"Seer",
-		"Robber",
-		"TroubleMaker",
-		"Tanner",
-		"Drunk",
-		"Hunter",
-		"Mason",
-		"Insomniac",
-		"Minion",
-		"DobbleGanger"}
-
-	if role < 0 || role > DobbleGanger {
-		return "Unknown"
-	}
-
-	return names[role]
-}
 
 type Game struct {
 	Id             string
@@ -84,22 +40,4 @@ func (game *Game) Start() error {
 	}
 
 	return nil
-}
-
-type Action struct {
-	player Player
-}
-
-type Player struct {
-	Name         string
-	originalRole Role
-	currentRole  Role
-}
-
-func CreatePlayer(name string) *Player {
-	return &Player{Name: name}
-}
-
-func (player *Player) String() string {
-	return fmt.Sprintf("<%s was %v and now is %v>", player.Name, player.originalRole, player.currentRole)
 }
