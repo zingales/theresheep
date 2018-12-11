@@ -3,6 +3,7 @@ They're Sheep.
 actions: 
 Create Game
 Join Game
+Select Possible roles
 Start Game
 See who you are
 Do you special action: 
