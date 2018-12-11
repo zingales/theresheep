@@ -21,7 +21,7 @@ type Game struct {
 func CreateGame(id string) (*Game, error) {
 	game := &Game{Id: id}
 	game.players = make([]*Player, 0)
-	game.History = &ActionManager{}
+	game.History = &ActionManager{game: game}
 	return game, nil
 }
 
@@ -67,20 +67,10 @@ func (game *Game) Start() error {
 	for ; index < len(game.players); index++ {
 		player := game.players[index]
 		role := game.rolePool[roleOrderAssigment[index]]
-		player.OriginalAssigment(role)
-		game.History.AddOriginalRoleAssignment(player.Name, role)
+		game.History.OriginalAssigment(player, role)
 	}
 
-	game.Center[0] = &Player{Name: nameOfCenterCard(0), isDummy: true}
-	game.Center[0].OriginalAssigment(game.rolePool[roleOrderAssigment[index]])
-
-	game.Center[1] = &Player{Name: nameOfCenterCard(1), isDummy: true}
-	game.Center[1].OriginalAssigment(game.rolePool[roleOrderAssigment[index+1]])
-
-	game.Center[2] = &Player{Name: nameOfCenterCard(2), isDummy: true}
-	game.Center[2].OriginalAssigment(game.rolePool[roleOrderAssigment[index+2]])
-
-	game.History.AssignCenter(game.Center[0], game.Center[1], game.Center[2])
+	game.History.AssignCenter(game.rolePool[roleOrderAssigment[index]], game.rolePool[roleOrderAssigment[index+1]], game.rolePool[roleOrderAssigment[index+2]])
 
 	return nil
 }
@@ -133,13 +123,6 @@ func (game *Game) GetPlayerByName(name string) *Player {
 	return nil
 }
 
-func (game *Game) SwapRoles(player1 *Player, player2 *Player) {
-	tempRole := player1.currentRole
-	player1.currentRole = player2.currentRole
-	player2.currentRole = tempRole
-	game.History.RoleSwap(player1.Name, player1.currentRole, player2.Name, player2.currentRole)
-}
-
 func (game *Game) ExecuteNight() {
 	for i := 0; i < len(RoleOrder); i++ {
 		activeRole := RoleOrder[i]
@@ -156,58 +139,36 @@ func (game *Game) ExecuteNight() {
 		case Werewolf:
 			if len(players) == 1 {
 				singularWerewolf := players[0]
-				centerNumbers := singularWerewolf.ChooseCenterCards(1)
-				center := game.Center[centerNumbers[0]]
-				singularWerewolf.KnowsRole(center.Name, center.currentRole)
+				game.History.LearnAboutCenterCards(singularWerewolf, 1)
 			} else {
 				// Assumption there are only 2 werewolfs
-				players[0].KnowsRole(players[1].Name, players[1].originalRole)
-				players[1].KnowsRole(players[0].Name, players[0].originalRole)
+				game.History.LearnAboutEachother(players[0], players[1])
 			}
 		case Minion:
 			minion := players[0]
 			// Assumption only 1 minion
 			werewolfs := game.GetPlayerByOriginalRole(Werewolf)
-			for j := 0; j < len(werewolfs); j++ {
-				minion.KnowsRole(werewolfs[j].Name, werewolfs[j].originalRole)
-			}
+			game.History.LearnAboutPlayersRole(minion, werewolfs)
 		case Mason:
 			if len(players) == 2 {
-				players[0].KnowsRole(players[1].Name, players[1].originalRole)
-				players[1].KnowsRole(players[0].Name, players[0].originalRole)
+				game.History.LearnAboutEachother(players[0], players[1])
 			}
 		case Seer:
 			seer := players[0]
-			if seer.DoesChoosePlayerInsteadOfCenter() {
-				playerNames := seer.ChoosePlayers(game.PlayerNames(), 1)
-				player := game.GetPlayerByName(playerNames[0])
-				seer.KnowsRole(playerNames[0], player.originalRole)
-			} else {
-				centerNumbers := seer.ChooseCenterCards(2)
-				center1 := game.Center[centerNumbers[0]]
-				center2 := game.Center[centerNumbers[1]]
-				seer.KnowsRole(center1.Name, center1.currentRole)
-				seer.KnowsRole(center2.Name, center2.currentRole)
-			}
+			game.History.SeerAction(seer)
 		case Robber:
 			robber := players[0]
-			playerNames := robber.ChoosePlayers(game.PlayerNames(), 1)
-			player := game.GetPlayerByName(playerNames[0])
-			robber.KnowsRole(playerNames[0], player.currentRole)
-			game.SwapRoles(robber, player)
+			choosee := game.History.ChooseAndLearnAboutRole(robber)
+			game.History.SwapRoles(robber, robber, choosee)
 		case TroubleMaker:
 			troubleMaker := players[0]
-			playerNames := troubleMaker.ChoosePlayers(game.PlayerNames(), 2)
-			player1 := game.GetPlayerByName(playerNames[0])
-			player2 := game.GetPlayerByName(playerNames[1])
-			game.SwapRoles(player1, player2)
+			game.History.ChooseTwoAndSwap(troubleMaker)
 		case Drunk:
 			drunk := players[0]
-			centerNumbers := drunk.ChooseCenterCards(1)
-			game.SwapRoles(drunk, game.Center[centerNumbers[0]])
+			game.History.SwapWithCenterNoLearn(drunk)
 		case Insomniac:
 			insomniac := players[0]
-			insomniac.KnowsRole(insomniac.Name, insomniac.currentRole)
+			game.History.LearnAboutSelf(insomniac)
 		default:
 			// Aka the villager
 			continue
@@ -221,14 +182,10 @@ func (game *Game) EndGame() {
 	killcount := make(map[string]int)
 	whoNominatesWhom := make(map[string]string)
 	// each player chooses whom to kill
-	for i := 0; i < len(game.players); i++ {
-		playerNames := game.PlayerNames()
-		// you can't choose to kill yourself. But you can choose that there are no werewolfs in game
-		playerNames[i] = NoWereWolfs
+	for _, player := range game.players {
+		name := game.History.NominateToKill(player)
 
-		names := game.players[i].ChoosePlayers(playerNames, 1)
-		name := names[0]
-		whoNominatesWhom[game.players[i].Name] = name
+		whoNominatesWhom[player.Name] = name
 
 		if _, ok := killcount[name]; !ok {
 			killcount[name] = 0
@@ -261,8 +218,8 @@ func (game *Game) EndGame() {
 
 		player := game.GetPlayerByName(name)
 		if player.currentRole == Hunter {
-			playerNames := player.ChoosePlayers(game.PlayerNames(), 1)
-			nominees = append(nominees, playerNames[0])
+			name := game.History.NominateToKill(player)
+			nominees = append(nominees, name)
 		}
 	}
 
