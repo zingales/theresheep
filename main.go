@@ -1,10 +1,8 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"log"
-	"os"
 	"strconv"
 
 	"github.com/zingales/theresheep/gamelogic"
@@ -22,18 +20,8 @@ func main() {
 	// create a game with this number of players
 	var num int = 3
 	{
-		// text, err := readFromConsole("how many players? ")
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-
-		// num, err := strconv.Atoi(text)
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-
 		for i := 0; i < num; i++ {
-			game.AddPlayer(gamelogic.CreatePlayer("Player" + strconv.Itoa(i)))
+			game.AddPlayer(gamelogic.CreatePlayer("Player"+strconv.Itoa(i), &gamelogic.ConsoleUserInput{}))
 		}
 
 	}
@@ -58,14 +46,4 @@ func main() {
 	game.ExecuteNight()
 
 	fmt.Println(game)
-}
-
-func readFromConsole(prompt string) (string, error) {
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Print(prompt)
-	text, err := reader.ReadString('\n')
-	if err != nil {
-		return "", err
-	}
-	return text[:len(text)-1], nil
 }

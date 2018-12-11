@@ -6,6 +6,7 @@ import (
 
 type Player struct {
 	Name         string
+	input        UserInput
 	originalRole Role
 	currentRole  Role
 }
@@ -15,8 +16,8 @@ func (player *Player) OriginalAssigment(role Role) {
 	player.currentRole = role
 }
 
-func CreatePlayer(name string) *Player {
-	return &Player{Name: name}
+func CreatePlayer(name string, ui UserInput) *Player {
+	return &Player{Name: name, input: ui}
 }
 
 func (player *Player) String() string {
@@ -24,23 +25,77 @@ func (player *Player) String() string {
 }
 
 func (player *Player) ChooseCenterCards(number int) []int {
-	// Replace with user input
-	return []int{1}
+	nums := make([]int, number)
+	for i := 0; i < number; i++ {
+
+		var num int
+		invalid := true
+		additionalInfo := ""
+		for invalid {
+			invalid = false
+			num = player.input.ChooseCenterCard(additionalInfo)
+			if num < 1 {
+				invalid = true
+				additionalInfo = "Number cannot be smaller than 1"
+				continue
+			}
+
+			if num > 3 {
+				invalid = true
+				additionalInfo = "Number cannot be larger than 3"
+				continue
+			}
+
+			for j := 0; j < len(nums); j++ {
+				if nums[j] == num {
+					invalid = true
+					additionalInfo = "When chosing more than 1 number, numbers can't be the same"
+					continue
+				}
+			}
+		}
+		nums[i] = num
+	}
+
+	return nums
 }
 
 func (player *Player) DoesChoosePlayerInsteadOfCenter() bool {
-	// replace with user input
-	return true
+	return player.input.DoesChoosePlayerInsteadOfCenter("")
 }
 
 func (player *Player) ChoosePlayers(playerNames []string, count int) []string {
-	// replace with user input
-	// validate you don't choose yourself as a player
-	if count == 1 {
-		return []string{playerNames[1]}
-	} else {
-		return []string{playerNames[1], playerNames[2]}
+	// remove player name from the list of options:
+	for i := 0; i < len(playerNames); i++ {
+		if playerNames[i] == player.Name {
+			playerNames[i] = playerNames[len(playerNames)-1]
+			playerNames = playerNames[:len(playerNames)-1]
+		}
 	}
+
+	names := make([]string, count)
+	for i := 0; i < count; i++ {
+		additionalInfo := ""
+		invalid := true
+		var name string
+		for invalid {
+			invalid = false
+			name = player.input.ChoosePlayer(additionalInfo, playerNames)
+
+			for j := 0; j < len(names); j++ {
+				if names[j] == name {
+					invalid = true
+					additionalInfo = "When chosing more than 1 player, you can't choose the same player twice"
+					continue
+				}
+			}
+			// validate you don't choose the same player more than once
+		}
+
+		names[i] = name
+	}
+
+	return names
 }
 
 func (player *Player) KnowsRole(playerName string, role Role) {

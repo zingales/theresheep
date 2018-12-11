@@ -3,6 +3,7 @@ package gamelogic
 import (
 	"errors"
 	"fmt"
+	"log"
 	"math/rand"
 	"strconv"
 )
@@ -29,6 +30,13 @@ func (game *Game) String() string {
 }
 
 func (game *Game) AddPlayer(player *Player) {
+	if player.input == nil {
+		log.Fatal("user needs to have input device")
+	}
+
+	if player.Name == "" {
+		log.Fatal("user name cannot be empty string")
+	}
 	game.players = append(game.players, player)
 }
 
