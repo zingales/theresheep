@@ -15,7 +15,7 @@ type Game struct {
 	players  []*Player
 	rolePool []Role
 	History  *ActionManager
-	Center   [3]Role
+	Center   [3]*Player
 }
 
 func CreateGame(id string) (*Game, error) {
@@ -30,13 +30,15 @@ func (game *Game) String() string {
 }
 
 func (game *Game) AddPlayer(player *Player) {
-	if player.input == nil {
-		log.Fatal("user needs to have input device")
+	if player.input == nil || player.isDummy {
+		log.Fatal("actual players need to have input device")
 	}
 
 	if player.Name == "" {
 		log.Fatal("user name cannot be empty string")
 	}
+
+	// validate no two players have the same name
 	game.players = append(game.players, player)
 }
 
@@ -60,7 +62,7 @@ func (game *Game) Start() error {
 	}
 
 	roleOrderAssigment := rand.Perm(len(game.rolePool))
-	fmt.Println("Random Role Order %v", roleOrderAssigment)
+	fmt.Printf("Random Role Order %v\n", roleOrderAssigment)
 	index := 0
 	for ; index < len(game.players); index++ {
 		player := game.players[index]
@@ -69,13 +71,22 @@ func (game *Game) Start() error {
 		game.History.AddOriginalRoleAssignment(player.Name, role)
 	}
 
-	game.Center[0] = game.rolePool[roleOrderAssigment[index]]
-	game.Center[1] = game.rolePool[roleOrderAssigment[index+1]]
-	game.Center[2] = game.rolePool[roleOrderAssigment[index+2]]
+	game.Center[0] = &Player{Name: nameOfCenterCard(0), isDummy: true}
+	game.Center[0].OriginalAssigment(game.rolePool[roleOrderAssigment[index]])
+
+	game.Center[1] = &Player{Name: nameOfCenterCard(1), isDummy: true}
+	game.Center[1].OriginalAssigment(game.rolePool[roleOrderAssigment[index+1]])
+
+	game.Center[2] = &Player{Name: nameOfCenterCard(2), isDummy: true}
+	game.Center[2].OriginalAssigment(game.rolePool[roleOrderAssigment[index+2]])
 
 	game.History.AssignCenter(game.Center[0], game.Center[1], game.Center[2])
 
 	return nil
+}
+
+func nameOfCenterCard(i int) string {
+	return "Center_" + strconv.Itoa(i)
 }
 
 func (game *Game) GetPlayerByRole(role Role) []*Player {
@@ -117,17 +128,6 @@ func (game *Game) SwapRoles(player1 *Player, player2 *Player) {
 	game.History.RoleSwap(player1.Name, player1.currentRole, player2.Name, player2.currentRole)
 }
 
-func nameOfCenterCard(i int) string {
-	return "Center_" + strconv.Itoa(i)
-}
-
-func (game *Game) SwapWithCenter(player *Player, centerNumber int) {
-	tempRole := player.currentRole
-	player.currentRole = game.Center[centerNumber]
-	game.Center[centerNumber] = tempRole
-	game.History.RoleSwap(player.Name, player.currentRole, nameOfCenterCard(centerNumber), tempRole)
-}
-
 func (game *Game) ExecuteNight() {
 	for i := 0; i < len(RoleOrder); i++ {
 		activeRole := RoleOrder[i]
@@ -141,8 +141,8 @@ func (game *Game) ExecuteNight() {
 			if len(players) == 1 {
 				singularWerewolf := players[0]
 				centerNumbers := singularWerewolf.ChooseCenterCards(1)
-				centerNumber := centerNumbers[0]
-				singularWerewolf.KnowsRole(nameOfCenterCard(centerNumber), game.Center[centerNumber])
+				center := game.Center[centerNumbers[0]]
+				singularWerewolf.KnowsRole(center.Name, center.currentRole)
 			} else {
 				// Assumption there are only 2 werewolfs
 				players[0].KnowsRole(players[1].Name, players[1].originalRole)
@@ -168,8 +168,10 @@ func (game *Game) ExecuteNight() {
 				seer.KnowsRole(playerNames[0], player.originalRole)
 			} else {
 				centerNumbers := seer.ChooseCenterCards(2)
-				seer.KnowsRole(nameOfCenterCard(centerNumbers[0]), game.Center[centerNumbers[0]])
-				seer.KnowsRole(nameOfCenterCard(centerNumbers[1]), game.Center[centerNumbers[1]])
+				center1 := game.Center[centerNumbers[0]]
+				center2 := game.Center[centerNumbers[1]]
+				seer.KnowsRole(center1.Name, center1.currentRole)
+				seer.KnowsRole(center2.Name, center2.currentRole)
 			}
 		case Robber:
 			robber := players[0]
@@ -186,7 +188,7 @@ func (game *Game) ExecuteNight() {
 		case Drunk:
 			drunk := players[0]
 			centerNumbers := drunk.ChooseCenterCards(1)
-			game.SwapWithCenter(drunk, centerNumbers[0])
+			game.SwapRoles(drunk, game.Center[centerNumbers[0]])
 		case Insomniac:
 			insomniac := players[0]
 			insomniac.KnowsRole(insomniac.Name, insomniac.currentRole)

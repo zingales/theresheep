@@ -47,7 +47,7 @@ func (input *ConsoleUserInput) DoesChoosePlayerInsteadOfCenter(additionalInfo st
 func (input *ConsoleUserInput) ChoosePlayer(additionalInfo string, playerNames []string) string {
 	fmt.Println("Names")
 	for i := 0; i < len(playerNames); i++ {
-		fmt.Println("%d: %s", i, playerNames[i])
+		fmt.Printf("%d: %s\n", i, playerNames[i])
 	}
 	text, err := readFromConsole(additionalInfo + " Choose a player by entering the coresponding number? ")
 	if err != nil {

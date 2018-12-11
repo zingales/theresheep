@@ -7,6 +7,7 @@ import (
 type Player struct {
 	Name         string
 	input        UserInput
+	isDummy      bool
 	originalRole Role
 	currentRole  Role
 }
@@ -17,7 +18,7 @@ func (player *Player) OriginalAssigment(role Role) {
 }
 
 func CreatePlayer(name string, ui UserInput) *Player {
-	return &Player{Name: name, input: ui}
+	return &Player{Name: name, input: ui, isDummy: false}
 }
 
 func (player *Player) String() string {
@@ -54,7 +55,8 @@ func (player *Player) ChooseCenterCards(number int) []int {
 				}
 			}
 		}
-		nums[i] = num
+		// Correcting for zero based indexing
+		nums[i] = num - 1
 	}
 
 	return nums

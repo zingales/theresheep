@@ -13,7 +13,7 @@ func (am *ActionManager) AddOriginalRoleAssignment(playerName string, role Role)
 
 }
 
-func (am *ActionManager) AssignCenter(role0 Role, role1 Role, role2 Role) {
+func (am *ActionManager) AssignCenter(center1 *Player, center2 *Player, center3 *Player) {
 
 }
 
