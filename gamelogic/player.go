@@ -10,6 +10,7 @@ type Player struct {
 	isDummy      bool
 	originalRole Role
 	currentRole  Role
+	HasSeen      map[string]Role
 }
 
 func (player *Player) OriginalAssigment(role Role) {
@@ -18,15 +19,15 @@ func (player *Player) OriginalAssigment(role Role) {
 }
 
 func CreatePlayer(name string, ui UserInput) *Player {
-	return &Player{Name: name, input: ui, isDummy: false}
+	return &Player{Name: name, input: ui, isDummy: false, HasSeen: make(map[string]Role)}
 }
 
 func (player *Player) String() string {
-	return fmt.Sprintf("<%s was %v and now is %v>", player.Name, player.originalRole, player.currentRole)
+	return fmt.Sprintf("<%s was %v and now is %v; Has Seen %v>", player.Name, player.originalRole, player.currentRole, player.HasSeen)
 }
 
 func (player *Player) ChooseCenterCards(number int) []int {
-	nums := make([]int, number)
+	nums := make([]int, 0)
 	for i := 0; i < number; i++ {
 
 		var num int
@@ -35,15 +36,15 @@ func (player *Player) ChooseCenterCards(number int) []int {
 		for invalid {
 			invalid = false
 			num = player.input.ChooseCenterCard(additionalInfo)
-			if num < 1 {
+			if num < 0 {
 				invalid = true
-				additionalInfo = "Number cannot be smaller than 1"
+				additionalInfo = "Number cannot be smaller than 0"
 				continue
 			}
 
-			if num > 3 {
+			if num > 2 {
 				invalid = true
-				additionalInfo = "Number cannot be larger than 3"
+				additionalInfo = "Number cannot be larger than 2"
 				continue
 			}
 
@@ -55,8 +56,8 @@ func (player *Player) ChooseCenterCards(number int) []int {
 				}
 			}
 		}
-		// Correcting for zero based indexing
-		nums[i] = num - 1
+
+		nums = append(nums, num)
 	}
 
 	return nums
@@ -84,6 +85,7 @@ func (player *Player) ChoosePlayers(playerNames []string, count int) []string {
 			invalid = false
 			name = player.input.ChoosePlayer(additionalInfo, playerNames)
 
+			// validate you don't choose the same player more than once
 			for j := 0; j < len(names); j++ {
 				if names[j] == name {
 					invalid = true
@@ -91,7 +93,6 @@ func (player *Player) ChoosePlayers(playerNames []string, count int) []string {
 					continue
 				}
 			}
-			// validate you don't choose the same player more than once
 		}
 
 		names[i] = name
@@ -101,5 +102,5 @@ func (player *Player) ChoosePlayers(playerNames []string, count int) []string {
 }
 
 func (player *Player) KnowsRole(playerName string, role Role) {
-
+	player.HasSeen[playerName] = role
 }

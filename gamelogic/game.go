@@ -144,6 +144,8 @@ func (game *Game) ExecuteNight() {
 	for i := 0; i < len(RoleOrder); i++ {
 		activeRole := RoleOrder[i]
 		players := game.GetPlayerByOriginalRole(activeRole)
+		fmt.Printf("Role Turn %v\n", activeRole)
+		fmt.Printf("Number of players of that role %d\n", len(players))
 		if len(players) == 0 {
 			continue
 		}
@@ -247,21 +249,17 @@ func (game *Game) EndGame() {
 	nominees := make([]string, 0)
 	for k, v := range killcount {
 		if v == maxKillCount {
-			fmt.Println("Nominated " + k)
 			nominees = append(nominees, k)
 		}
 	}
 
-	fmt.Printf("nominees %v\n", nominees)
 	// If a nominated person is hunter they can kill someone else
 	for _, name := range nominees {
 		if name == NoWereWolfs {
 			continue
 		}
 
-		fmt.Println("This is a name " + name)
 		player := game.GetPlayerByName(name)
-		fmt.Println(player)
 		if player.currentRole == Hunter {
 			playerNames := player.ChoosePlayers(game.PlayerNames(), 1)
 			nominees = append(nominees, playerNames[0])
@@ -287,6 +285,21 @@ func (game *Game) EndGame() {
 		}
 	}
 
+	fmt.Printf("Nominees %v\n", nominees)
+
+	centerWerewolfs := 0
+	if game.Center[0].currentRole == Werewolf {
+		centerWerewolfs++
+	}
+	if game.Center[1].currentRole == Werewolf {
+		centerWerewolfs++
+	}
+	if game.Center[2].currentRole == Werewolf {
+		centerWerewolfs++
+	}
+
+	fmt.Printf("Werewolf Death %t, Tanner Death %t, No Werewolfs Selected %t, number of central werewolfs %d\n", werewolfDeath, tannerDeath, NoWereWolfsSelected, centerWerewolfs)
+
 	if werewolfDeath {
 		game.VillagerWin()
 	}
@@ -294,16 +307,6 @@ func (game *Game) EndGame() {
 	if tannerDeath {
 		game.TannerWin()
 	} else {
-		centerWerewolfs := 0
-		if game.Center[0].currentRole == Werewolf {
-			centerWerewolfs++
-		}
-		if game.Center[1].currentRole == Werewolf {
-			centerWerewolfs++
-		}
-		if game.Center[2].currentRole == Werewolf {
-			centerWerewolfs++
-		}
 
 		if NoWereWolfsSelected && centerWerewolfs > 1 {
 			game.VillagerWin()

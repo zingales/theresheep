@@ -18,7 +18,7 @@ func main() {
 	}
 
 	// create a game with this number of players
-	var num int = 3
+	var num int = 11
 	{
 		for i := 0; i < num; i++ {
 			game.AddPlayer(gamelogic.CreatePlayer("Player"+strconv.Itoa(i), &gamelogic.ConsoleUserInput{}))
@@ -30,16 +30,26 @@ func main() {
 		roles := []gamelogic.Role{
 			gamelogic.Villager,
 			gamelogic.Villager,
+			gamelogic.Villager,
 			gamelogic.Werewolf,
-			gamelogic.Werewolf,
+			gamelogic.Tanner,
 			gamelogic.TroubleMaker,
 			gamelogic.Robber,
+			gamelogic.Drunk,
+			gamelogic.Mason,
+			gamelogic.Mason,
+			gamelogic.Hunter,
+			gamelogic.Seer,
+			gamelogic.Minion,
+			gamelogic.Insomniac,
 		}
 		game.AssignRolePool(roles)
 
 	}
 
-	game.Start()
+	if err := game.Start(); err != nil {
+		log.Fatal(err)
+	}
 
 	fmt.Println(game)
 

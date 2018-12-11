@@ -6,7 +6,7 @@ import (
 
 type Role int
 
-var InvalidNumberOfRolesError = errors.New("There is an invalid number of players in this game")
+var InvalidNumberOfRolesError = errors.New("There is an invalid number of roles based on the players in this game")
 
 var RoleOrder = [...]Role{DoppleGanger, Werewolf, Minion, Mason, Seer, Robber, TroubleMaker, Drunk, Insomniac, DoppleGanger}
 

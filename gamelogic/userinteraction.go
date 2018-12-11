@@ -17,7 +17,7 @@ type UserInput interface {
 type ConsoleUserInput struct{}
 
 func (input *ConsoleUserInput) ChooseCenterCard(additionalInfo string) int {
-	text, err := readFromConsole(additionalInfo + " Which Center Card would you like to choose (between 1-3)? ")
+	text, err := readFromConsole(additionalInfo + " Which Center Card would you like to choose (between 0-2)? ")
 	if err != nil {
 		log.Fatal(err)
 	}
