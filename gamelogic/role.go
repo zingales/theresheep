@@ -1,6 +1,14 @@
 package gamelogic
 
+import (
+	"errors"
+)
+
 type Role int
+
+var InvalidNumberOfRolesError = errors.New("There is an invalid number of players in this game")
+
+var RoleOrder = [...]Role{DoppleGanger, Werewolf, Minion, Mason, Seer, Robber, TroubleMaker, Drunk, Insomniac, DoppleGanger}
 
 const (
 	Unassigned Role = iota
@@ -15,13 +23,10 @@ const (
 	Mason
 	Insomniac
 	Minion
-	DobbleGanger
+	DoppleGanger
 )
 
 func (role Role) String() string {
-	// declare an array of strings
-	// ... operator counts how many
-	// items in the array (7)
 	names := [...]string{
 		"Unassigned",
 		"Villager",
@@ -35,11 +40,21 @@ func (role Role) String() string {
 		"Mason",
 		"Insomniac",
 		"Minion",
-		"DobbleGanger"}
+		"DoppleGanger"}
 
-	if role < 0 || role > DobbleGanger {
+	if role < 0 || role > DoppleGanger {
 		return "Unknown"
 	}
 
 	return names[role]
+}
+
+func validateRolePool(roles []Role) error {
+	if len(roles) < 6 {
+		return InvalidNumberOfRolesError
+	}
+
+	// There can't be 1 mason
+
+	return nil
 }

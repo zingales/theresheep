@@ -11,30 +11,51 @@ import (
 )
 
 func main() {
-	log.Printf("Yo")
+	// Required, otherwise the games "random" order is the same after each refresh
+	// rand.Seed(time.Now().UTC().UnixNano())
+
 	game, err := gamelogic.CreateGame("Game1")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// add players to game
+	// create a game with this number of players
+	var num int = 3
 	{
-		text, err := readFromConsole("how many players? ")
-		if err != nil {
-			log.Fatal(err)
-		}
+		// text, err := readFromConsole("how many players? ")
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
 
-		num, err := strconv.Atoi(text)
-		if err != nil {
-			log.Fatal(err)
-		}
+		// num, err := strconv.Atoi(text)
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
 
 		for i := 0; i < num; i++ {
 			game.AddPlayer(gamelogic.CreatePlayer("Player" + strconv.Itoa(i)))
 		}
 
-		log.Printf("%i", num)
 	}
+
+	{
+		roles := []gamelogic.Role{
+			gamelogic.Villager,
+			gamelogic.Villager,
+			gamelogic.Werewolf,
+			gamelogic.Werewolf,
+			gamelogic.TroubleMaker,
+			gamelogic.Robber,
+		}
+		game.AssignRolePool(roles)
+
+	}
+
+	game.Start()
+
+	fmt.Println(game)
+
+	game.ExecuteNight()
 
 	fmt.Println(game)
 }
