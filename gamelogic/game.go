@@ -89,7 +89,7 @@ func nameOfCenterCard(i int) string {
 	return "Center_" + strconv.Itoa(i)
 }
 
-func (game *Game) GetPlayerByRole(role Role) []*Player {
+func (game *Game) GetPlayerByOriginalRole(role Role) []*Player {
 	players := make([]*Player, 0)
 	for i := 0; i < len(game.players); i++ {
 		if game.players[i].originalRole == role {
@@ -99,7 +99,18 @@ func (game *Game) GetPlayerByRole(role Role) []*Player {
 	}
 
 	return players
+}
 
+func (game *Game) GetPlayerByCurrentRole(role Role) []*Player {
+	players := make([]*Player, 0)
+	for i := 0; i < len(game.players); i++ {
+		if game.players[i].currentRole == role {
+			players = append(players, game.players[i])
+
+		}
+	}
+
+	return players
 }
 
 func (game *Game) PlayerNames() []string {
@@ -118,6 +129,7 @@ func (game *Game) GetPlayerByName(name string) *Player {
 		}
 	}
 
+	log.Fatal("Could not find name " + name)
 	return nil
 }
 
@@ -131,12 +143,14 @@ func (game *Game) SwapRoles(player1 *Player, player2 *Player) {
 func (game *Game) ExecuteNight() {
 	for i := 0; i < len(RoleOrder); i++ {
 		activeRole := RoleOrder[i]
-		players := game.GetPlayerByRole(activeRole)
+		players := game.GetPlayerByOriginalRole(activeRole)
 		if len(players) == 0 {
 			continue
 		}
 
 		switch activeRole {
+		case DoppleGanger:
+			log.Fatal("DoppleGanger has not been implemented")
 		case Werewolf:
 			if len(players) == 1 {
 				singularWerewolf := players[0]
@@ -151,7 +165,7 @@ func (game *Game) ExecuteNight() {
 		case Minion:
 			minion := players[0]
 			// Assumption only 1 minion
-			werewolfs := game.GetPlayerByRole(Werewolf)
+			werewolfs := game.GetPlayerByOriginalRole(Werewolf)
 			for j := 0; j < len(werewolfs); j++ {
 				minion.KnowsRole(werewolfs[j].Name, werewolfs[j].originalRole)
 			}
@@ -197,4 +211,116 @@ func (game *Game) ExecuteNight() {
 			continue
 		}
 	}
+}
+
+const NoWereWolfs string = "NoWerewolfs"
+
+func (game *Game) EndGame() {
+	killcount := make(map[string]int)
+	whoNominatesWhom := make(map[string]string)
+	// each player chooses whom to kill
+	for i := 0; i < len(game.players); i++ {
+		playerNames := game.PlayerNames()
+		// you can't choose to kill yourself. But you can choose that there are no werewolfs in game
+		playerNames[i] = NoWereWolfs
+
+		names := game.players[i].ChoosePlayers(playerNames, 1)
+		name := names[0]
+		whoNominatesWhom[game.players[i].Name] = name
+
+		if _, ok := killcount[name]; !ok {
+			killcount[name] = 0
+		}
+
+		killcount[name]++
+	}
+
+	// find how many votes decide a kill
+	maxKillCount := -1
+	for _, v := range killcount {
+		if v > maxKillCount {
+			maxKillCount = v
+		}
+	}
+
+	// Find whose been nominated to be killed
+	nominees := make([]string, 0)
+	for k, v := range killcount {
+		if v == maxKillCount {
+			fmt.Println("Nominated " + k)
+			nominees = append(nominees, k)
+		}
+	}
+
+	fmt.Printf("nominees %v\n", nominees)
+	// If a nominated person is hunter they can kill someone else
+	for _, name := range nominees {
+		if name == NoWereWolfs {
+			continue
+		}
+
+		fmt.Println("This is a name " + name)
+		player := game.GetPlayerByName(name)
+		fmt.Println(player)
+		if player.currentRole == Hunter {
+			playerNames := player.ChoosePlayers(game.PlayerNames(), 1)
+			nominees = append(nominees, playerNames[0])
+		}
+	}
+
+	// Find all winners and losers
+	tannerDeath := false
+	werewolfDeath := false
+	NoWereWolfsSelected := false
+	for _, name := range nominees {
+		if name == NoWereWolfs {
+			NoWereWolfsSelected = true
+			continue
+		}
+
+		player := game.GetPlayerByName(name)
+		switch player.currentRole {
+		case Tanner:
+			tannerDeath = true
+		case Werewolf:
+			werewolfDeath = true
+		}
+	}
+
+	if werewolfDeath {
+		game.VillagerWin()
+	}
+
+	if tannerDeath {
+		game.TannerWin()
+	} else {
+		centerWerewolfs := 0
+		if game.Center[0].currentRole == Werewolf {
+			centerWerewolfs++
+		}
+		if game.Center[1].currentRole == Werewolf {
+			centerWerewolfs++
+		}
+		if game.Center[2].currentRole == Werewolf {
+			centerWerewolfs++
+		}
+
+		if NoWereWolfsSelected && centerWerewolfs > 1 {
+			game.VillagerWin()
+		} else if !werewolfDeath {
+			game.WerewolfWin()
+		}
+	}
+}
+
+func (game *Game) TannerWin() {
+	fmt.Println("Tanner wins")
+}
+
+func (game *Game) VillagerWin() {
+	fmt.Println("Team Villager wins")
+}
+
+func (game *Game) WerewolfWin() {
+	fmt.Println("Team Werewolf wins")
 }

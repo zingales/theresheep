@@ -46,4 +46,6 @@ func main() {
 	game.ExecuteNight()
 
 	fmt.Println(game)
+
+	game.EndGame()
 }
