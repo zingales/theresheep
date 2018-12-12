@@ -3,14 +3,16 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"strconv"
+	"time"
 
 	"github.com/zingales/theresheep/gamelogic"
 )
 
 func main() {
 	// Required, otherwise the games "random" order is the same after each refresh
-	// rand.Seed(time.Now().UTC().UnixNano())
+	rand.Seed(time.Now().UTC().UnixNano())
 
 	game, err := gamelogic.CreateGame("Game1")
 	if err != nil {

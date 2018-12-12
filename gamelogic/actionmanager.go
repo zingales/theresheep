@@ -67,7 +67,7 @@ func (am *ActionManager) LearnAboutCenterCards(player *Player, numCardsToSee int
 	// todo consider breaking this into a tier 1 and tier 2 action
 	centerNumbers := player.ChooseCenterCards(numCardsToSee)
 	for _, num := range centerNumbers {
-		center := am.game.Center[centerNumbers[num]]
+		center := am.game.Center[num]
 		player.KnowsRole(center.Name, center.currentRole)
 		am.AddEventOneAffect(player, LearnRoles, center.createPlayerRolePair())
 	}
