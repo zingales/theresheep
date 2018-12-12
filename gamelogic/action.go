@@ -36,6 +36,7 @@ func (action Action) String() string {
 	names := [...]string{
 		"OrginalAssignment",
 		"LearnRoles",
+		"NominatesToKill",
 		"SwapRoles",
 	}
 

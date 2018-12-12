@@ -59,4 +59,6 @@ func main() {
 	fmt.Println(game)
 
 	game.EndGame()
+
+	fmt.Println(game)
 }
