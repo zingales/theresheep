@@ -26,6 +26,10 @@ func (player *Player) String() string {
 	return fmt.Sprintf("<%s was %v and now is %v; Has Seen %v>", player.Name, player.originalRole, player.currentRole, player.HasSeen)
 }
 
+func (player *Player) createPlayerRolePair() *PlayerRolePair {
+	return &PlayerRolePair{Name: player.Name, Role: player.currentRole}
+}
+
 func (player *Player) ChooseCenterCards(number int) []int {
 	nums := make([]int, 0)
 	for i := 0; i < number; i++ {

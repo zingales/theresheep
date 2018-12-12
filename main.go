@@ -21,7 +21,8 @@ func main() {
 	var num int = 11
 	{
 		for i := 0; i < num; i++ {
-			game.AddPlayer(gamelogic.CreatePlayer("Player"+strconv.Itoa(i), &gamelogic.ConsoleUserInput{}))
+			// game.AddPlayer(gamelogic.CreatePlayer("Player"+strconv.Itoa(i), &gamelogic.ConsoleUserInput{}))
+			game.AddPlayer(gamelogic.CreatePlayer("Player"+strconv.Itoa(i), &gamelogic.RandomUserInput{}))
 		}
 
 	}

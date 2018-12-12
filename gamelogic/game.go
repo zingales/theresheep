@@ -11,22 +11,22 @@ import (
 var InvalidNumberOfPlayersError = errors.New("There is an invalid number of players in this game")
 
 type Game struct {
-	Id       string
-	players  []*Player
-	rolePool []Role
-	History  *ActionManager
-	Center   [3]*Player
+	Id            string
+	players       []*Player
+	rolePool      []Role
+	actionManager *ActionManager
+	Center        [3]*Player
 }
 
 func CreateGame(id string) (*Game, error) {
 	game := &Game{Id: id}
 	game.players = make([]*Player, 0)
-	game.History = &ActionManager{game: game}
+	game.actionManager = &ActionManager{game: game, History: make([]*Event, 0)}
 	return game, nil
 }
 
 func (game *Game) String() string {
-	return fmt.Sprintf("Id: %s\n players %v\n avalibleRoles: %v\n History: %v\n Center: %v", game.Id, game.players, game.rolePool, game.History, game.Center)
+	return fmt.Sprintf("Id: %s\n players %v\n avalibleRoles: %v\n actionManager: %v\n Center: %v", game.Id, game.players, game.rolePool, game.actionManager, game.Center)
 }
 
 func (game *Game) AddPlayer(player *Player) {
@@ -67,10 +67,10 @@ func (game *Game) Start() error {
 	for ; index < len(game.players); index++ {
 		player := game.players[index]
 		role := game.rolePool[roleOrderAssigment[index]]
-		game.History.OriginalAssigment(player, role)
+		game.actionManager.OriginalAssigment(player, role)
 	}
 
-	game.History.AssignCenter(game.rolePool[roleOrderAssigment[index]], game.rolePool[roleOrderAssigment[index+1]], game.rolePool[roleOrderAssigment[index+2]])
+	game.actionManager.AssignCenter(game.rolePool[roleOrderAssigment[index]], game.rolePool[roleOrderAssigment[index+1]], game.rolePool[roleOrderAssigment[index+2]])
 
 	return nil
 }
@@ -139,36 +139,36 @@ func (game *Game) ExecuteNight() {
 		case Werewolf:
 			if len(players) == 1 {
 				singularWerewolf := players[0]
-				game.History.LearnAboutCenterCards(singularWerewolf, 1)
+				game.actionManager.LearnAboutCenterCards(singularWerewolf, 1)
 			} else {
 				// Assumption there are only 2 werewolfs
-				game.History.LearnAboutEachother(players[0], players[1])
+				game.actionManager.LearnAboutEachother(players[0], players[1])
 			}
 		case Minion:
 			minion := players[0]
 			// Assumption only 1 minion
 			werewolfs := game.GetPlayerByOriginalRole(Werewolf)
-			game.History.LearnAboutPlayersRole(minion, werewolfs)
+			game.actionManager.LearnAboutPlayersRole(minion, werewolfs)
 		case Mason:
 			if len(players) == 2 {
-				game.History.LearnAboutEachother(players[0], players[1])
+				game.actionManager.LearnAboutEachother(players[0], players[1])
 			}
 		case Seer:
 			seer := players[0]
-			game.History.SeerAction(seer)
+			game.actionManager.SeerAction(seer)
 		case Robber:
 			robber := players[0]
-			choosee := game.History.ChooseAndLearnAboutRole(robber)
-			game.History.SwapRoles(robber, robber, choosee)
+			choosee := game.actionManager.ChooseAndLearnAboutRole(robber)
+			game.actionManager.SwapRoles(robber, robber, choosee)
 		case TroubleMaker:
 			troubleMaker := players[0]
-			game.History.ChooseTwoAndSwap(troubleMaker)
+			game.actionManager.ChooseTwoAndSwap(troubleMaker)
 		case Drunk:
 			drunk := players[0]
-			game.History.SwapWithCenterNoLearn(drunk)
+			game.actionManager.SwapWithCenterNoLearn(drunk)
 		case Insomniac:
 			insomniac := players[0]
-			game.History.LearnAboutSelf(insomniac)
+			game.actionManager.LearnAboutSelf(insomniac)
 		default:
 			// Aka the villager
 			continue
@@ -183,7 +183,7 @@ func (game *Game) EndGame() {
 	whoNominatesWhom := make(map[string]string)
 	// each player chooses whom to kill
 	for _, player := range game.players {
-		name := game.History.NominateToKill(player)
+		name := game.actionManager.NominateToKill(player)
 
 		whoNominatesWhom[player.Name] = name
 
@@ -218,7 +218,7 @@ func (game *Game) EndGame() {
 
 		player := game.GetPlayerByName(name)
 		if player.currentRole == Hunter {
-			name := game.History.NominateToKill(player)
+			name := game.actionManager.NominateToKill(player)
 			nominees = append(nominees, name)
 		}
 	}

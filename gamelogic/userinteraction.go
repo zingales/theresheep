@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"strconv"
 )
@@ -12,6 +13,21 @@ type UserInput interface {
 	ChooseCenterCard(string) int
 	ChoosePlayer(string, []string) string
 	DoesChoosePlayerInsteadOfCenter(string) bool
+}
+
+type RandomUserInput struct{}
+
+func (input *RandomUserInput) ChooseCenterCard(additionalInfo string) int {
+	return rand.Intn(2)
+}
+
+func (input *RandomUserInput) DoesChoosePlayerInsteadOfCenter(additionalInfo string) bool {
+	return rand.Intn(1) == 0
+}
+
+func (input *RandomUserInput) ChoosePlayer(additionalInfo string, playerNames []string) string {
+	num := rand.Intn(len(playerNames))
+	return playerNames[num]
 }
 
 type ConsoleUserInput struct{}
