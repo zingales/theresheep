@@ -1,0 +1,80 @@
+// https://create-react-app.dev/docs/adding-a-sass-stylesheet/
+
+@mixin textBold {
+  font-weight: 600;
+}
+
+.NightPhase {
+  display: flex;
+  flex-direction: column;
+  &__header {
+    display: flex;
+    justify-content: center;
+
+    padding: 12px;
+
+    border-bottom: 1px solid;
+    margin: 0 128px;
+
+    font-weight: 500;
+    font-size: 24px;
+  }
+}
+
+.Body {
+  display: flex;
+  align-items: stretch;
+
+  &__column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh; // TODO: This is overflowing the viewport because the header takes up room
+    padding: 32px 72px;
+  }
+
+  &__box {
+    flex: 1 1 0;
+  }
+
+  &__list-item {
+    padding: 16px 0;
+  }
+
+  &__box-header {
+    @include textBold;
+  }
+
+  &__role,
+  &__team {
+    // TODO: color affiliation red for werewolf and green for good guy
+    @include textBold;
+    margin-bottom: 20px;
+  }
+
+  &__image {
+    align-self: center;
+    // ends up be 230 x 315
+    width: 230px;
+    height: auto;
+    // TODO: this should be justify-self: fill in remaining space
+    margin: 25px 10px;
+  }
+}
+
+.Checkbox {
+  &__row {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+  }
+  &__checkbox {
+    border-radius: 0;
+    background-color: transparent;
+    width: 20px;
+    height: 20px;
+    appearance: none;
+    border: 2px solid #505050;
+    margin-right: 16px;
+  }
+}
