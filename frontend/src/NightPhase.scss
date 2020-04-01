@@ -1,36 +1,21 @@
 // https://create-react-app.dev/docs/adding-a-sass-stylesheet/
-
-@mixin textBold {
-  font-weight: 600;
-}
+@import 'common';
 
 .NightPhase {
   display: flex;
   flex-direction: column;
+  height: 100vh;
   &__header {
-    display: flex;
-    justify-content: center;
-
-    padding: 12px;
-
-    border-bottom: 1px solid;
-    margin: 0 128px;
-
-    font-weight: 500;
-    font-size: 24px;
+    @include header;
   }
 }
 
-.Body {
+.NightPhaseBody {
   display: flex;
-  align-items: stretch;
+  height: 100vh;
 
   &__column {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    height: 100vh; // TODO: This is overflowing the viewport because the header takes up room
-    padding: 32px 72px;
+    @include column;
   }
 
   &__box {
