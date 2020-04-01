@@ -1,6 +1,7 @@
-import React, {FC, ReactNode} from 'react';
+import React, {ReactNode} from 'react';
 import werewolfImg from './pics/werewolf.png';
 import './NightPhase.scss';
+import Checkbox from './Checkbox';
 
 const NightPhase = () => {
   return (
@@ -41,17 +42,6 @@ const Body = () => {
           <div className="Body__list-item">Werewolf 3</div>
         </div>
       </div>
-    </div>
-  );
-};
-
-const Checkbox: FC<{children?: string}> = props => {
-  return (
-    <div>
-      <span className="Checkbox__row">
-        <input type="checkbox" className="Checkbox__checkbox" />
-        {props.children}
-      </span>
     </div>
   );
 };
