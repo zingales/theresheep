@@ -1,0 +1,24 @@
+@mixin textBold {
+  font-weight: 600;
+}
+
+@mixin column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; // TODO: This is overflowing the viewport because the header takes up room
+  padding: 32px 72px;
+}
+
+@mixin header {
+  display: flex;
+  justify-content: center;
+
+  padding: 12px;
+
+  border-bottom: 1px solid;
+  margin: 0 128px;
+
+  font-weight: 500;
+  font-size: 24px;
+}

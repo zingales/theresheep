@@ -1,4 +1,4 @@
-import React, {ReactNode} from 'react';
+import React from 'react';
 import werewolfImg from './pics/werewolf.png';
 import './NightPhase.scss';
 import Checkbox from './Checkbox';

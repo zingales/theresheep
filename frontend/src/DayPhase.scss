@@ -1,0 +1,31 @@
+@import 'common';
+
+.DayPhase {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  &__header {
+    @include header;
+  }
+}
+
+.DayPhaseBody {
+  display: flex;
+  height: 100vh;
+  &__header {
+    @include header;
+  }
+
+  &__column {
+    @include column;
+  }
+
+  &__timer {
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__kill-prompt {
+    @include textBold;
+  }
+}
