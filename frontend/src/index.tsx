@@ -4,6 +4,8 @@ import './index.scss';
 import NightPhase from './NightPhase';
 import DayPhase from './DayPhase';
 import * as serviceWorker from './serviceWorker';
+import {createMuiTheme, ThemeProvider} from '@material-ui/core';
+import {grey} from '@material-ui/core/colors';
 
 const App = () => {
   const [isDayPhase, setPhase] = useState<boolean>(true);
@@ -13,12 +15,22 @@ const App = () => {
     const listener = (e: KeyboardEvent) =>
       [' ', 'q', 's'].includes(e.key) && setPhase(p => !p);
     window.addEventListener('keyup', listener);
+    return () => window.removeEventListener('keyup', listener);
   }, []);
 
+  const theme = createMuiTheme({
+    palette: {
+      primary: grey,
+      secondary: grey,
+    },
+  });
+
   return (
-    <React.StrictMode>
-      <div>{component}</div>
-    </React.StrictMode>
+    <ThemeProvider theme={theme}>
+      <React.StrictMode>
+        <div>{component}</div>
+      </React.StrictMode>
+    </ThemeProvider>
   );
 };
 

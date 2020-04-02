@@ -1,6 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import './DayPhase.scss';
-import Checkbox from './Checkbox';
+// import Checkbox from './Checkbox';
+import AppBar from '@material-ui/core/AppBar';
+import {
+  FormControl,
+  RadioGroup,
+  FormLabel,
+  Radio,
+  FormControlLabel,
+} from '@material-ui/core';
 
 /*
  * Emits a new number n every interval milliseconds where n is the number of
@@ -26,9 +34,9 @@ const useTimer = (interval?: number): number => {
 const DayPhase = () => {
   return (
     <div className="DayPhase">
-      <div className="DayPhase__header">
-        <div className="DayPhase__header-title">Day Phase</div>
-      </div>
+      <AppBar color="primary" className="DayPhase__appbar " position="static">
+        One Night Werewolf
+      </AppBar>
       <DayPhaseBody />
     </div>
   );
@@ -42,6 +50,8 @@ const DayPhaseBody = () => {
   const minutesRemaining = Math.floor(timeRemaining / 60);
   const secondsRemaining = timeRemaining % 60;
 
+  const value = 'value';
+  const handleChange = () => {};
   return (
     <div className="DayPhaseBody">
       <div className="DayPhaseBody__column DayPhaseBody__timer">
@@ -52,9 +62,30 @@ const DayPhaseBody = () => {
       <div className="DayPhaseBody__column">
         <div className="DayPhaseBody__vertical-gutter" />
         <div className="DayPhaseBody__kill-prompt"> Choose who to kill </div>
-        <Checkbox> Person 1</Checkbox>
-        <Checkbox> Person 2</Checkbox>
-        <Checkbox> Person 3</Checkbox>
+        <FormControl component="fieldset">
+          {/* <FormLabel component="legend">Choose who to kill</FormLabel> */}
+          <RadioGroup
+            aria-label="people"
+            name="people"
+            value={value}
+            onChange={handleChange}>
+            <FormControlLabel
+              value="person-1"
+              control={<Radio />}
+              label="Person 1"
+            />
+            <FormControlLabel
+              value="person-2"
+              control={<Radio />}
+              label="Person 2"
+            />
+            <FormControlLabel
+              value="person-3"
+              control={<Radio />}
+              label="Person 3"
+            />
+          </RadioGroup>
+        </FormControl>
       </div>
     </div>
   );
