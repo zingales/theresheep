@@ -50,8 +50,9 @@ const DayPhaseBody = () => {
   const minutesRemaining = Math.floor(timeRemaining / 60);
   const secondsRemaining = timeRemaining % 60;
 
-  const value = 'value';
-  const handleChange = () => {};
+  const [radioGroupValue, setRadio] = useState<string | null>(null);
+
+  // const handleChange = () => {};
   return (
     <div className="DayPhaseBody">
       <div className="DayPhaseBody__column DayPhaseBody__timer">
@@ -67,8 +68,8 @@ const DayPhaseBody = () => {
           <RadioGroup
             aria-label="people"
             name="people"
-            value={value}
-            onChange={handleChange}>
+            value={radioGroupValue}
+            onChange={(_, value) => setRadio(value)}>
             <FormControlLabel
               value="person-1"
               control={<Radio />}
