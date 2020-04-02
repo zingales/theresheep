@@ -12,7 +12,12 @@
 
 .NightPhaseBody {
   display: flex;
-  height: 100vh;
+  flex: 1;
+
+  &__vertical-gutter {
+    // TODO: should be sized with some flex shit. flex: <max> <min> <prefferred>
+    height: 32px;
+  }
 
   &__column {
     @include column;
@@ -27,13 +32,13 @@
   }
 
   &__box-header {
-    @include textBold;
+    @include boldPrompt;
   }
 
   &__role,
   &__team {
     // TODO: color affiliation red for werewolf and green for good guy
-    @include textBold;
+    @include boldPrompt;
     margin-bottom: 20px;
   }
 

@@ -18,6 +18,7 @@ const NightPhaseBody = () => {
   return (
     <div className="NightPhaseBody">
       <div className="NightPhaseBody__column">
+        <div className="NightPhaseBody__vertical-gutter" />
         <div className="NightPhaseBody__role">Your Role: werewolf</div>
         <div className="NightPhaseBody__team">Team: bad</div>
         <div className="NightPhaseBody__description">
@@ -27,6 +28,7 @@ const NightPhaseBody = () => {
         <img src={werewolfImg} className="NightPhaseBody__image" alt="logo" />
       </div>
       <div className="NightPhaseBody__column">
+        <div className="NightPhaseBody__vertical-gutter" />
         <div className="NightPhaseBody__box">
           <div className="NightPhaseBody__box-header">Pick who to kill</div>
           <Checkbox> Person 1</Checkbox>

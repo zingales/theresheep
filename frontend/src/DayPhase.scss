@@ -11,9 +11,11 @@
 
 .DayPhaseBody {
   display: flex;
-  height: 100vh;
-  &__header {
-    @include header;
+  flex: 1;
+
+  &__vertical-gutter {
+    // TODO: should be sized with some flex shit. flex: <max> <min> <prefferred>
+    height: 32px;
   }
 
   &__column {
@@ -23,9 +25,10 @@
   &__timer {
     align-items: center;
     justify-content: center;
+    font-size: 72px;
   }
 
   &__kill-prompt {
-    @include textBold;
+    @include boldPrompt;
   }
 }

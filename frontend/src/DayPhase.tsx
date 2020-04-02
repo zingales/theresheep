@@ -11,12 +11,13 @@ const useTimer = (interval?: number): number => {
 
   useEffect(() => {
     const startTimestamp = Date.now();
-    setInterval(() => {
+    const timer = setInterval(() => {
       if (startTimestamp === null) {
         return;
       }
       setElapsed(Math.floor(Date.now() - startTimestamp));
     }, interval || 1000);
+    return () => clearInterval(timer);
   }, [interval]);
 
   return elapsedMills;
@@ -49,6 +50,7 @@ const DayPhaseBody = () => {
         </span>
       </div>
       <div className="DayPhaseBody__column">
+        <div className="DayPhaseBody__vertical-gutter" />
         <div className="DayPhaseBody__kill-prompt"> Choose who to kill </div>
         <Checkbox> Person 1</Checkbox>
         <Checkbox> Person 2</Checkbox>
