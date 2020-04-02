@@ -61,7 +61,6 @@ const DayPhaseBody = () => {
         </span>
       </div>
       <div className="DayPhaseBody__column">
-        <div className="DayPhaseBody__vertical-gutter" />
         <div className="DayPhaseBody__kill-prompt"> Choose who to kill </div>
         <FormControl component="fieldset">
           {/* <FormLabel component="legend">Choose who to kill</FormLabel> */}

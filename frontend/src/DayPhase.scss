@@ -30,6 +30,7 @@
 
   &__column {
     @include column;
+    justify-content: center;
   }
 
   &__timer {
