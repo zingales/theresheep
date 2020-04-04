@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import './DayPhase.scss';
-import AppBar from '@material-ui/core/AppBar';
 import {
   FormControl,
   RadioGroup,
@@ -30,17 +29,6 @@ const useTimer = (interval?: number): number => {
 };
 
 const DayPhase = () => {
-  return (
-    <div className="DayPhase">
-      <AppBar color="primary" className="DayPhase__appbar " position="static">
-        Day Phase
-      </AppBar>
-      <DayPhaseBody />
-    </div>
-  );
-};
-
-const DayPhaseBody = () => {
   const elapsedMills = useTimer();
   const elapsedSeconds = Math.round(elapsedMills / 1000);
   const totalTime = 5 * 60; // 5 minutes worth of seconds
@@ -52,14 +40,14 @@ const DayPhaseBody = () => {
 
   // const handleChange = () => {};
   return (
-    <div className="DayPhaseBody">
-      <div className="DayPhaseBody__column DayPhaseBody__timer">
+    <div className="DayPhase">
+      <div className="DayPhase__column DayPhase__timer">
         <span>
           {minutesRemaining} : {String(secondsRemaining).padStart(2, '0')}
         </span>
       </div>
-      <div className="DayPhaseBody__column">
-        <div className="DayPhaseBody__kill-prompt"> Choose who to kill </div>
+      <div className="DayPhase__column">
+        <div className="DayPhase__kill-prompt"> Choose who to kill </div>
         <FormControl component="fieldset">
           {/* <FormLabel component="legend">Choose who to kill</FormLabel> */}
           <RadioGroup

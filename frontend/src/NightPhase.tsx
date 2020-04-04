@@ -3,36 +3,23 @@ import werewolfImg from './pics/werewolf.png';
 import './NightPhase.scss';
 import {Checkbox, FormControlLabel} from '@material-ui/core';
 
-import AppBar from '@material-ui/core/AppBar';
-
 const NightPhase = () => {
   return (
     <div className="NightPhase">
-      <AppBar color="primary" className="NightPhase__appbar " position="static">
-        Night Phase
-      </AppBar>
-      <NightPhaseBody />
-    </div>
-  );
-};
-
-const NightPhaseBody = () => {
-  return (
-    <div className="NightPhaseBody">
-      <div className="NightPhaseBody__column">
-        <div className="NightPhaseBody__vertical-gutter" />
-        <div className="NightPhaseBody__role">Your Role: werewolf</div>
-        <div className="NightPhaseBody__team">Team: bad</div>
-        <div className="NightPhaseBody__description">
+      <div className="NightPhase__column">
+        <div className="NightPhase__vertical-gutter" />
+        <div className="NightPhase__role">Your Role: werewolf</div>
+        <div className="NightPhase__team">Team: bad</div>
+        <div className="NightPhase__description">
           Shall I compare a werewolf to a summer's day? Thou art more lovely and
           more temperate. Choose someone to kill, ploop a doop boop moop.
         </div>
-        <img src={werewolfImg} className="NightPhaseBody__image" alt="logo" />
+        <img src={werewolfImg} className="NightPhase__image" alt="logo" />
       </div>
-      <div className="NightPhaseBody__column">
-        <div className="NightPhaseBody__vertical-gutter" />
-        <div className="NightPhaseBody__box">
-          <div className="NightPhaseBody__box-header">Pick who to kill</div>
+      <div className="NightPhase__column">
+        <div className="NightPhase__vertical-gutter" />
+        <div className="NightPhase__box">
+          <div className="NightPhase__box-header">Pick who to kill</div>
           <div>
             <FormControlLabel
               value="person-1"
@@ -55,11 +42,11 @@ const NightPhaseBody = () => {
             />
           </div>
         </div>
-        <div className="NightPhaseBody__box">
-          <div className="NightPhaseBody__box-header">Your werewolves are</div>
-          <div className="NightPhaseBody__list-item">Werewolf 1</div>
-          <div className="NightPhaseBody__list-item">Werewolf 2</div>
-          <div className="NightPhaseBody__list-item">Werewolf 3</div>
+        <div className="NightPhase__box">
+          <div className="NightPhase__box-header">Your werewolves are</div>
+          <div className="NightPhase__list-item">Werewolf 1</div>
+          <div className="NightPhase__list-item">Werewolf 2</div>
+          <div className="NightPhase__list-item">Werewolf 3</div>
         </div>
       </div>
     </div>

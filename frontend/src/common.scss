@@ -10,16 +10,3 @@
   height: 100%; // TODO: This is overflowing the viewport because the header takes up room
   margin: 0px 72px;
 }
-
-@mixin header {
-  display: flex;
-  justify-content: center;
-
-  padding: 12px;
-
-  border-bottom: 1px solid;
-  margin: 0 128px;
-
-  font-weight: 500;
-  font-size: 24px;
-}

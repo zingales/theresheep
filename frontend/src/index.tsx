@@ -6,6 +6,7 @@ import DayPhase from './DayPhase';
 import * as serviceWorker from './serviceWorker';
 import {createMuiTheme, ThemeProvider} from '@material-ui/core';
 import {grey} from '@material-ui/core/colors';
+import AppBar from '@material-ui/core/AppBar';
 
 const App = () => {
   const [isDayPhase, setPhase] = useState<boolean>(false);
@@ -28,7 +29,12 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <React.StrictMode>
-        <div>{component}</div>
+        <div className="App">
+          <AppBar color="primary" className="App__appbar " position="static">
+            {isDayPhase ? 'Day Phase' : 'Night Phase'}
+          </AppBar>
+          {component}
+        </div>
       </React.StrictMode>
     </ThemeProvider>
   );
