@@ -1,11 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import './DayPhase.scss';
-// import Checkbox from './Checkbox';
 import AppBar from '@material-ui/core/AppBar';
 import {
   FormControl,
   RadioGroup,
-  FormLabel,
   Radio,
   FormControlLabel,
 } from '@material-ui/core';
@@ -35,7 +33,7 @@ const DayPhase = () => {
   return (
     <div className="DayPhase">
       <AppBar color="primary" className="DayPhase__appbar " position="static">
-        One Night Werewolf
+        Day Phase
       </AppBar>
       <DayPhaseBody />
     </div>

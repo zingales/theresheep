@@ -8,7 +8,7 @@ import {createMuiTheme, ThemeProvider} from '@material-ui/core';
 import {grey} from '@material-ui/core/colors';
 
 const App = () => {
-  const [isDayPhase, setPhase] = useState<boolean>(true);
+  const [isDayPhase, setPhase] = useState<boolean>(false);
   const component = isDayPhase ? <DayPhase /> : <NightPhase />;
 
   useEffect(() => {

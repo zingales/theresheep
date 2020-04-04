@@ -1,14 +1,16 @@
 import React from 'react';
 import werewolfImg from './pics/werewolf.png';
 import './NightPhase.scss';
-import Checkbox from './Checkbox';
+import {Checkbox, FormControlLabel} from '@material-ui/core';
+
+import AppBar from '@material-ui/core/AppBar';
 
 const NightPhase = () => {
   return (
     <div className="NightPhase">
-      <div className="NightPhase__header">
-        <div className="NightPhase__header-title">Night Phase</div>
-      </div>
+      <AppBar color="primary" className="NightPhase__appbar " position="static">
+        Night Phase
+      </AppBar>
       <NightPhaseBody />
     </div>
   );
@@ -31,9 +33,27 @@ const NightPhaseBody = () => {
         <div className="NightPhaseBody__vertical-gutter" />
         <div className="NightPhaseBody__box">
           <div className="NightPhaseBody__box-header">Pick who to kill</div>
-          <Checkbox> Person 1</Checkbox>
-          <Checkbox> Person 2</Checkbox>
-          <Checkbox> Person 3</Checkbox>
+          <div>
+            <FormControlLabel
+              value="person-1"
+              control={<Checkbox />}
+              label="Person 1"
+            />
+          </div>
+          <div>
+            <FormControlLabel
+              value="person-2"
+              control={<Checkbox />}
+              label="Person 2"
+            />
+          </div>
+          <div>
+            <FormControlLabel
+              value="person-3"
+              control={<Checkbox />}
+              label="Person 3"
+            />
+          </div>
         </div>
         <div className="NightPhaseBody__box">
           <div className="NightPhaseBody__box-header">Your werewolves are</div>
