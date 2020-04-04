@@ -21,7 +21,6 @@ code {
   height: 100vh;
 
   &__appbar {
-    // TODO: why can't i do display: flex, flex-direction: normal, justify-content: center
     display: flex;
     flex-direction: column;
     align-items: center;
