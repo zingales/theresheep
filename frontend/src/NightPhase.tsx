@@ -1,15 +1,13 @@
 import React from 'react';
 import werewolfImg from './pics/werewolf.png';
 import './NightPhase.scss';
-import {Checkbox, FormControlLabel} from '@material-ui/core';
 
 const NightPhase = () => {
   return (
     <div className="NightPhase">
       <div className="NightPhase__column">
-        <div className="NightPhase__vertical-gutter" />
         <div className="NightPhase__role">Your Role: werewolf</div>
-        <div className="NightPhase__team">Team: bad</div>
+        <div className="NightPhase__team">Team: werewolf</div>
         <div className="NightPhase__description">
           At night, all Werewolves open their eyes and look for other
           werewolves. If no one else opens their eyes, the other Werewolves are
