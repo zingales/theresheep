@@ -7,6 +7,10 @@
 
   display: flex;
 
+  @media only screen and (max-width: 600px) {
+    flex-direction: column;
+  }
+
   &__vertical-gutter {
     // TODO: should be sized with some flex shit. flex: <max> <min> <prefferred>
     height: 64px;
