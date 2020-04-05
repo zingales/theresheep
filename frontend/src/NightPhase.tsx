@@ -11,37 +11,14 @@ const NightPhase = () => {
         <div className="NightPhase__role">Your Role: werewolf</div>
         <div className="NightPhase__team">Team: bad</div>
         <div className="NightPhase__description">
-          Shall I compare a werewolf to a summer's day? Thou art more lovely and
-          more temperate. Choose someone to kill, ploop a doop boop moop.
+          At night, all Werewolves open their eyes and look for other
+          werewolves. If no one else opens their eyes, the other Werewolves are
+          in the center. Werewolves are on the werewolf team.
         </div>
         <img src={werewolfImg} className="NightPhase__image" alt="logo" />
       </div>
       <div className="NightPhase__column">
         <div className="NightPhase__vertical-gutter" />
-        <div className="NightPhase__box">
-          <div className="NightPhase__box-header">Pick who to kill</div>
-          <div>
-            <FormControlLabel
-              value="person-1"
-              control={<Checkbox />}
-              label="Person 1"
-            />
-          </div>
-          <div>
-            <FormControlLabel
-              value="person-2"
-              control={<Checkbox />}
-              label="Person 2"
-            />
-          </div>
-          <div>
-            <FormControlLabel
-              value="person-3"
-              control={<Checkbox />}
-              label="Person 3"
-            />
-          </div>
-        </div>
         <div className="NightPhase__box">
           <div className="NightPhase__box-header">Your werewolves are</div>
           <div className="NightPhase__list-item">Werewolf 1</div>
