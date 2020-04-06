@@ -1,3 +1,6 @@
+/*****************************************************************************
+ **************************** Game State Types *******************************
+ *****************************************************************************/
 export type Role = 'werewolf' | 'villager' | 'seer';
 export type Action =
   | 'choose who to kill'
@@ -5,7 +8,7 @@ export type Action =
   | 'swap role'
   | 'seer action';
 
-type PlayerId = number;
+export type PlayerId = number;
 
 // Information to be revealed to each player when the game is over.
 export type GameOverState = {
@@ -24,3 +27,23 @@ export type BackendState = {
   pendingAction: Action | null;
   gameOver?: GameOverState;
 };
+
+/*****************************************************************************
+ ******************************* Utility Types *******************************
+ *****************************************************************************/
+
+type AnyObject = {[key: string]: any};
+export type FetchError<E extends AnyObject> =
+  | {type: 'fetchError'}
+  | {type: 'nonJsonError'; body: string}
+  | {type: 'httpError'; status: number; body: E};
+
+export type AsyncResult<T, E> =
+  | {
+      type: 'success';
+      result: T;
+    }
+  | {
+      type: 'pending';
+    }
+  | {type: 'error'; error: FetchError<E>};
