@@ -11,13 +11,12 @@
     justify-content: center;
   }
 
-  &__timer {
-    align-items: center;
-    justify-content: center;
-    font-size: 72px;
-  }
-
   &__kill-prompt {
     @include boldPrompt;
+  }
+
+  &__timer-column {
+    align-items: center;
+    justify-content: center;
   }
 }

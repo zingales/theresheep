@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
 
 import './index.scss';
-import WerewolfNightPhase from './werewolf/WerewolfNightPhase';
+import WerewolfNightPhase from './villager/VillagerNightPhase';
 import WerewolfDayPhase from './werewolf/WerewolfDayPhase';
 import {useBackendState, assertNever} from './utils';
 
