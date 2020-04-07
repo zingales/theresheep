@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {useTimer} from './utils';
+import {useTimer} from 'utils';
 import './DayPhase.scss';
 import {
   FormControl,

@@ -2,8 +2,8 @@ import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
 
 import './index.scss';
-import NightPhase from './NightPhase';
-import DayPhase from './DayPhase';
+import WerewolfNightPhase from './werewolf/NightPhase';
+import WerewolfDayPhase from './werewolf/DayPhase';
 import {useBackendState, assertNever} from './utils';
 
 import {createMuiTheme, ThemeProvider} from '@material-ui/core';
@@ -44,12 +44,14 @@ const App = () => {
           'Non Exhaustive switch statement',
           backendStateAsyncResult.error,
         );
+        // TODO: why is this return null necessary? shouldn't typescript
+        // exhaustive switching work?
         return null;
     }
   }
   const backendState = backendStateAsyncResult.result;
 
-  const component = isDayPhase ? <DayPhase /> : <NightPhase />;
+  const component = isDayPhase ? <WerewolfDayPhase /> : <WerewolfNightPhase />;
 
   const theme = createMuiTheme({
     palette: {
@@ -72,8 +74,4 @@ const App = () => {
   );
 };
 
-ReactDOM.render(
-  <App />,
-
-  document.getElementById('root'),
-);
+ReactDOM.render(<App />, document.getElementById('root'));
