@@ -1,5 +1,5 @@
 import React from 'react';
-import werewolfImg from './pics/werewolf.png';
+import werewolfImg from 'pics/werewolf.png';
 import './NightPhase.scss';
 
 const NightPhase = () => {
