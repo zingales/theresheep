@@ -1,6 +1,4 @@
 import React, {useState} from 'react';
-import {useTimer} from 'utils';
-import './WerewolfDayPhase.scss';
 import {
   FormControl,
   RadioGroup,
@@ -8,28 +6,20 @@ import {
   FormControlLabel,
 } from '@material-ui/core';
 
-const WerewolfDayPhase = () => {
-  const elapsedMills = useTimer();
-  const elapsedSeconds = Math.round(elapsedMills / 1000);
-  const totalTime = 5 * 60; // 5 minutes worth of seconds
-  const timeRemaining = totalTime - elapsedSeconds;
-  const minutesRemaining = Math.floor(timeRemaining / 60);
-  const secondsRemaining = timeRemaining % 60;
+import './WerewolfDayPhase.scss';
+import Timer from 'Timer';
 
+const WerewolfDayPhase = () => {
   const [radioGroupValue, setRadio] = useState<string | null>(null);
 
-  // const handleChange = () => {};
   return (
     <div className="WerewolfDayPhase">
-      <div className="WerewolfDayPhase__column WerewolfDayPhase__timer">
-        <span>
-          {minutesRemaining} : {String(secondsRemaining).padStart(2, '0')}
-        </span>
+      <div className="WerewolfDayPhase__column WerewolfDayPhase__timer-column">
+        <Timer />
       </div>
       <div className="WerewolfDayPhase__column">
-        <div className="WerewolfDayPhase__kill-prompt"> Choose who to kill </div>
+        <div className="WerewolfDayPhase__kill-prompt">Choose who to kill</div>
         <FormControl component="fieldset">
-          {/* <FormLabel component="legend">Choose who to kill</FormLabel> */}
           <RadioGroup
             aria-label="people"
             name="people"

@@ -51,27 +51,6 @@ export const useBackendState = (): AsyncResult<BackendState, {}> => {
   return backendState;
 };
 
-/*
- * Emits a new number n every interval milliseconds where n is the number of
- * milliseconds elapsed since useTimer rendered.
- */
-export const useTimer = (interval?: number): number => {
-  const [elapsedMills, setElapsed] = useState<number>(0);
-
-  useEffect(() => {
-    const startTimestamp = Date.now();
-    const timer = setInterval(() => {
-      if (startTimestamp === null) {
-        return;
-      }
-      setElapsed(Math.floor(Date.now() - startTimestamp));
-    }, interval || 1000);
-    return () => clearInterval(timer);
-  }, [interval]);
-
-  return elapsedMills;
-};
-
 export const assertNever = (msg: string, _: never) => {
   throw new Error(msg);
 };
