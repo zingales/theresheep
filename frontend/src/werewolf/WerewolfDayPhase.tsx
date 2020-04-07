@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useTimer} from 'utils';
-import './DayPhase.scss';
+import './WerewolfDayPhase.scss';
 import {
   FormControl,
   RadioGroup,
@@ -8,7 +8,7 @@ import {
   FormControlLabel,
 } from '@material-ui/core';
 
-const DayPhase = () => {
+const WerewolfDayPhase = () => {
   const elapsedMills = useTimer();
   const elapsedSeconds = Math.round(elapsedMills / 1000);
   const totalTime = 5 * 60; // 5 minutes worth of seconds
@@ -20,14 +20,14 @@ const DayPhase = () => {
 
   // const handleChange = () => {};
   return (
-    <div className="DayPhase">
-      <div className="DayPhase__column DayPhase__timer">
+    <div className="WerewolfDayPhase">
+      <div className="WerewolfDayPhase__column WerewolfDayPhase__timer">
         <span>
           {minutesRemaining} : {String(secondsRemaining).padStart(2, '0')}
         </span>
       </div>
-      <div className="DayPhase__column">
-        <div className="DayPhase__kill-prompt"> Choose who to kill </div>
+      <div className="WerewolfDayPhase__column">
+        <div className="WerewolfDayPhase__kill-prompt"> Choose who to kill </div>
         <FormControl component="fieldset">
           {/* <FormLabel component="legend">Choose who to kill</FormLabel> */}
           <RadioGroup
@@ -57,4 +57,4 @@ const DayPhase = () => {
   );
 };
 
-export default DayPhase;
+export default WerewolfDayPhase;

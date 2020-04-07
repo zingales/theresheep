@@ -2,18 +2,17 @@ import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
 
 import './index.scss';
-import WerewolfNightPhase from './werewolf/NightPhase';
-import WerewolfDayPhase from './werewolf/DayPhase';
+import WerewolfNightPhase from './werewolf/WerewolfNightPhase';
+import WerewolfDayPhase from './werewolf/WerewolfDayPhase';
 import {useBackendState, assertNever} from './utils';
 
 import {createMuiTheme, ThemeProvider} from '@material-ui/core';
 import {grey} from '@material-ui/core/colors';
 import AppBar from '@material-ui/core/AppBar';
 
-// const App = () => null;
 const App = () => {
   const backendStateAsyncResult = useBackendState();
-  const [isDayPhase, setPhase] = useState<boolean>(false);
+  const [isWerewolfDayPhase, setPhase] = useState<boolean>(false);
   useEffect(() => {
     const listener = (e: KeyboardEvent) =>
       [' ', 'q', 's'].includes(e.key) && setPhase(p => !p);
@@ -51,7 +50,11 @@ const App = () => {
   }
   const backendState = backendStateAsyncResult.result;
 
-  const component = isDayPhase ? <WerewolfDayPhase /> : <WerewolfNightPhase />;
+  const component = isWerewolfDayPhase ? (
+    <WerewolfDayPhase />
+  ) : (
+    <WerewolfNightPhase />
+  );
 
   const theme = createMuiTheme({
     palette: {
@@ -65,7 +68,7 @@ const App = () => {
       <React.StrictMode>
         <div className="App">
           <AppBar color="primary" className="App__appbar " position="static">
-            {isDayPhase ? 'Day Phase' : 'Night Phase'}
+            {isWerewolfDayPhase ? 'Day Phase' : 'Night Phase'}
           </AppBar>
           {component}
         </div>
