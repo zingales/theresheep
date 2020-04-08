@@ -1,12 +1,16 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import werewolfImg from 'pics/werewolf.png';
+import villagerImg from 'pics/villager.png';
 import './WerewolfNightPhase.scss';
-import {BackendState} from 'types';
+import {assertNever} from 'utils';
+import {BackendState, Role} from 'types';
 
 const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
   const {
-    backendState: {originalWerewolves},
+    backendState: {originalWerewolves, centerCards},
   } = props;
+
+  const [chosenCardIdx, setChosenCard] = useState<number | null>(null);
 
   const chooseFromCenter = originalWerewolves.length <= 1;
 
@@ -34,7 +38,11 @@ const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
               : 'Your werewolves are'}
           </div>
           {chooseFromCenter ? (
-            <CenterChooseWidget />
+            <CenterChooseWidget
+              chosenCardIdx={chosenCardIdx}
+              setChosenCard={setChosenCard}
+              centerCards={centerCards}
+            />
           ) : (
             originalWerewolves.map((name, idx) => (
               <div
@@ -50,12 +58,53 @@ const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
   );
 };
 
-const CenterChooseWidget = () => {
+type CenterChooseWidgetProps = {
+  chosenCardIdx: number | null;
+  setChosenCard: (idx: number) => void;
+  centerCards: Role[];
+};
+const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
+  const {chosenCardIdx, setChosenCard, centerCards} = props;
+  const centerImages = centerCards.map(role => {
+    switch (role) {
+      case 'villager':
+        return (
+          <img
+            className="CenterChooseWidget__center-card no-hover"
+            src={villagerImg}
+            alt="logo"
+          />
+        );
+      case 'werewolf':
+        return (
+          <img
+            className="CenterChooseWidget__center-card no-hover"
+            src={werewolfImg}
+            alt="logo"
+          />
+        );
+      default:
+        return assertNever('Non exhaustive switch', role);
+    }
+  });
+
+  const noHover = chosenCardIdx === null ? '' : 'no-hover';
+
   return (
     <div className="CenterChooseWidget">
-      <span className="CenterChooseWidget__center-card">?</span>
-      <span className="CenterChooseWidget__center-card">?</span>
-      <span className="CenterChooseWidget__center-card">?</span>
+      <div className="CenterChooseWidget__cards-row">
+        {[0, 1, 2].map(idx => (
+          <div
+            onClick={() => chosenCardIdx === null && setChosenCard(idx)}
+            className={'CenterChooseWidget__center-card ' + noHover}>
+            {chosenCardIdx === idx ? centerImages[idx] : '?'}
+          </div>
+        ))}
+      </div>
+      <div className="CenterChooseWidget__prompt-row">
+        {chosenCardIdx !== null &&
+          `You saw ${centerCards[chosenCardIdx]} in the center!`}
+      </div>
     </div>
   );
 };
