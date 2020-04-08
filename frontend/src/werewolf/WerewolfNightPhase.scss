@@ -51,3 +51,30 @@
     padding: 10px 0;
   }
 }
+
+$height: 200px;
+$cardAspectRatio: 200.75 / 275;
+$questionMarkColor: #ffffff;
+
+.CenterChooseWidget {
+  display: flex;
+  &__center-card {
+    margin: 5px;
+    height: $height;
+    width: $height * $cardAspectRatio;
+    background-color: #444;
+    border-radius: 20px;
+    color: $questionMarkColor;
+    line-height: 1.42857143;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: $height * 0.6;
+  }
+
+  &__center-card:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+    color: darken($questionMarkColor, 25%);
+  }
+}
