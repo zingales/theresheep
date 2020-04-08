@@ -6,19 +6,19 @@ import {
   FormControlLabel,
 } from '@material-ui/core';
 
-import './WerewolfDayPhase.scss';
+import './DayPhase.scss';
 import Timer from 'Timer';
 
-const WerewolfDayPhase = () => {
+const DayPhase = () => {
   const [radioGroupValue, setRadio] = useState<string | null>(null);
 
   return (
-    <div className="WerewolfDayPhase">
-      <div className="WerewolfDayPhase__column WerewolfDayPhase__timer-column">
+    <div className="DayPhase">
+      <div className="DayPhase__column DayPhase__timer-column">
         <Timer />
       </div>
-      <div className="WerewolfDayPhase__column">
-        <div className="WerewolfDayPhase__kill-prompt">Choose who to kill</div>
+      <div className="DayPhase__column">
+        <div className="DayPhase__kill-prompt">Choose who to kill</div>
         <FormControl component="fieldset">
           <RadioGroup
             aria-label="people"
@@ -47,4 +47,4 @@ const WerewolfDayPhase = () => {
   );
 };
 
-export default WerewolfDayPhase;
+export default DayPhase;
