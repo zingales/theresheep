@@ -1,7 +1,6 @@
-// https://create-react-app.dev/docs/adding-a-sass-stylesheet/
 @import 'common';
 
-.WerewolfNightPhase {
+.VillagerNightPhase {
   flex: 1 1 0;
   min-height: 0;
 
@@ -25,23 +24,10 @@
     @include column;
   }
 
-  &__box {
-    flex: 1 1 0;
-  }
-
-  &__list-item {
-    padding: 16px 0;
-  }
-
-  &__box-header {
-    @include boldPrompt;
-  }
-
   &__image {
     align-self: center;
     width: auto;
     height: 275px;
-    // box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2) inset;
     -webkit-filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
     filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
   }
