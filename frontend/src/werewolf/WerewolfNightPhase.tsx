@@ -7,6 +7,9 @@ const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
   const {
     backendState: {originalWerewolves},
   } = props;
+
+  const chooseFromCenter = originalWerewolves.length <= 1;
+
   return (
     <div className="WerewolfNightPhase">
       <div className="WerewolfNightPhase__column">
@@ -26,13 +29,33 @@ const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
       <div className="WerewolfNightPhase__column">
         <div className="WerewolfNightPhase__box">
           <div className="WerewolfNightPhase__box-header">
-            Your werewolves are
+            {chooseFromCenter
+              ? 'Choose card from center'
+              : 'Your werewolves are'}
           </div>
-          {originalWerewolves.map(name => (
-            <div className="WerewolfNightPhase__list-item">{name}</div>
-          ))}
+          {chooseFromCenter ? (
+            <CenterChooseWidget />
+          ) : (
+            originalWerewolves.map((name, idx) => (
+              <div
+                key={`original-werewolf-${idx}`}
+                className="WerewolfNightPhase__list-item">
+                {name}
+              </div>
+            ))
+          )}
         </div>
       </div>
+    </div>
+  );
+};
+
+const CenterChooseWidget = () => {
+  return (
+    <div className="CenterChooseWidget">
+      <span className="CenterChooseWidget__center-card">?</span>
+      <span className="CenterChooseWidget__center-card">?</span>
+      <span className="CenterChooseWidget__center-card">?</span>
     </div>
   );
 };
