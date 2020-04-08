@@ -25,6 +25,7 @@ export type BackendState = {
   newRole?: Role;
   pendingAction: Action | null;
   originalWerewolves: string[];
+  centerCards: Role[];
   gameOver?: GameOverState;
 };
 
