@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import './index.scss';
 import WerewolfNightPhase from './werewolf/WerewolfNightPhase';
 import VillagerNightPhase from './villager/VillagerNightPhase';
-import WerewolfDayPhase from './werewolf/WerewolfDayPhase';
+import DayPhase from './DayPhase';
 import {useBackendState, assertNever} from './utils';
 import {Role} from 'types';
 
@@ -79,7 +79,7 @@ const App = () => {
 
 const getComponent = (phase: Phase, role: Role): JSX.Element => {
   if (phase === 'day') {
-    return <WerewolfDayPhase />;
+    return <DayPhase />;
   }
 
   switch (role) {

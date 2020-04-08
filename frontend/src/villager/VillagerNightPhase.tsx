@@ -23,8 +23,8 @@ const VillagerNightPhase = () => {
 
       <span className="VillagerNightPhase__column VillagerNightPhase__waiting-column">
         <span>
-          Nothing for you to do. Waiting for other characters to finish their
-          actions
+          Waiting for other characters to finish their actions. Nothing for you
+          to do
           <Elipsis />
         </span>
       </span>
