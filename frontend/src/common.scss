@@ -1,6 +1,5 @@
 @mixin boldPrompt {
   font-weight: 600;
-  // padding-bottom: 12px;
 }
 
 $colTopPadding: 64px;
@@ -11,6 +10,5 @@ $colBottomPadding: 32px;
   display: flex;
   flex-direction: column;
   height: calc(100% - $colTopPadding - $colBottomPadding);
-  // margin: 0px 72px;
   padding: $colTopPadding 72px $colBottomPadding 72px;
 }

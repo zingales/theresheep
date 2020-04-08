@@ -2,20 +2,24 @@ import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
 
 import './index.scss';
-import WerewolfNightPhase from './villager/VillagerNightPhase';
+import WerewolfNightPhase from './werewolf/WerewolfNightPhase';
+import VillagerNightPhase from './villager/VillagerNightPhase';
 import WerewolfDayPhase from './werewolf/WerewolfDayPhase';
 import {useBackendState, assertNever} from './utils';
+import {Role} from 'types';
 
 import {createMuiTheme, ThemeProvider} from '@material-ui/core';
 import {grey} from '@material-ui/core/colors';
 import AppBar from '@material-ui/core/AppBar';
 
+type Phase = 'day' | 'night';
 const App = () => {
   const backendStateAsyncResult = useBackendState();
-  const [isWerewolfDayPhase, setPhase] = useState<boolean>(false);
+  const [phase, setPhase] = useState<Phase>('night');
   useEffect(() => {
     const listener = (e: KeyboardEvent) =>
-      [' ', 'q', 's'].includes(e.key) && setPhase(p => !p);
+      [' ', 'q', 's'].includes(e.key) &&
+      setPhase(p => (p === 'day' ? 'night' : 'day'));
     window.addEventListener('keyup', listener);
     return () => window.removeEventListener('keyup', listener);
   }, []);
@@ -39,22 +43,18 @@ const App = () => {
         return <div>non-json error "{body}"</div>;
       }
       default:
-        assertNever(
+        // TODO: why do i have to return assertNever? Why can't I just
+        // assertNever?
+        // https://github.com/microsoft/TypeScript/issues/10470
+        return assertNever(
           'Non Exhaustive switch statement',
           backendStateAsyncResult.error,
         );
-        // TODO: why is this return null necessary? shouldn't typescript
-        // exhaustive switching work?
-        return null;
     }
   }
   const backendState = backendStateAsyncResult.result;
 
-  const component = isWerewolfDayPhase ? (
-    <WerewolfDayPhase />
-  ) : (
-    <WerewolfNightPhase />
-  );
+  const component = getComponent(phase, backendState.originalRole);
 
   const theme = createMuiTheme({
     palette: {
@@ -68,13 +68,26 @@ const App = () => {
       <React.StrictMode>
         <div className="App">
           <AppBar color="primary" className="App__appbar " position="static">
-            {isWerewolfDayPhase ? 'Day Phase' : 'Night Phase'}
+            {phase === 'day' ? 'Day Phase' : 'Night Phase'}
           </AppBar>
           {component}
         </div>
       </React.StrictMode>
     </ThemeProvider>
   );
+};
+
+const getComponent = (phase: Phase, role: Role): JSX.Element => {
+  if (phase === 'day') {
+    return <WerewolfDayPhase />;
+  }
+
+  switch (role) {
+    case 'werewolf':
+      return <WerewolfNightPhase />;
+    case 'villager':
+      return <VillagerNightPhase />;
+  }
 };
 
 ReactDOM.render(<App />, document.getElementById('root'));

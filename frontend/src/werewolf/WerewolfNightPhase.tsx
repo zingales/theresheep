@@ -13,12 +13,17 @@ const WerewolfNightPhase = () => {
           werewolves. If no one else opens their eyes, the other Werewolves are
           in the center. Werewolves are on the werewolf team.
         </div>
-        <img src={werewolfImg} className="WerewolfNightPhase__image" alt="logo" />
+        <img
+          src={werewolfImg}
+          className="WerewolfNightPhase__image"
+          alt="logo"
+        />
       </div>
       <div className="WerewolfNightPhase__column">
-        <div className="WerewolfNightPhase__vertical-gutter" />
         <div className="WerewolfNightPhase__box">
-          <div className="WerewolfNightPhase__box-header">Your werewolves are</div>
+          <div className="WerewolfNightPhase__box-header">
+            Your werewolves are
+          </div>
           <div className="WerewolfNightPhase__list-item">Werewolf 1</div>
           <div className="WerewolfNightPhase__list-item">Werewolf 2</div>
           <div className="WerewolfNightPhase__list-item">Werewolf 3</div>
