@@ -6,7 +6,7 @@ import WerewolfNightPhase from './werewolf/WerewolfNightPhase';
 import VillagerNightPhase from './villager/VillagerNightPhase';
 import DayPhase from './DayPhase';
 import {useBackendState, assertNever} from './utils';
-import {Role} from 'types';
+import {Role, BackendState} from 'types';
 
 import {createMuiTheme, ThemeProvider} from '@material-ui/core';
 import {grey} from '@material-ui/core/colors';
@@ -54,7 +54,7 @@ const App = () => {
   }
   const backendState = backendStateAsyncResult.result;
 
-  const component = getComponent(phase, backendState.originalRole);
+  const component = getComponent(phase, backendState);
 
   const theme = createMuiTheme({
     palette: {
@@ -77,14 +77,18 @@ const App = () => {
   );
 };
 
-const getComponent = (phase: Phase, role: Role): JSX.Element => {
+const getComponent = (
+  phase: Phase,
+  backendState: BackendState,
+): JSX.Element => {
   if (phase === 'day') {
     return <DayPhase />;
   }
+  const role = backendState.originalRole;
 
   switch (role) {
     case 'werewolf':
-      return <WerewolfNightPhase />;
+      return <WerewolfNightPhase backendState={backendState} />;
     case 'villager':
       return <VillagerNightPhase />;
   }

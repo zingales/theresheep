@@ -21,10 +21,10 @@ export type GameOverState = {
 
 export type BackendState = {
   timer: number;
-  playerIdToName: Map<PlayerId, string>;
   originalRole: Role;
   newRole?: Role;
   pendingAction: Action | null;
+  originalWerewolves: string[];
   gameOver?: GameOverState;
 };
 
