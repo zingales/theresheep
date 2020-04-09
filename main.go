@@ -8,9 +8,14 @@ import (
 	"time"
 
 	"github.com/zingales/theresheep/gamelogic"
+	"github.com/zingales/theresheep/backend"
 )
 
-func main() {
+func main(){
+	backend.StartServer("8080")
+}
+
+func termainlmain() {
 	// Required, otherwise the games "random" order is the same after each refresh
 	rand.Seed(time.Now().UTC().UnixNano())
 
