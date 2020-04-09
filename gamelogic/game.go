@@ -9,6 +9,7 @@ import (
 )
 
 var InvalidNumberOfPlayersError = errors.New("There is an invalid number of players in this game")
+var CouldNotFindPlayer = errors.New("There was no player by that filter found in this game")
 
 type Game struct {
 	Id            string
@@ -29,7 +30,7 @@ func (game *Game) String() string {
 	return fmt.Sprintf("Id: %s\n players %v\n avalibleRoles: %v\n actionManager: %v\n Center: %v", game.Id, game.players, game.rolePool, game.actionManager, game.Center)
 }
 
-func (game *Game) AddPlayer(player *Player) {
+func (game *Game) AddPlayer(player *Player) (int){
 	if player.input == nil || player.isDummy {
 		log.Fatal("actual players need to have input device")
 	}
@@ -40,7 +41,10 @@ func (game *Game) AddPlayer(player *Player) {
 
 	// validate no two players have the same name
 	game.players = append(game.players, player)
+	return len(game.players)-1
 }
+
+
 
 func (game *Game) AssignRolePool(roles []Role) error {
 	if err := validateRolePool(roles); err != nil {
@@ -101,6 +105,14 @@ func (game *Game) GetPlayerByCurrentRole(role Role) []*Player {
 	}
 
 	return players
+}
+
+func (game *Game) GetPlayerById(id int) (*Player, error) {
+	if id < 0 || id > len(game.players)-1 {
+		return nil, CouldNotFindPlayer
+	}
+
+	return game.players[id], nil
 }
 
 func (game *Game) PlayerNames() []string {
