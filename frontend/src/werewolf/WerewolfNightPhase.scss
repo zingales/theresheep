@@ -54,7 +54,6 @@
 
 $centerCardHeight: 200px;
 $cardAspectRatio: 200.75 / 275;
-$questionMarkColor: #ffffff;
 
 .CenterChooseWidget {
   display: flex;
@@ -75,7 +74,7 @@ $questionMarkColor: #ffffff;
     width: $centerCardHeight * $cardAspectRatio;
     background-color: #444;
     border-radius: 20px;
-    color: $questionMarkColor;
+    color: white;
 
     display: flex;
     align-items: center;
@@ -87,6 +86,5 @@ $questionMarkColor: #ffffff;
   &__center-card:not(.no-hover):hover {
     cursor: pointer;
     transform: scale(1.05);
-    color: darken($questionMarkColor, 25%);
   }
 }
