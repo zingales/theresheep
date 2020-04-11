@@ -51,6 +51,30 @@ export async function req<T>(path: string, options?: RequestInit): Promise<T> {
   }
 }
 
+export const createNewGame = async () => {
+  const {id} = await req<{id: string}>('/api/games', {method: 'POST'});
+  return id;
+};
+
+export const createPlayer = async (gameId: string, name: string) => {
+  const {id} = await req<{id: string}>(`/api/games/${gameId}/players`, {
+    method: 'POST',
+    body: JSON.stringify({name}),
+  });
+  return id;
+};
+
+export const startGame = async (gameId: string) =>
+  await req<{}>(`/api/games/${gameId}/start`, {
+    method: 'POST',
+  });
+
+export const setRolePool = async (gameId: string, roles: string[]) =>
+  await req<{}>(`/api/games/${gameId}/role_pool`, {
+    method: 'POST',
+    body: JSON.stringify({roles}),
+  });
+
 export const getBackendState = async (): Promise<BackendState> =>
   await req<BackendState>(`/get-state`);
 
