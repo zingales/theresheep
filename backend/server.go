@@ -1,6 +1,7 @@
 package backend
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -195,7 +196,9 @@ func CreateGame(responseWriter http.ResponseWriter, request *http.Request) (erro
 
 	games.Store(name, game)
 
-	fmt.Fprint(responseWriter, name)
+	json.NewEncoder(responseWriter).Encode(map[string]string{
+		"id": game.Id,
+	})
 
 	return nil, http.StatusOK
 }
