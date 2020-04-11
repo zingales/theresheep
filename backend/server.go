@@ -125,6 +125,7 @@ func DefineRoutes() http.Handler {
   mux.Post("/api/games/{gameId}/start", WrapGameApiEndpoint(StartGame))
 
 
+  // mux.Put("/api/games/{gameId}/players/{playerId}/action", WrapPlayerApiEndpoint(GetPlayerInfo))
   mux.Get("/api/games/{gameId}/players/{playerId}", WrapPlayerApiEndpoint(GetPlayerInfo))
   mux.Post("/api/games/{gameId}/players", WrapGameApiEndpoint(CreatePlayer))
 
