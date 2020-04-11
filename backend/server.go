@@ -1,12 +1,12 @@
 package backend
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
 	"sync"
 
 	"github.com/gorilla/pat"
@@ -95,6 +95,7 @@ var GameNotFoundError error = errors.New("Game with that id was not found")
 var NotImplementedError error = errors.New("That method has not been implemented yet")
 var MissingParamInUrlError error = errors.New("Request Url was missing a param key")
 var RoleNoteFoundError error = errors.New("This role does not exist")
+var InvalidJSON error = errors.New("Invalid Json")
 
 // Var Method Types:
 const MethodGet = "GET"
@@ -152,17 +153,17 @@ var roleCast = map[string]gamelogic.Role{
 }
 
 func AssignRolePool(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int) {
-	err, rolesString := getFirstOccuranceInUrlParam(request, "roles")
-	if err != nil {
-		return err, http.StatusBadRequest
+	rolesReq := struct{ Roles []string }{}
+
+	if err := json.NewDecoder(request.Body).Decode(&rolesReq); err != nil {
+		return InvalidJSON, http.StatusBadRequest
 	}
 
 	var roles []gamelogic.Role
 
-	for _, value := range strings.Split(rolesString, ",") {
-		role, ok := roleCast[strings.ToLower(value)]
+	for _, roleName := range rolesReq.Roles {
+		role, ok := gamelogic.RoleNameToID[roleName]
 		if !ok {
-			log.Print(value)
 			return RoleNoteFoundError, http.StatusBadRequest
 		}
 		roles = append(roles, role)
@@ -196,7 +197,9 @@ func CreateGame(responseWriter http.ResponseWriter, request *http.Request) (erro
 
 	games.Store(name, game)
 
-	fmt.Fprint(responseWriter, name)
+	json.NewEncoder(responseWriter).Encode(map[string]string{
+		"id": game.Id,
+	})
 
 	return nil, http.StatusOK
 }
@@ -208,8 +211,11 @@ func GetPlayerInfo(player *gamelogic.Player, game *gamelogic.Game, responseWrite
 
 func getFirstOccuranceInUrlParam(request *http.Request, key string) (error, string) {
 	keys, ok := request.URL.Query()[key]
+	fmt.Println(keys)
+	fmt.Println(request.URL.Query())
 
 	if !ok || len(keys[0]) < 1 {
+		fmt.Println("here")
 
 		return MissingParamInUrlError, ""
 	}
@@ -219,16 +225,21 @@ func getFirstOccuranceInUrlParam(request *http.Request, key string) (error, stri
 
 func CreatePlayer(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int) {
 
-	err, name := getFirstOccuranceInUrlParam(request, "name")
+	player := struct{ Name string }{}
+
+	if err := json.NewDecoder(request.Body).Decode(&player); err != nil {
+		return errors.New("Invalid json"), http.StatusBadRequest
+	}
+
+	id, err := game.AddPlayer(
+		gamelogic.CreatePlayer(player.Name, &gamelogic.RandomUserInput{}))
+
 	if err != nil {
 		return err, http.StatusBadRequest
 	}
 
-	id, err := game.AddPlayer(gamelogic.CreatePlayer(name, &gamelogic.RandomUserInput{}))
-	if err != nil {
-		return err, http.StatusBadRequest
-	}
-
-	fmt.Fprint(responseWriter, id)
+	json.NewEncoder(responseWriter).Encode(map[string]int{
+		"id": id,
+	})
 	return nil, http.StatusOK
 }
