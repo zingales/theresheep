@@ -30,7 +30,7 @@ func (game *Game) String() string {
 	return fmt.Sprintf("Id: %s\n players %v\n avalibleRoles: %v\n actionManager: %v\n Center: %v", game.Id, game.players, game.rolePool, game.actionManager, game.Center)
 }
 
-func (game *Game) AddPlayer(player *Player) (int){
+func (game *Game) AddPlayer(player *Player) int {
 	if player.input == nil || player.isDummy {
 		log.Fatal("actual players need to have input device")
 	}
@@ -41,10 +41,8 @@ func (game *Game) AddPlayer(player *Player) (int){
 
 	// validate no two players have the same name
 	game.players = append(game.players, player)
-	return len(game.players)-1
+	return len(game.players) - 1
 }
-
-
 
 func (game *Game) AssignRolePool(roles []Role) error {
 	if err := validateRolePool(roles); err != nil {
