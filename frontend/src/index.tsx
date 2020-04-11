@@ -1,19 +1,98 @@
 import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
 
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  useParams,
+  useHistory,
+} from 'react-router-dom';
+
 import './index.scss';
 import WerewolfNightPhase from './werewolf/WerewolfNightPhase';
 import VillagerNightPhase from './villager/VillagerNightPhase';
 import DayPhase from './DayPhase';
 import {useBackendState, assertNever} from './utils';
-import {Role, BackendState} from 'types';
+import {createNewGame, createPlayer, setRolePool, startGame} from './api';
+import {BackendState} from 'types';
 
 import {createMuiTheme, ThemeProvider} from '@material-ui/core';
 import {grey} from '@material-ui/core/colors';
-import AppBar from '@material-ui/core/AppBar';
+import {AppBar, Button} from '@material-ui/core';
 
 type Phase = 'day' | 'night';
 const App = () => {
+  const theme = createMuiTheme({
+    palette: {
+      primary: grey,
+      secondary: grey,
+    },
+  });
+  return (
+    <React.StrictMode>
+      <ThemeProvider theme={theme}>
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              <CreateGame />
+            </Route>
+            <Route path="/createGame">
+              <CreateGame />
+            </Route>
+            <Route strict path="/game/:gameId/player/:playerId">
+              <Game />
+            </Route>
+          </Switch>
+        </Router>
+      </ThemeProvider>
+    </React.StrictMode>
+  );
+};
+
+const CreateGame = () => {
+  const history = useHistory();
+  const createGameSequence = async () => {
+    const gameId = await createNewGame();
+
+    const player1Id = await createPlayer(gameId, 'player 1');
+    const player2Id = await createPlayer(gameId, 'player 2');
+    const player3Id = await createPlayer(gameId, 'player 3');
+
+    await setRolePool(gameId, [
+      'werewolf',
+      'werewolf',
+      'villager',
+      'villager',
+      'villager',
+      'villager',
+    ]);
+    await startGame(gameId);
+    history.push(`/game/${gameId}/player/${player1Id}`);
+  };
+  return (
+    <div className="App">
+      <AppBar color="primary" className="App__appbar " position="static">
+        Create Game
+      </AppBar>
+
+      <div className="CreateGame">
+        <div className="CreateGame__box">
+          <div className="CreateGame__title">Create a new game yo</div>
+          <Button
+            onClick={createGameSequence}
+            variant="contained"
+            className="CreateGame__button">
+            New game
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Game = () => {
+  const {gameId, playerId} = useParams();
   const backendStateAsyncResult = useBackendState();
   const [phase, setPhase] = useState<Phase>('night');
   useEffect(() => {
@@ -56,24 +135,13 @@ const App = () => {
 
   const component = getComponent(phase, backendState);
 
-  const theme = createMuiTheme({
-    palette: {
-      primary: grey,
-      secondary: grey,
-    },
-  });
-
   return (
-    <ThemeProvider theme={theme}>
-      <React.StrictMode>
-        <div className="App">
-          <AppBar color="primary" className="App__appbar " position="static">
-            {phase === 'day' ? 'Day Phase' : 'Night Phase'}
-          </AppBar>
-          {component}
-        </div>
-      </React.StrictMode>
-    </ThemeProvider>
+    <div className="App">
+      <AppBar color="primary" className="App__appbar " position="static">
+        {phase === 'day' ? 'Day Phase' : 'Night Phase'}
+      </AppBar>
+      {component}
+    </div>
   );
 };
 
