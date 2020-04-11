@@ -183,7 +183,7 @@ func StartGame(game *gamelogic.Game, responseWriter http.ResponseWriter, request
 		return err, http.StatusBadRequest
 	}
 
-  game.ExecuteNight()
+  go game.ExecuteNight()
 
   fmt.Fprint(responseWriter, "The Game's Afoot")
   return nil, http.StatusOK
@@ -231,7 +231,10 @@ func CreatePlayer(game *gamelogic.Game, responseWriter http.ResponseWriter, requ
     return err, http.StatusBadRequest
   }
 
-  id := game.AddPlayer(gamelogic.CreatePlayer(name, &gamelogic.RandomUserInput{}))
+  id, err := game.AddPlayer(gamelogic.CreatePlayer(name, &gamelogic.RandomUserInput{}))
+  if err != nil {
+    return err, http.StatusBadRequest
+  }
 
   fmt.Fprint(responseWriter, id)
   return nil, http.StatusOK
