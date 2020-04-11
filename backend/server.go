@@ -211,8 +211,11 @@ func GetPlayerInfo(player *gamelogic.Player, game *gamelogic.Game, responseWrite
 
 func getFirstOccuranceInUrlParam(request *http.Request, key string) (error, string) {
 	keys, ok := request.URL.Query()[key]
+	fmt.Println(keys)
+	fmt.Println(request.URL.Query())
 
 	if !ok || len(keys[0]) < 1 {
+		fmt.Println("here")
 
 		return MissingParamInUrlError, ""
 	}
@@ -222,16 +225,21 @@ func getFirstOccuranceInUrlParam(request *http.Request, key string) (error, stri
 
 func CreatePlayer(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int) {
 
-	err, name := getFirstOccuranceInUrlParam(request, "name")
+	player := struct{ Name string }{}
+
+	if err := json.NewDecoder(request.Body).Decode(&player); err != nil {
+		return err, http.StatusBadRequest
+	}
+
+	id, err := game.AddPlayer(
+		gamelogic.CreatePlayer(player.Name, &gamelogic.RandomUserInput{}))
+
 	if err != nil {
 		return err, http.StatusBadRequest
 	}
 
-	id, err := game.AddPlayer(gamelogic.CreatePlayer(name, &gamelogic.RandomUserInput{}))
-	if err != nil {
-		return err, http.StatusBadRequest
-	}
-
-	fmt.Fprint(responseWriter, id)
+	json.NewEncoder(responseWriter).Encode(map[string]int{
+		"id": id,
+	})
 	return nil, http.StatusOK
 }
