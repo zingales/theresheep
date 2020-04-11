@@ -1,26 +1,25 @@
 package backend
 
 import (
-    "fmt"
-    "net/http"
-    "sync"
-    "log"
-    "strings"
-    "strconv"
-    "errors"
+	"errors"
+	"fmt"
+	"log"
+	"net/http"
+	"strconv"
+	"strings"
+	"sync"
 
-    "github.com/gorilla/pat"
+	"github.com/gorilla/pat"
 
-    "github.com/zingales/theresheep/gamelogic"
+	"github.com/zingales/theresheep/gamelogic"
 )
 
 var games = new(sync.Map)
 
 func StartServer(port string) {
 
-    http.ListenAndServe(":8090", DefineRoutes())
+	http.ListenAndServe(":8090", DefineRoutes())
 }
-
 
 type ApiHandlerFunc func(http.ResponseWriter, *http.Request) (error, int)
 type GameApiHandlerFunc func(*gamelogic.Game, http.ResponseWriter, *http.Request) (error, int)
@@ -31,7 +30,7 @@ func WrapApiEndpoint(
 ) http.HandlerFunc {
 	return func(responseWriter http.ResponseWriter, request *http.Request) {
 
-    var httpStatus int
+		var httpStatus int
 		if err, httpStatus := apiHandlerFunc(responseWriter, request); err != nil {
 			if httpStatus >= 500 {
 				log.Print(err)
@@ -40,7 +39,7 @@ func WrapApiEndpoint(
 			return
 		}
 
-    responseWriter.WriteHeader(httpStatus)
+		responseWriter.WriteHeader(httpStatus)
 	}
 }
 
@@ -49,45 +48,44 @@ func WrapGameApiEndpoint(
 ) http.HandlerFunc {
 	return WrapApiEndpoint(func(responseWriter http.ResponseWriter, request *http.Request) (error, int) {
 
-    _, gameId := getFirstOccuranceInUrlParam(request, ":gameId")
-    var game *gamelogic.Game
-    temp, ok := games.Load(gameId)
-    if ok {
-      game = temp.(*gamelogic.Game)
-    } else {
-      return GameNotFoundError, http.StatusBadRequest
-    }
+		_, gameId := getFirstOccuranceInUrlParam(request, ":gameId")
+		var game *gamelogic.Game
+		temp, ok := games.Load(gameId)
+		if ok {
+			game = temp.(*gamelogic.Game)
+		} else {
+			return GameNotFoundError, http.StatusBadRequest
+		}
 
-    return apiHandlerFunc(game, responseWriter, request)
+		return apiHandlerFunc(game, responseWriter, request)
 	})
 }
 
 func WrapPlayerApiEndpoint(
 	apiHandlerFunc PlayerApiHandlerFunc,
 ) http.HandlerFunc {
-  return WrapApiEndpoint(func(responseWriter http.ResponseWriter, request *http.Request) (error, int) {
+	return WrapApiEndpoint(func(responseWriter http.ResponseWriter, request *http.Request) (error, int) {
 
-    _, gameId := getFirstOccuranceInUrlParam(request, ":gameId")
-    var game *gamelogic.Game
-    temp, ok := games.Load(gameId)
-    if ok {
-      game = temp.(*gamelogic.Game)
-    } else {
-      return GameNotFoundError, http.StatusBadRequest
-    }
-    _, playerIdAsString := getFirstOccuranceInUrlParam(request, ":playerId")
-    playerId, err := strconv.Atoi(playerIdAsString)
-    if err != nil {
-      return err, http.StatusBadRequest
-    }
+		_, gameId := getFirstOccuranceInUrlParam(request, ":gameId")
+		var game *gamelogic.Game
+		temp, ok := games.Load(gameId)
+		if ok {
+			game = temp.(*gamelogic.Game)
+		} else {
+			return GameNotFoundError, http.StatusBadRequest
+		}
+		_, playerIdAsString := getFirstOccuranceInUrlParam(request, ":playerId")
+		playerId, err := strconv.Atoi(playerIdAsString)
+		if err != nil {
+			return err, http.StatusBadRequest
+		}
 
-    player, err := game.GetPlayerById(playerId)
-    if err != nil {
-      return err, http.StatusBadRequest
-    }
+		player, err := game.GetPlayerById(playerId)
+		if err != nil {
+			return err, http.StatusBadRequest
+		}
 
-
-    return apiHandlerFunc(player, game, responseWriter, request)
+		return apiHandlerFunc(player, game, responseWriter, request)
 	})
 }
 
@@ -105,13 +103,13 @@ const MethodPost = "POST"
 func DefineRoutes() http.Handler {
 	mux := pat.New()
 
-  // static files
+	// static files
 	// {
 	// 	staticDirectoryName := "static"
 	// 	staticDirectoryPaddedWithSlashes := "/" + staticDirectoryName + "/"
-  //
+	//
 	// 	fileServer := http.FileServer(http.Dir(staticDirectoryName))
-  //
+	//
 	// 	mux.Handle(
 	// 		staticDirectoryPaddedWithSlashes,
 	// 		http.StripPrefix(staticDirectoryPaddedWithSlashes, fileServer))
@@ -119,124 +117,118 @@ func DefineRoutes() http.Handler {
 
 	// Redirects
 
-  mux.Post("/api/games/{gameId}/role_pool", WrapGameApiEndpoint(AssignRolePool))
-  mux.Get("/api/games/{gameId}/role_pool", WrapGameApiEndpoint(GetRolePool))
+	mux.Post("/api/games/{gameId}/role_pool", WrapGameApiEndpoint(AssignRolePool))
+	mux.Get("/api/games/{gameId}/role_pool", WrapGameApiEndpoint(GetRolePool))
 
-  mux.Post("/api/games/{gameId}/start", WrapGameApiEndpoint(StartGame))
+	mux.Post("/api/games/{gameId}/start", WrapGameApiEndpoint(StartGame))
 
+	// mux.Put("/api/games/{gameId}/players/{playerId}/action", WrapPlayerApiEndpoint(GetPlayerInfo))
+	mux.Get("/api/games/{gameId}/players/{playerId}", WrapPlayerApiEndpoint(GetPlayerInfo))
+	mux.Post("/api/games/{gameId}/players", WrapGameApiEndpoint(CreatePlayer))
 
-  // mux.Put("/api/games/{gameId}/players/{playerId}/action", WrapPlayerApiEndpoint(GetPlayerInfo))
-  mux.Get("/api/games/{gameId}/players/{playerId}", WrapPlayerApiEndpoint(GetPlayerInfo))
-  mux.Post("/api/games/{gameId}/players", WrapGameApiEndpoint(CreatePlayer))
-
-
-  mux.Post("/api/games", WrapApiEndpoint(CreateGame))
+	mux.Post("/api/games", WrapApiEndpoint(CreateGame))
 
 	return mux
 }
 
-func GetRolePool(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int){
-  return NotImplementedError, http.StatusInternalServerError
+func GetRolePool(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int) {
+	return NotImplementedError, http.StatusInternalServerError
 }
 
-var roleCast = map[string]gamelogic.Role {
-  "unassigned": gamelogic.Unassigned,
-  "villager": gamelogic.Villager,
-  "werewolf": gamelogic.Werewolf,
-  "seer": gamelogic.Seer,
-  "robber": gamelogic.Robber,
-  "troublemaker": gamelogic.TroubleMaker,
-  "tanner": gamelogic.Tanner,
-  "drunk": gamelogic.Drunk,
-  "hunter": gamelogic.Hunter,
-  "mason": gamelogic.Mason,
-  "insomniac": gamelogic.Insomniac,
-  "minion": gamelogic.Minion,
-  "doppleganger": gamelogic.DoppleGanger,
+var roleCast = map[string]gamelogic.Role{
+	"unassigned":   gamelogic.Unassigned,
+	"villager":     gamelogic.Villager,
+	"werewolf":     gamelogic.Werewolf,
+	"seer":         gamelogic.Seer,
+	"robber":       gamelogic.Robber,
+	"troublemaker": gamelogic.TroubleMaker,
+	"tanner":       gamelogic.Tanner,
+	"drunk":        gamelogic.Drunk,
+	"hunter":       gamelogic.Hunter,
+	"mason":        gamelogic.Mason,
+	"insomniac":    gamelogic.Insomniac,
+	"minion":       gamelogic.Minion,
+	"doppleganger": gamelogic.DoppleGanger,
 }
 
-func AssignRolePool(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int){
-  err, rolesString := getFirstOccuranceInUrlParam(request, "roles")
-  if err != nil {
-    return err, http.StatusBadRequest
-  }
-
-  var roles []gamelogic.Role
-
-  for _, value := range strings.Split(rolesString, ","){
-    role, ok := roleCast[strings.ToLower(value)]
-    if !ok {
-      log.Print(value)
-      return RoleNoteFoundError, http.StatusBadRequest
-    }
-    roles = append(roles, role)
-  }
-
-  game.AssignRolePool(roles)
-  fmt.Fprint(responseWriter, "Roll Pool Has Been Set")
-
-  return nil, http.StatusOK
-}
-
-func StartGame(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int){
-
-  if err := game.Start(); err != nil {
+func AssignRolePool(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int) {
+	err, rolesString := getFirstOccuranceInUrlParam(request, "roles")
+	if err != nil {
 		return err, http.StatusBadRequest
 	}
 
-  go game.ExecuteNight()
+	var roles []gamelogic.Role
 
-  fmt.Fprint(responseWriter, "The Game's Afoot")
-  return nil, http.StatusOK
+	for _, value := range strings.Split(rolesString, ",") {
+		role, ok := roleCast[strings.ToLower(value)]
+		if !ok {
+			log.Print(value)
+			return RoleNoteFoundError, http.StatusBadRequest
+		}
+		roles = append(roles, role)
+	}
+
+	game.AssignRolePool(roles)
+	fmt.Fprint(responseWriter, "Roll Pool Has Been Set")
+
+	return nil, http.StatusOK
 }
 
+func StartGame(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int) {
 
-func CreateGame(responseWriter http.ResponseWriter, request *http.Request) (error, int){
-  name := "Game1"
+	if err := game.Start(); err != nil {
+		return err, http.StatusBadRequest
+	}
 
-  game, err := gamelogic.CreateGame(name)
-  if err != nil {
-    return err, http.StatusInternalServerError
-  }
+	go game.ExecuteNight()
 
-  games.Store(name, game)
-
-  fmt.Fprint(responseWriter, name)
-
-
-  return nil, http.StatusOK
+	fmt.Fprint(responseWriter, "The Game's Afoot")
+	return nil, http.StatusOK
 }
 
+func CreateGame(responseWriter http.ResponseWriter, request *http.Request) (error, int) {
+	name := "Game1"
 
-func GetPlayerInfo(player *gamelogic.Player, game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int){
-  fmt.Fprint(responseWriter, player.String())
-  return nil, http.StatusOK
+	game, err := gamelogic.CreateGame(name)
+	if err != nil {
+		return err, http.StatusInternalServerError
+	}
+
+	games.Store(name, game)
+
+	fmt.Fprint(responseWriter, name)
+
+	return nil, http.StatusOK
+}
+
+func GetPlayerInfo(player *gamelogic.Player, game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int) {
+	fmt.Fprint(responseWriter, player.String())
+	return nil, http.StatusOK
 }
 
 func getFirstOccuranceInUrlParam(request *http.Request, key string) (error, string) {
-  keys, ok := request.URL.Query()[key]
+	keys, ok := request.URL.Query()[key]
 
-    if !ok || len(keys[0]) < 1 {
+	if !ok || len(keys[0]) < 1 {
 
-        return MissingParamInUrlError, ""
-    }
+		return MissingParamInUrlError, ""
+	}
 
-    return nil, keys[0]
+	return nil, keys[0]
 }
 
+func CreatePlayer(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int) {
 
-func CreatePlayer(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int){
+	err, name := getFirstOccuranceInUrlParam(request, "name")
+	if err != nil {
+		return err, http.StatusBadRequest
+	}
 
-  err, name := getFirstOccuranceInUrlParam(request, "name")
-  if err != nil {
-    return err, http.StatusBadRequest
-  }
+	id, err := game.AddPlayer(gamelogic.CreatePlayer(name, &gamelogic.RandomUserInput{}))
+	if err != nil {
+		return err, http.StatusBadRequest
+	}
 
-  id, err := game.AddPlayer(gamelogic.CreatePlayer(name, &gamelogic.RandomUserInput{}))
-  if err != nil {
-    return err, http.StatusBadRequest
-  }
-
-  fmt.Fprint(responseWriter, id)
-  return nil, http.StatusOK
+	fmt.Fprint(responseWriter, id)
+	return nil, http.StatusOK
 }

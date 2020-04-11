@@ -18,7 +18,7 @@ type Game struct {
 	rolePool      []Role
 	actionManager *ActionManager
 	Center        [3]*Player
-	inProgress 		bool
+	inProgress    bool
 }
 
 func CreateGame(id string) (*Game, error) {
@@ -33,7 +33,7 @@ func (game *Game) String() string {
 	return fmt.Sprintf("Id: %s\n players %v\n avalibleRoles: %v\n actionManager: %v\n Center: %v", game.Id, game.players, game.rolePool, game.actionManager, game.Center)
 }
 
-func (game *Game) AddPlayer(player *Player) (int, error){
+func (game *Game) AddPlayer(player *Player) (int, error) {
 	if game.inProgress {
 		return 0, GameInProgressError
 	}
@@ -47,10 +47,8 @@ func (game *Game) AddPlayer(player *Player) (int, error){
 
 	// validate no two players have the same name
 	game.players = append(game.players, player)
-	return len(game.players)-1, nil
+	return len(game.players) - 1, nil
 }
-
-
 
 func (game *Game) AssignRolePool(roles []Role) error {
 	if game.inProgress {
