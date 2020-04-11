@@ -18,15 +18,20 @@ type UserInput interface {
 type RandomUserInput struct{}
 
 func (input *RandomUserInput) ChooseCenterCard(additionalInfo string) int {
-	return rand.Intn(2)
+	choice := rand.Intn(2)
+	log.Printf("ranomly choosing center card %d", choice)
+	return choice
 }
 
 func (input *RandomUserInput) DoesChoosePlayerInsteadOfCenter(additionalInfo string) bool {
-	return rand.Intn(1) == 0
+	choice := rand.Intn(1) == 0
+	log.Printf("ranomly choose player or center %b", choice)
+	return choice
 }
 
 func (input *RandomUserInput) ChoosePlayer(additionalInfo string, playerNames []string) string {
 	num := rand.Intn(len(playerNames))
+	log.Printf("randomly choosing player %d", num)
 	return playerNames[num]
 }
 

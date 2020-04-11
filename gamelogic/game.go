@@ -9,6 +9,8 @@ import (
 )
 
 var InvalidNumberOfPlayersError = errors.New("There is an invalid number of players in this game")
+var CouldNotFindPlayer = errors.New("There was no player by that filter found in this game")
+var GameInProgressError = errors.New("Action Cannot Be complete while a game is in progress")
 
 type Game struct {
 	Id            string
@@ -16,12 +18,14 @@ type Game struct {
 	rolePool      []Role
 	actionManager *ActionManager
 	Center        [3]*Player
+	inProgress    bool
 }
 
 func CreateGame(id string) (*Game, error) {
 	game := &Game{Id: id}
 	game.players = make([]*Player, 0)
 	game.actionManager = &ActionManager{game: game, History: make([]*Event, 0)}
+	game.inProgress = false
 	return game, nil
 }
 
@@ -29,7 +33,10 @@ func (game *Game) String() string {
 	return fmt.Sprintf("Id: %s\n players %v\n avalibleRoles: %v\n actionManager: %v\n Center: %v", game.Id, game.players, game.rolePool, game.actionManager, game.Center)
 }
 
-func (game *Game) AddPlayer(player *Player) {
+func (game *Game) AddPlayer(player *Player) (int, error) {
+	if game.inProgress {
+		return 0, GameInProgressError
+	}
 	if player.input == nil || player.isDummy {
 		log.Fatal("actual players need to have input device")
 	}
@@ -40,9 +47,13 @@ func (game *Game) AddPlayer(player *Player) {
 
 	// validate no two players have the same name
 	game.players = append(game.players, player)
+	return len(game.players) - 1, nil
 }
 
 func (game *Game) AssignRolePool(roles []Role) error {
+	if game.inProgress {
+		return GameInProgressError
+	}
 	if err := validateRolePool(roles); err != nil {
 		return err
 	}
@@ -53,6 +64,9 @@ func (game *Game) AssignRolePool(roles []Role) error {
 }
 
 func (game *Game) Start() error {
+	if game.inProgress {
+		return GameInProgressError
+	}
 	if len(game.players) < 3 {
 		return InvalidNumberOfPlayersError
 	}
@@ -60,6 +74,8 @@ func (game *Game) Start() error {
 	if len(game.rolePool) != len(game.players)+3 {
 		return InvalidNumberOfRolesError
 	}
+
+	game.inProgress = true
 
 	roleOrderAssigment := rand.Perm(len(game.rolePool))
 	fmt.Printf("Random Role Order %v\n", roleOrderAssigment)
@@ -101,6 +117,14 @@ func (game *Game) GetPlayerByCurrentRole(role Role) []*Player {
 	}
 
 	return players
+}
+
+func (game *Game) GetPlayerById(id int) (*Player, error) {
+	if id < 0 || id > len(game.players)-1 {
+		return nil, CouldNotFindPlayer
+	}
+
+	return game.players[id], nil
 }
 
 func (game *Game) PlayerNames() []string {
