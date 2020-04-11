@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
 	"sync"
 
 	"github.com/gorilla/pat"
@@ -152,17 +151,17 @@ var roleCast = map[string]gamelogic.Role{
 }
 
 func AssignRolePool(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int) {
-	err, rolesString := getFirstOccuranceInUrlParam(request, "roles")
-	if err != nil {
-		return err, http.StatusBadRequest
+	rolesReq := struct{ Roles []string }{}
+
+	if err := json.NewDecoder(request.Body).Decode(&rolesReq); err != nil {
+		return errors.New("Invalid Json"), http.StatusBadRequest
 	}
 
 	var roles []gamelogic.Role
 
-	for _, value := range strings.Split(rolesString, ",") {
-		role, ok := roleCast[strings.ToLower(value)]
+	for _, roleName := range rolesReq.Roles {
+		role, ok := gamelogic.RoleNameToID[roleName]
 		if !ok {
-			log.Print(value)
 			return RoleNoteFoundError, http.StatusBadRequest
 		}
 		roles = append(roles, role)
@@ -227,7 +226,7 @@ func CreatePlayer(game *gamelogic.Game, responseWriter http.ResponseWriter, requ
 	player := struct{ Name string }{}
 	err := json.NewDecoder(request.Body).Decode(&player)
 	if err != nil {
-		return err, http.StatusBadRequest
+		return errors.New("Invalid Json"), http.StatusBadRequest
 	}
 
 	id := game.AddPlayer(

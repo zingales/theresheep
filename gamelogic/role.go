@@ -26,6 +26,22 @@ const (
 	DoppleGanger
 )
 
+// RoleNameToID is a map of human readable roles to Ids
+var RoleNameToID = map[string]Role{
+	"villager":     Villager,
+	"werewolf":     Werewolf,
+	"seer":         Seer,
+	"robber":       Robber,
+	"troublemaker": TroubleMaker,
+	"tanner":       Tanner,
+	"drunk":        Drunk,
+	"hunter":       Hunter,
+	"mason":        Mason,
+	"insomniac":    Insomniac,
+	"minion":       Minion,
+	"doppleganger": DoppleGanger,
+}
+
 func (role Role) String() string {
 	names := [...]string{
 		"Unassigned",
