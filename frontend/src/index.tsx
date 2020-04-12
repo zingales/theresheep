@@ -28,23 +28,23 @@ const App = () => {
     return <div>pending</div>;
   } else if (backendStateAsyncResult.type === 'error') {
     switch (backendStateAsyncResult.error.type) {
-      case 'fetchError':
+      case 'ConnectionError':
         return <div>Failed to fetch</div>;
-      case 'httpError': {
-        const {status, body} = backendStateAsyncResult.error;
+      case 'HttpError': {
+        const status = backendStateAsyncResult.error.status;
+        const json = backendStateAsyncResult.error.json;
         return (
           <div>
-            Http Error: {status} {body}
+            Http Error: {status} {json}
           </div>
         );
       }
-      case 'nonJsonError': {
-        const {body} = backendStateAsyncResult.error;
+      case 'NonJsonError': {
+        const body = backendStateAsyncResult.error.body;
         return <div>non-json error "{body}"</div>;
       }
       default:
-        // TODO: why do i have to return assertNever? Why can't I just
-        // assertNever?
+        // why do i have to return assertNever? Why can't I just assertNever?
         // https://github.com/microsoft/TypeScript/issues/10470
         return assertNever(
           'Non Exhaustive switch statement',

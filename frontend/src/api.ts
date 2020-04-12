@@ -1,4 +1,12 @@
-import {BackendState, Role, PlayerId, FetchError} from './types';
+import {
+  BackendState,
+  Role,
+  PlayerId,
+  ConnectionError,
+  NonJsonError,
+  HttpError,
+  FetchError,
+} from './types';
 
 /*
  * Send an http request. Throws errors of type FetchError. Annoying typescript
@@ -21,12 +29,12 @@ export async function req<T>(path: string, options?: RequestInit): Promise<T> {
     ...options,
   };
 
-  const url = `${window.location.protocol}//${window.location.hostname}:8000${path}`;
-  let resp;
+  const url = `${window.location.protocol}//${window.location.hostname}:8090${path}`;
+  let resp: Response;
   try {
     resp = await fetch(url, modifiedOptions);
   } catch (error) {
-    throw {type: 'fetchError'} as FetchError<any>;
+    throw new ConnectionError(url);
   }
 
   if (resp.ok) {
@@ -35,16 +43,11 @@ export async function req<T>(path: string, options?: RequestInit): Promise<T> {
       const respJson = JSON.parse(text);
       return respJson;
     } catch (error) {
-      throw {type: 'nonJsonError', body: text} as FetchError<any>;
+      throw new NonJsonError(text);
     }
   } else {
     const respJson = await resp.json();
-    throw {
-      // TODO: eslint warns with no-throw-literal. Make this a class instead of an object
-      type: 'httpError',
-      status: resp.status,
-      body: respJson,
-    } as FetchError<any>;
+    throw new HttpError(resp.status, respJson);
   }
 }
 
