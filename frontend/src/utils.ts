@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react';
+import {useParams} from 'react-router-dom';
 import {BackendState, AsyncResult, FetchError} from './types';
 import {getBackendState} from './api';
 
@@ -26,19 +27,23 @@ const timeout = (mills: number) =>
  * 2. Continue returning the last successful response in the case of an error
  * so the calling component can continue displaying reasonable information
  */
-export const useBackendState = (): AsyncResult<BackendState, {}> => {
-  const [backendState, setBackendState] = useState<
-    AsyncResult<BackendState, {}>
-  >({
+export const useBackendState = (): AsyncResult<BackendState> => {
+  const {gameId, playerId} = useParams();
+  const [backendState, setBackendState] = useState<AsyncResult<BackendState>>({
     type: 'pending',
   });
+
   useEffect(() => {
     // using IIFE to avoid returning a Promise.
     // See https://medium.com/javascript-in-plain-english/how-to-use-async-function-in-react-hook-useeffect-typescript-js-6204a788a435
     (async () => {
+      if (gameId === undefined || playerId === undefined) {
+        // TODO: do something better with this
+        return;
+      }
       while (true) {
         try {
-          const result = await getBackendState();
+          const result = await getBackendState(gameId, playerId);
           setBackendState({type: 'success', result});
         } catch (untypedError) {
           const error = untypedError as FetchError<{}>;
@@ -47,7 +52,7 @@ export const useBackendState = (): AsyncResult<BackendState, {}> => {
         await timeout(1000);
       }
     })();
-  }, []);
+  }, [gameId, playerId]);
   return backendState;
 };
 

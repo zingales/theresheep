@@ -5,7 +5,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  useParams,
   useHistory,
 } from 'react-router-dom';
 
@@ -55,9 +54,10 @@ const CreateGame = () => {
   const createGameSequence = async () => {
     const gameId = await createNewGame();
 
+    // TODO: Promise.all this
     const player1Id = await createPlayer(gameId, 'player 1');
-    const player2Id = await createPlayer(gameId, 'player 2');
-    const player3Id = await createPlayer(gameId, 'player 3');
+    await createPlayer(gameId, 'player 2');
+    await createPlayer(gameId, 'player 3');
 
     await setRolePool(gameId, [
       'werewolf',
@@ -92,7 +92,6 @@ const CreateGame = () => {
 };
 
 const Game = () => {
-  const {gameId, playerId} = useParams();
   const backendStateAsyncResult = useBackendState();
   const [phase, setPhase] = useState<Phase>('night');
   useEffect(() => {

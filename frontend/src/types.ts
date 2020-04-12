@@ -2,11 +2,6 @@
  **************************** Game State Types *******************************
  *****************************************************************************/
 export type Role = 'werewolf' | 'villager';
-export type Action =
-  | 'choose who to kill'
-  | 'choose center card'
-  | 'swap role'
-  | 'seer action';
 
 export type PlayerId = number;
 
@@ -20,13 +15,13 @@ export type GameOverState = {
 };
 
 export type BackendState = {
-  timer: number;
+  // timer: number;
   originalRole: Role;
   newRole?: Role;
-  pendingAction: Action | null;
+  // pendingAction: Action | null;
   originalWerewolves: string[];
   centerCards: Role[];
-  gameOver?: GameOverState;
+  // gameOver?: GameOverState;
 };
 
 /*****************************************************************************
@@ -64,7 +59,9 @@ export class HttpError<E extends AnyObject> extends Error {
 
 export type FetchError<E> = ConnectionError | NonJsonError | HttpError<E>;
 
-export type AsyncResult<T, E> =
+export type AsyncResult<T> = AsyncResultWithErr<T, any>;
+
+export type AsyncResultWithErr<T, E> =
   | {
       type: 'success';
       result: T;

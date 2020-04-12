@@ -5,7 +5,6 @@ import {
   ConnectionError,
   NonJsonError,
   HttpError,
-  FetchError,
 } from './types';
 
 /*
@@ -13,7 +12,6 @@ import {
  * can't keep track of error types, so callers of this method (or callers of
  * callers of this method) must try {...} catch(error) {...} and cast error to
  * type FetchError<E>
- *
  */
 export async function req<T>(path: string, options?: RequestInit): Promise<T> {
   // TODO: errors won't always be http error
@@ -75,8 +73,11 @@ export const setRolePool = async (gameId: string, roles: string[]) =>
     body: JSON.stringify({roles}),
   });
 
-export const getBackendState = async (): Promise<BackendState> =>
-  await req<BackendState>(`/get-state`);
+export const getBackendState = async (
+  gameId: string,
+  playerId: string,
+): Promise<BackendState> =>
+  await req<BackendState>(`/api/games/${gameId}/players/${playerId}`);
 
 export const chooseWhoToKill = async (): Promise<{}> =>
   await req<{}>(`/choose-who-to-kill`, {method: 'POST'});
