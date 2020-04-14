@@ -3,16 +3,6 @@ import {useParams} from 'react-router-dom';
 import {BackendState, AsyncResult, FetchError} from './types';
 import {getBackendState} from './api';
 
-/**
- * Returns a promise that resolves in mills milliseconds
- */
-const timeout = (mills: number) =>
-  new Promise(resolve => {
-    setTimeout(() => {
-      resolve();
-    }, mills);
-  });
-
 /*
  * A hook that polls the backend and reutrns an AsyncResult<BackendState>.
  * Before the first response returns this hook will return {type: 'pending'}.
@@ -34,24 +24,22 @@ export const useBackendState = (): AsyncResult<BackendState> => {
   });
 
   useEffect(() => {
-    // using IIFE to avoid returning a Promise.
-    // See https://medium.com/javascript-in-plain-english/how-to-use-async-function-in-react-hook-useeffect-typescript-js-6204a788a435
-    (async () => {
-      if (gameId === undefined || playerId === undefined) {
-        // TODO: do something better with this
-        return;
+    if (gameId === undefined || playerId === undefined) {
+      // TODO: do something better with this
+      return;
+    }
+
+    const interval = setInterval(async () => {
+      try {
+        const result = await getBackendState(gameId, playerId);
+        setBackendState({type: 'success', result});
+      } catch (untypedError) {
+        const error = untypedError as FetchError<{}>;
+        setBackendState({type: 'error', error});
       }
-      while (true) {
-        try {
-          const result = await getBackendState(gameId, playerId);
-          setBackendState({type: 'success', result});
-        } catch (untypedError) {
-          const error = untypedError as FetchError<{}>;
-          setBackendState({type: 'error', error});
-        }
-        await timeout(1000);
-      }
-    })();
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, [gameId, playerId]);
   return backendState;
 };
