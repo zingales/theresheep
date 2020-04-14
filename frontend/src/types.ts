@@ -49,9 +49,11 @@ export class NonJsonError extends Error {
 export class HttpError<E extends AnyObject> extends Error {
   type: 'HttpError' = 'HttpError';
   status: number;
+  url: string;
   json: E;
-  constructor(status: number, json: E) {
-    super(`HttpError status :: ${status} body :: ${json}`);
+  constructor(url: string, status: number, json: E) {
+    super(`HttpError url :: ${url} status :: ${status} body :: ${json}`);
+    this.url = url;
     this.status = status;
     this.json = json;
   }
@@ -59,9 +61,11 @@ export class HttpError<E extends AnyObject> extends Error {
 
 export type FetchError<E> = ConnectionError | NonJsonError | HttpError<E>;
 
-export type AsyncResult<T> = AsyncResultWithErr<T, any>;
+export type DefaultFetchError = FetchError<{error: string}>;
 
-export type AsyncResultWithErr<T, E> =
+export type AsyncResult<T> = AsyncResultWithErr<T, DefaultFetchError>;
+
+export type AsyncResultWithErr<T, E extends FetchError<any>> =
   | {
       type: 'success';
       result: T;
@@ -69,4 +73,4 @@ export type AsyncResultWithErr<T, E> =
   | {
       type: 'pending';
     }
-  | {type: 'error'; error: FetchError<E>};
+  | {type: 'error'; error: E};

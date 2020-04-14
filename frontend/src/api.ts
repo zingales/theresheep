@@ -45,7 +45,7 @@ export async function req<T>(path: string, options?: RequestInit): Promise<T> {
     }
   } else {
     const respJson = await resp.json();
-    throw new HttpError(resp.status, respJson);
+    throw new HttpError(url, resp.status, respJson);
   }
 }
 

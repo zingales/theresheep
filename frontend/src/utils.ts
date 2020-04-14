@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
-import {BackendState, AsyncResult, FetchError} from './types';
+import {BackendState, AsyncResult, DefaultFetchError} from './types';
 import {getBackendState} from './api';
 
 /*
@@ -34,7 +34,7 @@ export const useBackendState = (): AsyncResult<BackendState> => {
         const result = await getBackendState(gameId, playerId);
         setBackendState({type: 'success', result});
       } catch (untypedError) {
-        const error = untypedError as FetchError<{}>;
+        const error = untypedError as DefaultFetchError;
         setBackendState({type: 'error', error});
       }
     }, 1000);

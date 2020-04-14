@@ -14,7 +14,7 @@ import VillagerNightPhase from './villager/VillagerNightPhase';
 import DayPhase from './DayPhase';
 import {useBackendState, assertNever} from './utils';
 import {createNewGame, createPlayer, setRolePool, startGame} from './api';
-import {BackendState} from 'types';
+import {BackendState, DefaultFetchError} from 'types';
 
 import {createMuiTheme, ThemeProvider} from '@material-ui/core';
 import {grey} from '@material-ui/core/colors';
@@ -52,24 +52,41 @@ const App = () => {
 const CreateGame = () => {
   const history = useHistory();
   const createGameSequence = async () => {
-    const gameId = await createNewGame();
+    try {
+      const gameId = await createNewGame();
+      // TODO: Promise.all this
+      const player1Id = await createPlayer(gameId, 'player 1');
+      await createPlayer(gameId, 'player 2');
+      await createPlayer(gameId, 'player 3');
 
-    // TODO: Promise.all this
-    const player1Id = await createPlayer(gameId, 'player 1');
-    await createPlayer(gameId, 'player 2');
-    await createPlayer(gameId, 'player 3');
-
-    await setRolePool(gameId, [
-      'werewolf',
-      'werewolf',
-      'villager',
-      'villager',
-      'villager',
-      'villager',
-    ]);
-    await startGame(gameId);
-    history.push(`/game/${gameId}/player/${player1Id}`);
+      await setRolePool(gameId, [
+        'werewolf',
+        'werewolf',
+        'villager',
+        'villager',
+        'villager',
+        'villager',
+      ]);
+      await startGame(gameId);
+      history.push(`/game/${gameId}/player/${player1Id}`);
+    } catch (untypedError) {
+      const error = untypedError as DefaultFetchError;
+      switch (error.type) {
+        case 'ConnectionError':
+          alert(`ConnectionError`);
+          break;
+        case 'HttpError':
+          alert(`HttpError ${error.url} ${error.status} ${error.json.error}`);
+          break;
+        case 'NonJsonError':
+          alert(`NonJsonError ${error.message}`);
+          break;
+        default:
+          assertNever('Non exhaustive switch', error);
+      }
+    }
   };
+
   return (
     <div className="App">
       <AppBar color="primary" className="App__appbar " position="static">
@@ -108,19 +125,17 @@ const Game = () => {
     switch (backendStateAsyncResult.error.type) {
       case 'ConnectionError':
         return <div>Failed to fetch</div>;
-      case 'HttpError': {
+      case 'HttpError':
         const status = backendStateAsyncResult.error.status;
         const json = backendStateAsyncResult.error.json;
         return (
           <div>
-            Http Error: {status} {json}
+            Http Error: {status} {json.error}
           </div>
         );
-      }
-      case 'NonJsonError': {
+      case 'NonJsonError':
         const body = backendStateAsyncResult.error.body;
-        return <div>non-json error "{body}"</div>;
-      }
+        return <div>non-json error {body}</div>;
       default:
         // why do i have to return assertNever? Why can't I just assertNever?
         // https://github.com/microsoft/TypeScript/issues/10470
