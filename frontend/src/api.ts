@@ -69,7 +69,7 @@ export const startGame = async (gameId: string) =>
 
 export const setRolePool = async (gameId: string, roles: string[]) =>
   await req<{}>(`/api/games/${gameId}/role_pool`, {
-    method: 'POST',
+    method: 'PUT',
     body: JSON.stringify({roles}),
   });
 

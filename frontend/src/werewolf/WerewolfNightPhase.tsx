@@ -7,12 +7,16 @@ import {BackendState, Role} from 'types';
 
 const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
   const {
-    backendState: {originalWerewolves, centerCards},
+    backendState: {hasSeen},
   } = props;
 
   const [chosenCardIdx, setChosenCard] = useState<number | null>(null);
 
-  const chooseFromCenter = originalWerewolves.length <= 1;
+  const chooseFromCenter = false;
+  const centerCards = ['villager', 'werewolf'] as const;
+  const originalWerewolves = Object.entries(hasSeen)
+    .filter(([, role]) => role === 'werewolf')
+    .map(([name]) => name);
 
   return (
     <div className="WerewolfNightPhase">
@@ -61,7 +65,7 @@ const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
 type CenterChooseWidgetProps = {
   chosenCardIdx: number | null;
   setChosenCard: (idx: number) => void;
-  centerCards: Role[];
+  centerCards: readonly Role[];
 };
 const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
   const {chosenCardIdx, setChosenCard, centerCards} = props;
