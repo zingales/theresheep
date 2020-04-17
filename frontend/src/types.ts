@@ -15,13 +15,9 @@ export type GameOverState = {
 };
 
 export type BackendState = {
-  // timer: number;
+  name: string;
   originalRole: Role;
-  newRole?: Role;
-  // pendingAction: Action | null;
-  originalWerewolves: string[];
-  centerCards: Role[];
-  // gameOver?: GameOverState;
+  hasSeen: {[name: string]: Role};
 };
 
 /*****************************************************************************
