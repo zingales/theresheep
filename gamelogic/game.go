@@ -172,8 +172,14 @@ func (game *Game) ExecuteNight() {
 				singularWerewolf := players[0]
 				game.actionManager.LearnAboutCenterCards(singularWerewolf, 1)
 			} else {
-				// Assumption there are only 2 werewolfs
-				game.actionManager.LearnAboutEachother(players[0], players[1])
+				werewolfs := game.GetPlayerByOriginalRole(Werewolf)
+				for i, player1 := range werewolfs {
+					for j, player2 := range werewolfs {
+						if i < j {
+							game.actionManager.LearnAboutEachother(player1, player2)
+						}
+					}
+				}
 			}
 		case Minion:
 			minion := players[0]
