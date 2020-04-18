@@ -65,7 +65,10 @@ func WrapApiEndpoint(
 			if httpStatus >= 500 {
 				log.Print(err)
 			}
-			http.Error(responseWriter, err.Error(), httpStatus)
+			json.NewEncoder(responseWriter).Encode(map[string]string{
+				"error": err.Error(),
+			})
+			responseWriter.WriteHeader(httpStatus)
 			return
 		}
 
@@ -148,7 +151,7 @@ func DefineRoutes() http.Handler {
 
 	// Redirects
 
-	mux.Post("/api/games/{gameId}/role_pool", WrapGameApiEndpoint(AssignRolePool))
+	mux.Put("/api/games/{gameId}/role_pool", WrapGameApiEndpoint(AssignRolePool))
 	mux.Get("/api/games/{gameId}/role_pool", WrapGameApiEndpoint(GetRolePool))
 
 	mux.Post("/api/games/{gameId}/start", WrapGameApiEndpoint(StartGame))
@@ -210,7 +213,7 @@ func AssignRolePool(game *gamelogic.Game, responseWriter http.ResponseWriter, re
 	}
 
 	game.AssignRolePool(roles)
-	fmt.Fprint(responseWriter, "Roll Pool Has Been Set")
+	fmt.Fprint(responseWriter, "{}")
 
 	return nil, http.StatusOK
 }
@@ -223,7 +226,7 @@ func StartGame(game *gamelogic.Game, responseWriter http.ResponseWriter, request
 
 	go game.ExecuteNight()
 
-	fmt.Fprint(responseWriter, "The Game's Afoot")
+	fmt.Fprint(responseWriter, "{}")
 	return nil, http.StatusOK
 }
 
