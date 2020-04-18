@@ -137,18 +137,6 @@ const MethodPost = "POST"
 func DefineRoutes() http.Handler {
 	mux := pat.New()
 
-	// static files
-	// {
-	// 	staticDirectoryName := "static"
-	// 	staticDirectoryPaddedWithSlashes := "/" + staticDirectoryName + "/"
-	//
-	// 	fileServer := http.FileServer(http.Dir(staticDirectoryName))
-	//
-	// 	mux.Handle(
-	// 		staticDirectoryPaddedWithSlashes,
-	// 		http.StripPrefix(staticDirectoryPaddedWithSlashes, fileServer))
-	// }
-
 	// Redirects
 
 	mux.Put("/api/games/{gameId}/role_pool", WrapGameApiEndpoint(AssignRolePool))
@@ -156,7 +144,6 @@ func DefineRoutes() http.Handler {
 
 	mux.Post("/api/games/{gameId}/start", WrapGameApiEndpoint(StartGame))
 
-	// mux.Put("/api/games/{gameId}/players/{playerId}/action", WrapPlayerApiEndpoint(GetPlayerInfo))
 	mux.Get("/api/games/{gameId}/players/{playerId}", WrapPlayerApiEndpoint(GetPlayerInfo))
 	mux.Post("/api/games/{gameId}/players", WrapGameApiEndpoint(CreatePlayer))
 
@@ -256,12 +243,8 @@ func GetPlayerInfo(player *gamelogic.Player, game *gamelogic.Game, responseWrite
 
 func getFirstOccuranceInUrlParam(request *http.Request, key string) (error, string) {
 	keys, ok := request.URL.Query()[key]
-	fmt.Println(keys)
-	fmt.Println(request.URL.Query())
 
 	if !ok || len(keys[0]) < 1 {
-		fmt.Println("here")
-
 		return MissingParamInUrlError, ""
 	}
 
