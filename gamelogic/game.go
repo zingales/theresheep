@@ -77,7 +77,14 @@ func (game *Game) Start() error {
 
 	game.inProgress = true
 
-	roleOrderAssigment := rand.Perm(len(game.rolePool))
+	var roleOrderAssigment []int
+	if os.Getenv("DEBUG_ROLE_ORDER") == "" {
+		roleOrderAssigment = rand.Perm(len(game.rolePool))
+	} else {
+		roleOrderStrArray := strings.Split(os.Getenv("DEBUG_ROLE_ORDER"), ",")
+		roleOrderAssigment = utils.MustStrArrToint(roleOrderStrArray)
+	}
+
 	fmt.Printf("Random Role Order %v\n", roleOrderAssigment)
 	index := 0
 	for ; index < len(game.players); index++ {
