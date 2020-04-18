@@ -3,7 +3,6 @@ package backend
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -22,9 +21,12 @@ func StartServer(port string) {
 	http.ListenAndServe(":8090", DefineRoutes())
 }
 
-type ApiHandlerFunc func(http.ResponseWriter, *http.Request) (error, int)
-type GameApiHandlerFunc func(*gamelogic.Game, http.ResponseWriter, *http.Request) (error, int)
-type PlayerApiHandlerFunc func(*gamelogic.Player, *gamelogic.Game, http.ResponseWriter, *http.Request) (error, int)
+type JsonBody = map[string]interface{}
+type HttpStatus = int
+
+type ApiHandlerFunc func(http.ResponseWriter, *http.Request) (JsonBody, HttpStatus, error)
+type GameApiHandlerFunc func(*gamelogic.Game, http.ResponseWriter, *http.Request) (JsonBody, HttpStatus, error)
+type PlayerApiHandlerFunc func(*gamelogic.Player, *gamelogic.Game, http.ResponseWriter, *http.Request) (JsonBody, HttpStatus, error)
 
 // allowCors is useful in development mode when react is being served from a
 // webpack dev server on a different port than the backend. allowCors can
@@ -57,29 +59,33 @@ func allowCors(w http.ResponseWriter, r *http.Request) {
 func WrapApiEndpoint(
 	apiHandlerFunc ApiHandlerFunc,
 ) http.HandlerFunc {
-	return func(responseWriter http.ResponseWriter, request *http.Request) {
+
+	func(responseWriter http.ResponseWriter, request *http.Request) {
 		allowCors(responseWriter, request)
 
-		var httpStatus int
-		if err, httpStatus := apiHandlerFunc(responseWriter, request); err != nil {
-			if httpStatus >= 500 {
-				log.Print(err)
-			}
-			json.NewEncoder(responseWriter).Encode(map[string]string{
-				"error": err.Error(),
-			})
-			responseWriter.WriteHeader(httpStatus)
-			return
+		body, status, err := apiHandlerFunc(responseWriter, request)
+		responseWriter.WriteHeader(status)
+		if body == nil {
+			body = map[string]interface{}{}
 		}
 
-		responseWriter.WriteHeader(httpStatus)
+		if err != nil {
+			if status >= 500 {
+				log.Print(err)
+			}
+
+			body["error"] = err.Error()
+
+		}
+
+		json.NewEncoder(responseWriter).Encode(body)
 	}
 }
 
 func WrapGameApiEndpoint(
 	apiHandlerFunc GameApiHandlerFunc,
 ) http.HandlerFunc {
-	return WrapApiEndpoint(func(responseWriter http.ResponseWriter, request *http.Request) (error, int) {
+	return WrapApiEndpoint(func(responseWriter http.ResponseWriter, request *http.Request) (JsonBody, HttpStatus, error) {
 
 		_, gameId := getFirstOccuranceInUrlParam(request, ":gameId")
 		var game *gamelogic.Game
@@ -87,7 +93,7 @@ func WrapGameApiEndpoint(
 		if ok {
 			game = temp.(*gamelogic.Game)
 		} else {
-			return GameNotFoundError, http.StatusBadRequest
+			return nil, http.StatusBadRequest, GameNotFoundError
 		}
 
 		return apiHandlerFunc(game, responseWriter, request)
@@ -97,7 +103,7 @@ func WrapGameApiEndpoint(
 func WrapPlayerApiEndpoint(
 	apiHandlerFunc PlayerApiHandlerFunc,
 ) http.HandlerFunc {
-	return WrapApiEndpoint(func(responseWriter http.ResponseWriter, request *http.Request) (error, int) {
+	return WrapApiEndpoint(func(responseWriter http.ResponseWriter, request *http.Request) (JsonBody, HttpStatus, error) {
 
 		_, gameId := getFirstOccuranceInUrlParam(request, ":gameId")
 		var game *gamelogic.Game
@@ -105,17 +111,17 @@ func WrapPlayerApiEndpoint(
 		if ok {
 			game = temp.(*gamelogic.Game)
 		} else {
-			return GameNotFoundError, http.StatusBadRequest
+			return nil, http.StatusBadRequest, GameNotFoundError
 		}
 		_, playerIdAsString := getFirstOccuranceInUrlParam(request, ":playerId")
 		playerId, err := strconv.Atoi(playerIdAsString)
 		if err != nil {
-			return err, http.StatusBadRequest
+			return nil, http.StatusBadRequest, err
 		}
 
 		player, err := game.GetPlayerById(playerId)
 		if err != nil {
-			return err, http.StatusBadRequest
+			return nil, http.StatusBadRequest, err
 		}
 
 		return apiHandlerFunc(player, game, responseWriter, request)
@@ -162,8 +168,8 @@ func AllowAllCors(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "*")
 }
 
-func GetRolePool(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int) {
-	return NotImplementedError, http.StatusInternalServerError
+func GetRolePool(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (JsonBody, HttpStatus, error) {
+	return nil, http.StatusInternalServerError, NotImplementedError
 }
 
 var roleCast = map[string]gamelogic.Role{
@@ -182,11 +188,11 @@ var roleCast = map[string]gamelogic.Role{
 	"doppleganger": gamelogic.DoppleGanger,
 }
 
-func AssignRolePool(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int) {
+func AssignRolePool(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (JsonBody, HttpStatus, error) {
 	rolesReq := struct{ Roles []string }{}
 
 	if err := json.NewDecoder(request.Body).Decode(&rolesReq); err != nil {
-		return InvalidJSON, http.StatusBadRequest
+		return nil, http.StatusBadRequest, InvalidJSON
 	}
 
 	var roles []gamelogic.Role
@@ -194,51 +200,49 @@ func AssignRolePool(game *gamelogic.Game, responseWriter http.ResponseWriter, re
 	for _, roleName := range rolesReq.Roles {
 		role, ok := gamelogic.RoleNameToID[roleName]
 		if !ok {
-			return RoleNoteFoundError, http.StatusBadRequest
+			return nil, http.StatusBadRequest, RoleNoteFoundError
 		}
 		roles = append(roles, role)
 	}
 
 	game.AssignRolePool(roles)
-	fmt.Fprint(responseWriter, "{}")
 
-	return nil, http.StatusOK
+	return nil, http.StatusOK, nil
 }
 
-func StartGame(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int) {
+func StartGame(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (JsonBody, HttpStatus, error) {
 
 	if err := game.Start(); err != nil {
-		return err, http.StatusBadRequest
+		return nil, http.StatusBadRequest, err
 	}
 
 	go game.ExecuteNight()
 
-	fmt.Fprint(responseWriter, "{}")
-	return nil, http.StatusOK
+	return nil, http.StatusOK, nil
 }
 
-func CreateGame(responseWriter http.ResponseWriter, request *http.Request) (error, int) {
+func CreateGame(responseWriter http.ResponseWriter, request *http.Request) (JsonBody, HttpStatus, error) {
 	name := "Game1"
 
 	game, err := gamelogic.CreateGame(name)
 	if err != nil {
-		return err, http.StatusInternalServerError
+		return nil, http.StatusInternalServerError, err
 	}
 
 	games.Store(name, game)
 
-	json.NewEncoder(responseWriter).Encode(map[string]string{
+	body := map[string]interface{}{
 		"id": game.Id,
-	})
+	}
 
-	return nil, http.StatusOK
+	return body, http.StatusOK, nil
 }
 
-func GetPlayerInfo(player *gamelogic.Player, game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int) {
-	if err := json.NewEncoder(responseWriter).Encode(player); err != nil {
-		return err, http.StatusInternalServerError
+func GetPlayerInfo(player *gamelogic.Player, game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (JsonBody, HttpStatus, error) {
+	body := map[string]interface{}{
+		"player": player,
 	}
-	return nil, http.StatusOK
+	return body, http.StatusOK, nil
 }
 
 func getFirstOccuranceInUrlParam(request *http.Request, key string) (error, string) {
@@ -251,12 +255,12 @@ func getFirstOccuranceInUrlParam(request *http.Request, key string) (error, stri
 	return nil, keys[0]
 }
 
-func CreatePlayer(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int) {
+func CreatePlayer(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (JsonBody, HttpStatus, error) {
 
 	player := struct{ Name string }{}
 
 	if err := json.NewDecoder(request.Body).Decode(&player); err != nil {
-		return errors.New("Invalid json"), http.StatusBadRequest
+		return nil, http.StatusBadRequest, InvalidJSON
 	}
 
 	id, err := game.AddPlayer(
@@ -267,28 +271,28 @@ func CreatePlayer(game *gamelogic.Game, responseWriter http.ResponseWriter, requ
 	)
 
 	if err != nil {
-		return err, http.StatusBadRequest
+		return nil, http.StatusBadRequest, err
 	}
 
-	json.NewEncoder(responseWriter).Encode(map[string]int{
+	body := map[string]interface{}{
 		"id": id,
-	})
-	return nil, http.StatusOK
+	}
+	return body, http.StatusOK, nil
 }
 
-func DoAction(player *gamelogic.Player, _ *gamelogic.Game, w http.ResponseWriter, r *http.Request) (error, int) {
+func DoAction(player *gamelogic.Player, _ *gamelogic.Game, w http.ResponseWriter, r *http.Request) (JsonBody, HttpStatus, error) {
 
 	action := struct {
 		actionType string
 		action     interface{}
 	}{}
 	if err := json.NewDecoder(r.Body).Decode(&action); err != nil {
-		return errors.New("Invalid json"), http.StatusBadRequest
+		return nil, http.StatusBadRequest, InvalidJSON
 	}
 
 	if err := player.ReceiveMessage(action.actionType, action.action); err != nil {
-		return err, http.StatusBadRequest
+		return nil, http.StatusBadRequest, err
 	}
 
-	return nil, http.StatusOK
+	return nil, http.StatusOK, nil
 }
