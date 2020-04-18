@@ -13,6 +13,8 @@ type UserInput interface {
 	ChooseCenterCard(string) int
 	ChoosePlayer(string, []string) string
 	DoesChoosePlayerInsteadOfCenter(string) bool
+	Prompt() string
+	ReceiveMessage(msgType string, msgBody interface{}) error
 }
 
 type RandomUserInput struct{}
@@ -33,6 +35,14 @@ func (input *RandomUserInput) ChoosePlayer(additionalInfo string, playerNames []
 	num := rand.Intn(len(playerNames))
 	log.Printf("randomly choosing player %d", num)
 	return playerNames[num]
+}
+
+func (input *RandomUserInput) Prompt() string {
+	return ""
+}
+
+func (input *RandomUserInput) ReceiveMessage(msgType string, msgBody interface{}) error {
+	return nil
 }
 
 type ConsoleUserInput struct{}
@@ -80,6 +90,14 @@ func (input *ConsoleUserInput) ChoosePlayer(additionalInfo string, playerNames [
 		log.Fatal(err)
 	}
 	return playerNames[num]
+}
+
+func (input *ConsoleUserInput) Prompt() string {
+	return ""
+}
+
+func (input *ConsoleUserInput) ReceiveMessage(msgType string, msgBody interface{}) error {
+	return nil
 }
 
 func readFromConsole(prompt string) (string, error) {
