@@ -108,3 +108,7 @@ func (player *Player) ChoosePlayers(playerNames []string, count int) []string {
 func (player *Player) KnowsRole(playerName string, role Role) {
 	player.HasSeen[playerName] = role
 }
+
+func (player *Player) ReceiveMessage(msgType string, msgBody interface{}) error {
+	return player.input.ReceiveMessage(msgType, msgBody)
+}

@@ -270,7 +270,11 @@ func CreatePlayer(game *gamelogic.Game, responseWriter http.ResponseWriter, requ
 	}
 
 	id, err := game.AddPlayer(
-		gamelogic.CreatePlayer(player.Name, &gamelogic.RandomUserInput{}))
+		gamelogic.CreatePlayer(
+			player.Name,
+			NewBrowserUserInput(),
+		),
+	)
 
 	if err != nil {
 		return err, http.StatusBadRequest
