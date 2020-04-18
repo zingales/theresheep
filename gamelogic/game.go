@@ -5,10 +5,24 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"os"
 	"strconv"
+	"strings"
+
+	"github.com/zingales/theresheep/utils"
 )
 
-var InvalidNumberOfPlayersError = errors.New("There is an invalid number of players in this game")
+type InvalidNumberOfPlayersError struct {
+	gameId string
+	n      int
+}
+
+func (err InvalidNumberOfPlayersError) Error() string {
+	return fmt.Sprintf(
+		"Invalid number of players:: (%d) to start game::%s\n",
+		err.n, err.gameId)
+}
+
 var CouldNotFindPlayer = errors.New("There was no player by that filter found in this game")
 var GameInProgressError = errors.New("Action Cannot Be complete while a game is in progress")
 
@@ -68,7 +82,7 @@ func (game *Game) Start() error {
 		return GameInProgressError
 	}
 	if len(game.players) < 3 {
-		return InvalidNumberOfPlayersError
+		return InvalidNumberOfPlayersError{game.Id, len(game.players)}
 	}
 
 	if len(game.rolePool) != len(game.players)+3 {
