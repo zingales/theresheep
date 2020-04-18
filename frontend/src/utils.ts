@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
-import {BackendState, AsyncResult, DefaultFetchError} from './types';
+import {BackendState, AsyncResult, DefaultFetchError, Role} from './types';
 import {getBackendState} from './api';
 
 /*
