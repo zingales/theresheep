@@ -159,6 +159,8 @@ func DefineRoutes() http.Handler {
 
 	mux.Post("/api/games", WrapApiEndpoint(CreateGame))
 
+	mux.Post("/api/games/{gameId}/player/{playerId}/do_action", WrapPlayerApiEndpoint(DoAction))
+
 	mux.PathPrefix("/").Methods(http.MethodOptions).HandlerFunc(AllowAllCors)
 
 	return mux
@@ -283,5 +285,22 @@ func CreatePlayer(game *gamelogic.Game, responseWriter http.ResponseWriter, requ
 	json.NewEncoder(responseWriter).Encode(map[string]int{
 		"id": id,
 	})
+	return nil, http.StatusOK
+}
+
+func DoAction(player *gamelogic.Player, _ *gamelogic.Game, w http.ResponseWriter, r *http.Request) (error, int) {
+
+	action := struct {
+		actionType string
+		action     interface{}
+	}{}
+	if err := json.NewDecoder(r.Body).Decode(&action); err != nil {
+		return errors.New("Invalid json"), http.StatusBadRequest
+	}
+
+	if err := player.ReceiveMessage(action.actionType, action.action); err != nil {
+		return err, http.StatusBadRequest
+	}
+
 	return nil, http.StatusOK
 }
