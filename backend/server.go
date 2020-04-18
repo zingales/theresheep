@@ -245,7 +245,9 @@ func CreateGame(responseWriter http.ResponseWriter, request *http.Request) (erro
 }
 
 func GetPlayerInfo(player *gamelogic.Player, game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int) {
-	fmt.Fprint(responseWriter, player.String())
+	if err := json.NewEncoder(responseWriter).Encode(player); err != nil {
+		return err, http.StatusInternalServerError
+	}
 	return nil, http.StatusOK
 }
 

@@ -1,6 +1,7 @@
 package gamelogic
 
 import (
+	"encoding/json"
 	"fmt"
 )
 
@@ -11,6 +12,19 @@ type Player struct {
 	originalRole Role
 	currentRole  Role
 	HasSeen      map[string]Role
+}
+
+func (p *Player) MarshalJSON() ([]byte, error) {
+	hasSeen := make(map[string]string)
+	for playerName, roleId := range p.HasSeen {
+		hasSeen[playerName] = RoleIDToName[roleId]
+	}
+	return json.Marshal(map[string]interface{}{
+		"name":         p.Name,
+		"originalRole": RoleIDToName[p.originalRole],
+		"hasSeen":      hasSeen,
+		"actionPrompt": p.input.Prompt(),
+	})
 }
 
 func (player *Player) OriginalAssigment(role Role) {

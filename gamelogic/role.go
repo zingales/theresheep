@@ -42,6 +42,22 @@ var RoleNameToID = map[string]Role{
 	"doppleganger": DoppleGanger,
 }
 
+// RoleIDToName is a map of Role types to the string name
+var RoleIDToName = map[Role]string{
+	Villager:     "villager",
+	Werewolf:     "werewolf",
+	Seer:         "seer",
+	Robber:       "robber",
+	TroubleMaker: "troublemaker",
+	Tanner:       "tanner",
+	Drunk:        "drunk",
+	Hunter:       "hunter",
+	Mason:        "mason",
+	Insomniac:    "insomniac",
+	Minion:       "minion",
+	DoppleGanger: "doppleganger",
+}
+
 func (role Role) String() string {
 	names := [...]string{
 		"Unassigned",
