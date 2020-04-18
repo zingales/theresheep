@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"sync"
 
 	"github.com/gorilla/pat"
@@ -25,10 +26,39 @@ type ApiHandlerFunc func(http.ResponseWriter, *http.Request) (error, int)
 type GameApiHandlerFunc func(*gamelogic.Game, http.ResponseWriter, *http.Request) (error, int)
 type PlayerApiHandlerFunc func(*gamelogic.Player, *gamelogic.Game, http.ResponseWriter, *http.Request) (error, int)
 
+// allowCors is useful in development mode when react is being served from a
+// webpack dev server on a different port than the backend. allowCors can
+// (should?) be turned off in production
+func allowCors(w http.ResponseWriter, r *http.Request) {
+	origins := r.Header["Origin"]
+	var origin string
+	// try to avoid setting origin to * directly bc
+	// chrome complains about setting origin to *
+	// if request.credentials has been set to
+	// 'include'
+	// https://developer.mozilla.org/en-US/docs/Web/API/Request/credentials
+	if len(origins) > 0 {
+		origin = origins[0]
+	} else {
+		origin = "*"
+	}
+	w.Header().Set("Access-Control-Allow-Origin", origin)
+	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Credentials
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+
+	reqHeaders := r.Header["Access-Control-Request-Headers"]
+	if len(reqHeaders) > 0 {
+		w.Header().Set(
+			"Access-Control-Allow-Headers",
+			strings.Join(reqHeaders, ","))
+	}
+}
+
 func WrapApiEndpoint(
 	apiHandlerFunc ApiHandlerFunc,
 ) http.HandlerFunc {
 	return func(responseWriter http.ResponseWriter, request *http.Request) {
+		allowCors(responseWriter, request)
 
 		var httpStatus int
 		if err, httpStatus := apiHandlerFunc(responseWriter, request); err != nil {
@@ -129,7 +159,15 @@ func DefineRoutes() http.Handler {
 
 	mux.Post("/api/games", WrapApiEndpoint(CreateGame))
 
+	mux.PathPrefix("/").Methods(http.MethodOptions).HandlerFunc(AllowAllCors)
+
 	return mux
+}
+
+func AllowAllCors(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("myheader", "value")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "*")
 }
 
 func GetRolePool(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request) (error, int) {
