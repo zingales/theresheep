@@ -1,7 +1,6 @@
 import {
   BackendState,
   Role,
-  PlayerId,
   ConnectionError,
   NonJsonError,
   HttpError,
@@ -79,9 +78,6 @@ export const getBackendState = async (
 ): Promise<BackendState> =>
   await req<BackendState>(`/api/games/${gameId}/players/${playerId}`);
 
-export const chooseWhoToKill = async (): Promise<{}> =>
-  await req<{}>(`/choose-who-to-kill`, {method: 'POST'});
-
 export const chooseCenterCard = async (
   cardIdx: number,
 ): Promise<{role: Role}> =>
@@ -90,10 +86,7 @@ export const chooseCenterCard = async (
     body: JSON.stringify({cardIdx}),
   });
 
-export const swapRole = async (
-  player1: PlayerId,
-  player2: PlayerId,
-): Promise<{}> =>
+export const swapRole = async (player1: string, player2: string): Promise<{}> =>
   await req<{}>(`swap-role`, {
     method: 'POST',
     body: JSON.stringify({player1, player2}),

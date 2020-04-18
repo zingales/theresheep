@@ -1,22 +1,24 @@
-import React, {FC, useState} from 'react';
+import React, {FC} from 'react';
+import './WerewolfNightPhase.scss';
+import {BackendState, Role} from 'types';
+import {assertNever} from 'utils';
+import classNames from 'classnames';
+
 import werewolfImg from 'pics/werewolf.png';
 import villagerImg from 'pics/villager.png';
-import './WerewolfNightPhase.scss';
-import {assertNever} from 'utils';
-import {BackendState, Role} from 'types';
 
 const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
   const {
-    backendState: {hasSeen},
+    backendState: {hasSeen, expectedAction},
   } = props;
 
-  const [chosenCardIdx, setChosenCard] = useState<number | null>(null);
-
-  const chooseFromCenter = false;
-  const centerCards = ['villager', 'werewolf'] as const;
   const originalWerewolves = Object.entries(hasSeen)
     .filter(([, role]) => role === 'werewolf')
     .map(([name]) => name);
+
+  // making the assumption here that it will never be the case that
+  // originalWerewolves != [] and expectedAction == choose-center-card.
+  const chooseFromCenter = expectedAction == 'choose-center-card';
 
   return (
     <div className="WerewolfNightPhase">
@@ -42,11 +44,7 @@ const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
               : 'Your werewolves are'}
           </div>
           {chooseFromCenter ? (
-            <CenterChooseWidget
-              chosenCardIdx={chosenCardIdx}
-              setChosenCard={setChosenCard}
-              centerCards={centerCards}
-            />
+            <CenterChooseWidget cards={[null, null, null]} />
           ) : (
             originalWerewolves.map((name, idx) => (
               <div
@@ -63,54 +61,52 @@ const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
 };
 
 type CenterChooseWidgetProps = {
-  chosenCardIdx: number | null;
-  setChosenCard: (idx: number) => void;
-  centerCards: readonly Role[];
+  cards: (Role | null)[];
 };
-const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
-  const {chosenCardIdx, setChosenCard, centerCards} = props;
-  const centerImages = centerCards.map(role => {
-    switch (role) {
-      case 'villager':
-        return (
-          <img
-            className="CenterChooseWidget__center-card no-hover"
-            src={villagerImg}
-            alt="logo"
-          />
-        );
-      case 'werewolf':
-        return (
-          <img
-            className="CenterChooseWidget__center-card no-hover"
-            src={werewolfImg}
-            alt="logo"
-          />
-        );
-      default:
-        return assertNever('Non exhaustive switch', role);
-    }
-  });
 
-  const noHover = chosenCardIdx === null ? '' : 'no-hover';
+const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
+  const {cards} = props;
+
+  const chooseCard = async (idx: number) => {
+    // ... make api call, choose the card
+  };
 
   return (
     <div className="CenterChooseWidget">
       <div className="CenterChooseWidget__cards-row">
-        {[0, 1, 2].map(idx => (
-          <div
-            onClick={() => chosenCardIdx === null && setChosenCard(idx)}
-            className={'CenterChooseWidget__center-card ' + noHover}>
-            {chosenCardIdx === idx ? centerImages[idx] : '?'}
+        {cards.map((card, idx) => (
+          <div onClick={() => chooseCard(idx)}>
+            {card === null
+              ? '?'
+              : getImgForRole(
+                  card,
+                  classNames(
+                    'CenterChooseWidget__center-card',
+                    card && 'no-hover',
+                  ),
+                )}
           </div>
         ))}
       </div>
       <div className="CenterChooseWidget__prompt-row">
-        {chosenCardIdx !== null &&
-          `You saw ${centerCards[chosenCardIdx]} in the center!`}
+        {cards !== [] && `You saw ${cards[0]} in the center!`}
       </div>
     </div>
   );
 };
 
 export default WerewolfNightPhase;
+
+export const getImgForRole = (
+  role: Role,
+  className: string,
+): React.ReactNode => {
+  switch (role) {
+    case 'villager':
+      return <img className={className} src={villagerImg} alt="logo" />;
+    case 'werewolf':
+      return <img className={className} src={werewolfImg} alt="logo" />;
+    default:
+      return assertNever('Non exhaustive switch', role);
+  }
+};

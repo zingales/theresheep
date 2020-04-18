@@ -3,21 +3,17 @@
  *****************************************************************************/
 export type Role = 'werewolf' | 'villager';
 
-export type PlayerId = number;
-
-// Information to be revealed to each player when the game is over.
-export type GameOverState = {
-  winningTeam: 'werewolf' | 'villager' | 'tanner';
-  assasinatedPerson: PlayerId;
-  playerToRole: Map<PlayerId, Role>;
-  playerToChosenKill: Map<PlayerId, PlayerId>;
-  centerCards: Role[];
-};
+export type ExpectedAction =
+  | 'choose-center-card'
+  | 'choose-player'
+  | 'choose-player-instead-of-center'
+  | ''; // indicates no action is expected
 
 export type BackendState = {
   name: string;
   originalRole: Role;
-  hasSeen: {[name: string]: Role};
+  hasSeen: {[PlayerName: string]: Role};
+  expectedAction: ExpectedAction;
 };
 
 /*****************************************************************************
