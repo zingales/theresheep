@@ -75,8 +75,12 @@ export const setRolePool = async (gameId: string, roles: string[]) =>
 export const getBackendState = async (
   gameId: string,
   playerId: string,
-): Promise<BackendState> =>
-  await req<BackendState>(`/api/games/${gameId}/players/${playerId}`);
+): Promise<BackendState> => {
+  const {player} = await req<{player: BackendState}>(
+    `/api/games/${gameId}/players/${playerId}`,
+  );
+  return player;
+};
 
 export const chooseCenterCard = async (
   cardIdx: number,

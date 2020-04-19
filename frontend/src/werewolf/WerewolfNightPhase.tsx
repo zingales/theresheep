@@ -18,7 +18,7 @@ const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
 
   // making the assumption here that it will never be the case that
   // originalWerewolves != [] and expectedAction == choose-center-card.
-  const chooseFromCenter = expectedAction == 'choose-center-card';
+  const chooseFromCenter = expectedAction === 'choose-center-card';
 
   return (
     <div className="WerewolfNightPhase">

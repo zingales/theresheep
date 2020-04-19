@@ -173,6 +173,8 @@ const getComponent = (
       return <WerewolfNightPhase backendState={backendState} />;
     case 'villager':
       return <VillagerNightPhase />;
+    default:
+      return assertNever('Non Exhaustive switch', role);
   }
 };
 
