@@ -9,7 +9,7 @@ import villagerImg from 'pics/villager.png';
 
 const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
   const {
-    backendState: {hasSeen, expectedAction},
+    backendState: {hasSeen, actionPrompt},
   } = props;
 
   const originalWerewolves = Object.entries(hasSeen)
@@ -17,8 +17,8 @@ const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
     .map(([name]) => name);
 
   // making the assumption here that it will never be the case that
-  // originalWerewolves != [] and expectedAction == choose-center-card.
-  const chooseFromCenter = expectedAction === 'choose-center-card';
+  // originalWerewolves != [] and actionPrompt == choose-center-card.
+  const chooseFromCenter = actionPrompt === 'choose-center-card';
 
   return (
     <div className="WerewolfNightPhase">
@@ -75,16 +75,14 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
     <div className="CenterChooseWidget">
       <div className="CenterChooseWidget__cards-row">
         {cards.map((card, idx) => (
-          <div onClick={() => chooseCard(idx)}>
-            {card === null
-              ? '?'
-              : getImgForRole(
-                  card,
-                  classNames(
-                    'CenterChooseWidget__center-card',
-                    card && 'no-hover',
-                  ),
-                )}
+          <div
+            key={`center-card-${idx}`}
+            onClick={() => chooseCard(idx)}
+            className={classNames(
+              'CenterChooseWidget__center-card',
+              card && 'no-hover',
+            )}>
+            {card === null ? '?' : getImgForRole(card)}
           </div>
         ))}
       </div>
@@ -99,7 +97,7 @@ export default WerewolfNightPhase;
 
 export const getImgForRole = (
   role: Role,
-  className: string,
+  className?: string,
 ): React.ReactNode => {
   switch (role) {
     case 'villager':
