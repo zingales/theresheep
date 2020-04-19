@@ -3,6 +3,7 @@ package backend
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -18,7 +19,8 @@ var games = new(sync.Map)
 
 func StartServer(port string) {
 
-	http.ListenAndServe(":8090", DefineRoutes())
+	err := http.ListenAndServe(":8090", DefineRoutes())
+	fmt.Println(err)
 }
 
 type JsonBody = map[string]interface{}
@@ -59,8 +61,7 @@ func allowCors(w http.ResponseWriter, r *http.Request) {
 func WrapApiEndpoint(
 	apiHandlerFunc ApiHandlerFunc,
 ) http.HandlerFunc {
-
-	func(responseWriter http.ResponseWriter, request *http.Request) {
+	return func(responseWriter http.ResponseWriter, request *http.Request) {
 		allowCors(responseWriter, request)
 
 		body, status, err := apiHandlerFunc(responseWriter, request)
