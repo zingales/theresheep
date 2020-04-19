@@ -83,12 +83,19 @@ export const getBackendState = async (
 };
 
 export const chooseCenterCard = async (
+  gameId: string,
+  playerId: string,
   cardIdx: number,
-): Promise<{role: Role}> =>
-  await req<{role: Role}>(`/choose-center-card`, {
-    method: 'PUT',
-    body: JSON.stringify({cardIdx}),
+): Promise<{}> => {
+  const body = JSON.stringify({
+    actionType: 'choose-center-card',
+    action: cardIdx,
   });
+  return await req<{}>(`/api/games/${gameId}/player/${playerId}/do_action`, {
+    method: 'POST',
+    body,
+  });
+};
 
 export const swapRole = async (player1: string, player2: string): Promise<{}> =>
   await req<{}>(`swap-role`, {

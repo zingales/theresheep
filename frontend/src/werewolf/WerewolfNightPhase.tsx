@@ -3,6 +3,8 @@ import './WerewolfNightPhase.scss';
 import {BackendState, Role} from 'types';
 import {assertNever} from 'utils';
 import classNames from 'classnames';
+import {chooseCenterCard} from 'api';
+import {useParams} from 'react-router-dom';
 
 import werewolfImg from 'pics/werewolf.png';
 import villagerImg from 'pics/villager.png';
@@ -44,7 +46,7 @@ const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
               : 'Your werewolves are'}
           </div>
           {chooseFromCenter ? (
-            <CenterChooseWidget cards={[null, null, null]} />
+            <CenterChooseWidget roles={[null, null, null]} />
           ) : (
             originalWerewolves.map((name, idx) => (
               <div
@@ -61,20 +63,28 @@ const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
 };
 
 type CenterChooseWidgetProps = {
-  cards: (Role | null)[];
+  roles: (Role | null)[];
 };
 
 const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
-  const {cards} = props;
+  const {roles} = props;
 
-  const chooseCard = async (idx: number) => {
-    // ... make api call, choose the card
-  };
+  const {gameId, playerId} = useParams();
+  if (gameId === undefined || playerId === undefined) {
+    // TODO: return error here? Or maybe attach game and playerid to context
+    // and make them not undefined
+    return null;
+  }
+
+  const chooseCard = async (cardIdx: number) =>
+    chooseCenterCard(gameId, playerId, cardIdx);
+
+  const knownCard = roles.find(x => x !== null);
 
   return (
     <div className="CenterChooseWidget">
       <div className="CenterChooseWidget__cards-row">
-        {cards.map((card, idx) => (
+        {roles.map((card, idx) => (
           <div
             key={`center-card-${idx}`}
             onClick={() => chooseCard(idx)}
@@ -87,7 +97,7 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
         ))}
       </div>
       <div className="CenterChooseWidget__prompt-row">
-        {cards !== [] && `You saw ${cards[0]} in the center!`}
+        {knownCard && `You saw ${knownCard} in the center!`}
       </div>
     </div>
   );
