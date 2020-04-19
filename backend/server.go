@@ -176,13 +176,13 @@ func DefineRoutes() http.Handler {
 
 	mux.Post("/api/games", WrapApiEndpoint(CreateGame))
 
-	mux.PathPrefix("/").Methods(http.MethodOptions).HandlerFunc(AllowAllCors)
+	mux.PathPrefix("/").Methods(
+		http.MethodOptions).HandlerFunc(AllowPreflight)
 
 	return mux
 }
 
-func AllowAllCors(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("myheader", "value")
+func AllowPreflight(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "*")
 }
