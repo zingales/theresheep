@@ -1,10 +1,4 @@
-import {
-  BackendState,
-  Role,
-  ConnectionError,
-  NonJsonError,
-  HttpError,
-} from './types';
+import {BackendState, ConnectionError, NonJsonError, HttpError} from './types';
 
 /*
  * Send an http request. Throws errors of type FetchError. Annoying typescript

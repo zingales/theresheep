@@ -322,14 +322,21 @@ func DoAction(
 ) (JsonBody, HttpStatus, error) {
 
 	action := struct {
-		actionType string
-		action     interface{}
+		ActionType string
+		Action     interface{}
 	}{}
 	if err := json.NewDecoder(r.Body).Decode(&action); err != nil {
 		return nil, http.StatusBadRequest, InvalidJSON
 	}
 
-	err := player.ReceiveMessage(action.actionType, action.action)
+	asFloat, isFloat := action.Action.(float64)
+	if isFloat {
+		// hack because go deserializes numbers to floats. Convert all
+		// floats to ints so ReceiveMessage can work with ints
+		action.Action = int(asFloat)
+	}
+
+	err := player.ReceiveMessage(action.ActionType, action.Action)
 	if err != nil {
 		return nil, http.StatusBadRequest, err
 	}

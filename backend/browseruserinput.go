@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"sync"
+
+	"github.com/zingales/theresheep/utils"
 )
 
 // The game engine calls ChooseCenterCard(), ChoosePlayer() or
@@ -92,6 +94,12 @@ func (input *BrowserUserInput) ReceiveMessage(msgType string, msgBody interface{
 	_, msgIsBool := msgBody.(bool)
 	_, msgIsString := msgBody.(string)
 
+	isKnonwMessage := utils.Contains(
+		[]string{
+			ChooseCenterCardMsgType,
+			ChoosePlayerMsgType,
+			ChoosePlayerInsteadOfCenterMsgType,
+		}, msgType)
 	if input.expecting == "" {
 		return errors.New(fmt.Sprintf("Game engine is not expecting input " +
 			"from this player"))
@@ -111,7 +119,7 @@ func (input *BrowserUserInput) ReceiveMessage(msgType string, msgBody interface{
 		return errors.New(fmt.Sprintf(
 			"Message body for ChoosePlayerInsteadOfCenterMsgType "+
 				" should be <bool>. Received %x", msgBody))
-	} else {
+	} else if !isKnonwMessage {
 		return errors.New(fmt.Sprintf("Unknown message type \"%s\"", msgType))
 	}
 	select {
