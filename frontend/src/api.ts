@@ -77,7 +77,7 @@ export const getBackendState = async (
   playerId: string,
 ): Promise<BackendState> => {
   const {player: stateFromBackend, phase} = await req<StateFromBackend>(
-    `/api/games/${gameId}/players/${playerId}`,
+    `/api/games/${gameId}/players/${playerId}/state`,
   );
 
   type HasSeen = StateFromBackend['player']['hasSeen'];
