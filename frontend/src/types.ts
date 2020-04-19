@@ -9,10 +9,23 @@ export type ActionPrompt =
   | 'choose-player-instead-of-center'
   | ''; // indicates no action is expected
 
+// state as it comes in from backend. This is different from BackendState as
+// this state gets "massaged" into something more palatable for the frontend.
+// Specifically hasSeen gets changed
+export type StateFromBackend = {
+  player: {
+    name: string;
+    originalRole: Role;
+    hasSeen: {[x: string]: Role};
+    actionPrompt: ActionPrompt;
+  };
+};
+
 export type BackendState = {
   name: string;
   originalRole: Role;
-  hasSeen: {[PlayerName: string]: Role};
+  knownPlayers: {[playerName: string]: Role};
+  center: (Role | null)[];
   actionPrompt: ActionPrompt;
 };
 

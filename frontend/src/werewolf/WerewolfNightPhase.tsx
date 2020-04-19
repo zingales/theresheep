@@ -11,16 +11,14 @@ import villagerImg from 'pics/villager.png';
 
 const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
   const {
-    backendState: {hasSeen, actionPrompt},
+    backendState: {knownPlayers, center},
   } = props;
 
-  const originalWerewolves = Object.entries(hasSeen)
+  const originalWerewolves = Object.entries(knownPlayers)
     .filter(([, role]) => role === 'werewolf')
     .map(([name]) => name);
 
-  // making the assumption here that it will never be the case that
-  // originalWerewolves != [] and actionPrompt == choose-center-card.
-  const chooseFromCenter = actionPrompt === 'choose-center-card';
+  const showCenterWidget = originalWerewolves.length === 0;
 
   return (
     <div className="WerewolfNightPhase">
@@ -41,12 +39,12 @@ const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
       <div className="WerewolfNightPhase__column">
         <div className="WerewolfNightPhase__box">
           <div className="WerewolfNightPhase__box-header">
-            {chooseFromCenter
+            {showCenterWidget
               ? 'Choose card from center'
               : 'Your werewolves are'}
           </div>
-          {chooseFromCenter ? (
-            <CenterChooseWidget roles={[null, null, null]} />
+          {showCenterWidget ? (
+            <CenterChooseWidget center={center} />
           ) : (
             originalWerewolves.map((name, idx) => (
               <div
@@ -63,11 +61,11 @@ const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
 };
 
 type CenterChooseWidgetProps = {
-  roles: (Role | null)[];
+  center: (Role | null)[];
 };
 
 const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
-  const {roles} = props;
+  const {center} = props;
 
   const {gameId, playerId} = useParams();
   if (gameId === undefined || playerId === undefined) {
@@ -79,20 +77,22 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
   const chooseCard = async (cardIdx: number) =>
     chooseCenterCard(gameId, playerId, cardIdx);
 
-  const knownCard = roles.find(x => x !== null);
+  const knownCard = center.find(x => x !== null);
 
   return (
     <div className="CenterChooseWidget">
       <div className="CenterChooseWidget__cards-row">
-        {roles.map((card, idx) => (
+        {center.map((card, idx) => (
           <div
             key={`center-card-${idx}`}
             onClick={() => chooseCard(idx)}
             className={classNames(
               'CenterChooseWidget__center-card',
-              card && 'no-hover',
+              card !== null && 'no-hover',
             )}>
-            {card === null ? '?' : getImgForRole(card)}
+            {card === null
+              ? '?'
+              : getImgForRole(card, 'CenterChooseWidget__center-card no-hover')}
           </div>
         ))}
       </div>
