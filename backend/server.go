@@ -167,8 +167,8 @@ func DefineRoutes() http.Handler {
 
 	mux.Post("/api/games/{gameId}/start", WrapGameApiEndpoint(StartGame))
 
-	mux.Get("/api/games/{gameId}/players/{playerId}",
-		WrapPlayerApiEndpoint(GetPlayerInfo))
+	mux.Get("/api/games/{gameId}/players/{playerId}/state",
+		WrapPlayerApiEndpoint(GetGameStateForPlayer))
 	mux.Post("/api/games/{gameId}/players", WrapGameApiEndpoint(CreatePlayer))
 
 	mux.Post("/api/games/{gameId}/player/{playerId}/do_action",
@@ -279,7 +279,7 @@ func CreateGame(
 	return body, http.StatusOK, nil
 }
 
-func GetPlayerInfo(
+func GetGameStateForPlayer(
 	player *gamelogic.Player, game *gamelogic.Game,
 	responseWriter http.ResponseWriter, request *http.Request,
 ) (JsonBody, HttpStatus, error) {
