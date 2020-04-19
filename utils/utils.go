@@ -33,3 +33,11 @@ func Contains(arr []string, item string) bool {
 	}
 	return false
 }
+
+func MustAtoi(s string) int {
+	n, err := strconv.Atoi(s)
+	if err != nil {
+		panic(err)
+	}
+	return n
+}

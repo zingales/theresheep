@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {
@@ -14,13 +14,12 @@ import VillagerNightPhase from './villager/VillagerNightPhase';
 import DayPhase from './DayPhase';
 import {useBackendState, assertNever} from './utils';
 import {createNewGame, createPlayer, setRolePool, startGame} from './api';
-import {BackendState, DefaultFetchError} from 'types';
+import {BackendState, DefaultFetchError, Phase} from 'types';
 
 import {createMuiTheme, ThemeProvider} from '@material-ui/core';
 import {grey} from '@material-ui/core/colors';
 import {AppBar, Button} from '@material-ui/core';
 
-type Phase = 'day' | 'night';
 const App = () => {
   const theme = createMuiTheme({
     palette: {
@@ -110,14 +109,6 @@ const CreateGame = () => {
 
 const Game = () => {
   const backendStateAsyncResult = useBackendState();
-  const [phase, setPhase] = useState<Phase>('night');
-  useEffect(() => {
-    const listener = (e: KeyboardEvent) =>
-      [' ', 'q', 's'].includes(e.key) &&
-      setPhase(p => (p === 'day' ? 'night' : 'day'));
-    window.addEventListener('keyup', listener);
-    return () => window.removeEventListener('keyup', listener);
-  }, []);
 
   if (backendStateAsyncResult.type === 'pending') {
     return <div>pending</div>;
@@ -147,12 +138,12 @@ const Game = () => {
   }
   const backendState = backendStateAsyncResult.result;
 
-  const component = getComponent(phase, backendState);
+  const component = getComponent(backendState.phase, backendState);
 
   return (
     <div className="App">
       <AppBar color="primary" className="App__appbar " position="static">
-        {phase === 'day' ? 'Day Phase' : 'Night Phase'}
+        {backendState.phase === 'day' ? 'Day Phase' : 'Night Phase'}
       </AppBar>
       {component}
     </div>

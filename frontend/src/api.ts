@@ -76,7 +76,7 @@ export const getBackendState = async (
   gameId: string,
   playerId: string,
 ): Promise<BackendState> => {
-  const {player: stateFromBackend} = await req<StateFromBackend>(
+  const {player: stateFromBackend, phase} = await req<StateFromBackend>(
     `/api/games/${gameId}/players/${playerId}`,
   );
 
@@ -105,10 +105,6 @@ export const getBackendState = async (
       }
     }
 
-    // if (Object.entries(hasSeen).length > 0) {
-    //   debugger;
-    // }
-
     return {center, knownPlayers};
   };
 
@@ -117,6 +113,7 @@ export const getBackendState = async (
     ...stateFromBackend,
     center,
     knownPlayers,
+    phase,
   };
 
   return backendState;
