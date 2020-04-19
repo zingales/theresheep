@@ -170,10 +170,10 @@ func DefineRoutes() http.Handler {
 		WrapPlayerApiEndpoint(GetPlayerInfo))
 	mux.Post("/api/games/{gameId}/players", WrapGameApiEndpoint(CreatePlayer))
 
-	mux.Post("/api/games", WrapApiEndpoint(CreateGame))
-
 	mux.Post("/api/games/{gameId}/player/{playerId}/do_action",
 		WrapPlayerApiEndpoint(DoAction))
+
+	mux.Post("/api/games", WrapApiEndpoint(CreateGame))
 
 	mux.PathPrefix("/").Methods(http.MethodOptions).HandlerFunc(AllowAllCors)
 
