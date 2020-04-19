@@ -24,3 +24,12 @@ func MustStrArrToint(arr []string) []int {
 	}
 	return intArr
 }
+
+func Contains(arr []string, item string) bool {
+	for _, x := range arr {
+		if x == item {
+			return true
+		}
+	}
+	return false
+}
