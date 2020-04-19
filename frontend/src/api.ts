@@ -1,4 +1,10 @@
-import {BackendState, ConnectionError, NonJsonError, HttpError} from './types';
+import {
+  BackendState,
+  ConnectionError,
+  NonJsonError,
+  HttpError,
+  StateFromBackend,
+} from './types';
 
 /*
  * Send an http request. Throws errors of type FetchError. Annoying typescript
@@ -70,10 +76,50 @@ export const getBackendState = async (
   gameId: string,
   playerId: string,
 ): Promise<BackendState> => {
-  const {player} = await req<{player: BackendState}>(
+  const {player: stateFromBackend} = await req<StateFromBackend>(
     `/api/games/${gameId}/players/${playerId}`,
   );
-  return player;
+
+  type HasSeen = StateFromBackend['player']['hasSeen'];
+  type ParseHasSeenRetType = {
+    knownPlayers: BackendState['knownPlayers'];
+    center: BackendState['center'];
+  };
+  const parseHasSeen = (hasSeen: HasSeen): ParseHasSeenRetType => {
+    let center: BackendState['center'] = [null, null, null];
+    let knownPlayers: BackendState['knownPlayers'] = {};
+
+    for (const [key, value] of Object.entries(hasSeen)) {
+      const match = key.match(/Center_(\d+)/);
+      if (match !== null) {
+        const n = Number(match[1]);
+        if (n < 0 || n > 2 || Number.isNaN(n)) {
+          throw new Error(
+            `Unexpected center value from backend ${n} for key ${key} ` +
+              `in map hasSeen ${JSON.stringify(hasSeen)}`,
+          );
+        }
+        center[n] = value;
+      } else {
+        knownPlayers[key] = value;
+      }
+    }
+
+    // if (Object.entries(hasSeen).length > 0) {
+    //   debugger;
+    // }
+
+    return {center, knownPlayers};
+  };
+
+  const {center, knownPlayers} = parseHasSeen(stateFromBackend.hasSeen);
+  const backendState = {
+    ...stateFromBackend,
+    center,
+    knownPlayers,
+  };
+
+  return backendState;
 };
 
 export const chooseCenterCard = async (
