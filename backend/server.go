@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/gorilla/pat"
 
@@ -242,7 +243,19 @@ func StartGame(
 		return nil, http.StatusBadRequest, err
 	}
 
-	go game.ExecuteNight()
+	go func() {
+		// TODO: thread a context through here
+		game.ExecuteNight()
+
+		// wait 3 seconds before starting day phase
+		timer := time.NewTimer(3 * time.Second)
+		<-timer.C
+
+		game.ExecuteDay()
+
+		game.EndGame()
+
+	}()
 
 	return nil, http.StatusOK, nil
 }
@@ -271,6 +284,7 @@ func GetPlayerInfo(
 	responseWriter http.ResponseWriter, request *http.Request,
 ) (JsonBody, HttpStatus, error) {
 	body := map[string]interface{}{
+		"phase":  game.Phase,
 		"player": player,
 	}
 	return body, http.StatusOK, nil

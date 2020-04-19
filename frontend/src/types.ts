@@ -19,7 +19,10 @@ export type StateFromBackend = {
     hasSeen: {[x: string]: Role};
     actionPrompt: ActionPrompt;
   };
+  phase: Phase;
 };
+
+export type Phase = 'day' | 'night';
 
 export type BackendState = {
   name: string;
@@ -27,6 +30,7 @@ export type BackendState = {
   knownPlayers: {[playerName: string]: Role};
   center: (Role | null)[];
   actionPrompt: ActionPrompt;
+  phase: Phase;
 };
 
 /*****************************************************************************

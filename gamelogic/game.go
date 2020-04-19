@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/zingales/theresheep/utils"
 )
@@ -33,6 +34,7 @@ type Game struct {
 	actionManager *ActionManager
 	Center        [3]*Player
 	inProgress    bool
+	Phase         string
 }
 
 func CreateGame(id string) (*Game, error) {
@@ -169,6 +171,7 @@ func (game *Game) GetPlayerByName(name string) *Player {
 }
 
 func (game *Game) ExecuteNight() {
+	game.Phase = "night"
 	for i := 0; i < len(RoleOrder); i++ {
 		activeRole := RoleOrder[i]
 		players := game.GetPlayerByOriginalRole(activeRole)
@@ -225,6 +228,19 @@ func (game *Game) ExecuteNight() {
 			continue
 		}
 	}
+}
+
+func (game *Game) ExecuteDay() {
+	game.Phase = "day"
+
+	var timer *time.Timer
+	if os.Getenv("DEBUG_DAY_TIME_IN_SECONDS") == "" {
+		timer = time.NewTimer(5 * time.Minute)
+	} else {
+		nseconds := utils.MustAtoi(os.Getenv("DEBUG_DAY_TIME_IN_SECONDS"))
+		timer = time.NewTimer(time.Duration(nseconds) * time.Second)
+	}
+	<-timer.C
 }
 
 const NoWereWolfs string = "NoWerewolfs"
