@@ -3,7 +3,7 @@
  *****************************************************************************/
 export type Role = 'werewolf' | 'villager';
 
-export type ExpectedAction =
+export type ActionPrompt =
   | 'choose-center-card'
   | 'choose-player'
   | 'choose-player-instead-of-center'
@@ -13,7 +13,7 @@ export type BackendState = {
   name: string;
   originalRole: Role;
   hasSeen: {[PlayerName: string]: Role};
-  expectedAction: ExpectedAction;
+  actionPrompt: ActionPrompt;
 };
 
 /*****************************************************************************
