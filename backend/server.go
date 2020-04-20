@@ -247,7 +247,11 @@ func StartGame(
 		// TODO: thread a context through here
 		game.ExecuteNight()
 
-		// wait 3 seconds before starting day phase
+		// wait 3 seconds before starting day phase to allow people to
+		// see their night information.
+		// TODO: add a countdown so people
+		// can see when the transition will happen, or add a continue
+		// button and wait for everyone to press it before coninuing
 		timer := time.NewTimer(3 * time.Second)
 		<-timer.C
 
