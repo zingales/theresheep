@@ -20,12 +20,14 @@ export type StateFromBackend = {
     actionPrompt: ActionPrompt;
   };
   phase: Phase;
+  allPlayers: string[];
 };
 
 export type Phase = 'day' | 'night';
 
 export type BackendState = {
   name: string;
+  allPlayers: string[];
   originalRole: Role;
   knownPlayers: {[playerName: string]: Role};
   center: (Role | null)[];

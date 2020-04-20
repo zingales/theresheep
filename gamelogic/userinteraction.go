@@ -15,9 +15,16 @@ type UserInput interface {
 	DoesChoosePlayerInsteadOfCenter(string) bool
 	Prompt() string
 	ReceiveMessage(msgType string, msgBody interface{}) error
+	GetType() string
 }
 
 type RandomUserInput struct{}
+
+const RandomUserInputType string = "RandomUserInput"
+
+func (input *RandomUserInput) GetType() string {
+	return RandomUserInputType
+}
 
 func (input *RandomUserInput) ChooseCenterCard(additionalInfo string) int {
 	choice := rand.Intn(2)
@@ -46,6 +53,12 @@ func (input *RandomUserInput) ReceiveMessage(msgType string, msgBody interface{}
 }
 
 type ConsoleUserInput struct{}
+
+const ConsoleUserInputType string = "ConsoleUserInput"
+
+func (input *ConsoleUserInput) GetType() string {
+	return ConsoleUserInputType
+}
 
 func (input *ConsoleUserInput) ChooseCenterCard(additionalInfo string) int {
 	text, err := readFromConsole(additionalInfo + " Which Center Card would you like to choose (between 0-2)? ")
