@@ -3,6 +3,8 @@ package gamelogic
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
+	"sync"
 )
 
 type Player struct {
@@ -12,6 +14,10 @@ type Player struct {
 	originalRole Role
 	currentRole  Role
 	HasSeen      map[string]Role
+
+	// protects killNomination
+	lock           sync.RWMutex
+	killNomination string
 }
 
 func (p *Player) MarshalJSON() ([]byte, error) {
@@ -123,6 +129,55 @@ func (player *Player) KnowsRole(playerName string, role Role) {
 	player.HasSeen[playerName] = role
 }
 
-func (player *Player) ReceiveMessage(msgType string, msgBody interface{}) error {
-	return player.input.ReceiveMessage(msgType, msgBody)
+func (player *Player) UserAction(actionType string, actionBody interface{}) error {
+	switch actionType {
+	case ChooseCenterCardMsg:
+		return player.input.ReceiveMessage(actionType, actionBody)
+	case ChoosePlayerMsg:
+		return player.input.ReceiveMessage(actionType, actionBody)
+	case ChoosePlayerInsteadOfCenterMsg:
+		return player.input.ReceiveMessage(actionType, actionBody)
+	case NominateToKillMsg:
+		actionBodyAsStr, isStr := actionBody.(string)
+		if !isStr {
+			return fmt.Errorf(
+				"Message must be type <string> for \"%s\". "+
+					"Received %x",
+				NominateToKillMsg, actionBody)
+		}
+		player.SetNominateToKill(actionBodyAsStr)
+		return nil
+	default:
+		return fmt.Errorf("Unknown user action ", actionType)
+	}
+}
+
+func (player *Player) SetNominateToKill(nomination string) {
+	player.lock.Lock()
+	defer player.lock.Unlock()
+	player.killNomination = nomination
+}
+
+func (player *Player) GetKillNomination(playerNames []string) string {
+	if player.input.GetType() == "BrowserUserInput" {
+		player.lock.Lock()
+		defer player.lock.Unlock()
+		if player.killNomination == "" {
+			// user didn't choose a characeter. Choose a character
+			// randomly on behalf of the user
+			player.killNomination = playerNames[rand.Intn(len(playerNames))]
+		}
+		return player.killNomination
+	} else {
+		for i := 0; i < len(playerNames); i++ {
+			// you can't choose to kill yourself. But you can
+			// choose that there are no werewolfs in game
+			if playerNames[i] == player.Name {
+				playerNames[i] = NoWereWolfs
+				break
+			}
+		}
+		names := player.ChoosePlayers(playerNames, 1)
+		return names[0]
+	}
 }

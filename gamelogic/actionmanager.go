@@ -107,17 +107,14 @@ func (am *ActionManager) LearnAboutSelf(insomniac *Player) {
 }
 
 func (am *ActionManager) NominateToKill(player *Player) string {
+
 	playerNames := am.game.PlayerNames()
+	nomination := player.GetKillNomination(playerNames)
 
-	for i := 0; i < len(playerNames); i++ {
-		// you can't choose to kill yourself. But you can choose that there are no werewolfs in game
-		if playerNames[i] == player.Name {
-			playerNames[i] = NoWereWolfs
-			break
-		}
-	}
-
-	names := player.ChoosePlayers(playerNames, 1)
-	am.AddEventOneAffect(player, NominatesToKill, &PlayerRolePair{Name: names[0], Role: -1})
-	return names[0]
+	am.AddEventOneAffect(
+		player,
+		NominatesToKill,
+		&PlayerRolePair{Name: nomination, Role: -1},
+	)
+	return nomination
 }

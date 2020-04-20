@@ -155,7 +155,7 @@ const getComponent = (
   backendState: BackendState,
 ): JSX.Element => {
   if (phase === 'day') {
-    return <DayPhase />;
+    return <DayPhase backendState={backendState} />;
   }
   const role = backendState.originalRole;
 

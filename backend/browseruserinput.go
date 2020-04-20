@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/zingales/theresheep/gamelogic"
 	"github.com/zingales/theresheep/utils"
 )
 
@@ -48,11 +49,6 @@ import (
 // push flows, where nothing needs to block, the browser can just set state
 // directly on Player protected with a lock
 
-// Message types
-const ChooseCenterCardMsgType string = "choose-center-card"
-const ChoosePlayerMsgType string = "choose-player"
-const ChoosePlayerInsteadOfCenterMsgType string = "choose-player-instead-of-center"
-
 type BrowserUserInput struct {
 
 	// message takes a message from goroutine for the user request and
@@ -69,6 +65,12 @@ type BrowserUserInput struct {
 	expecting string
 }
 
+const BrowserUserInputType string = "BrowserUserInput"
+
+func (input *BrowserUserInput) GetType() string {
+	return BrowserUserInputType
+}
+
 func NewBrowserUserInput() *BrowserUserInput {
 	return &BrowserUserInput{
 		message: make(chan interface{}, 0),
@@ -81,7 +83,7 @@ func NewBrowserUserInput() *BrowserUserInput {
 
 func (input *BrowserUserInput) ChooseCenterCard(string) int {
 	input.lock.Lock()
-	input.expecting = ChooseCenterCardMsgType
+	input.expecting = gamelogic.ChooseCenterCardMsg
 	input.lock.Unlock()
 
 	card := <-input.message
@@ -91,7 +93,7 @@ func (input *BrowserUserInput) ChooseCenterCard(string) int {
 
 func (input *BrowserUserInput) ChoosePlayer(string, []string) string {
 	input.lock.Lock()
-	input.expecting = ChoosePlayerMsgType
+	input.expecting = gamelogic.ChoosePlayerMsg
 	input.lock.Unlock()
 
 	player := <-input.message
@@ -101,7 +103,7 @@ func (input *BrowserUserInput) ChoosePlayer(string, []string) string {
 
 func (input *BrowserUserInput) DoesChoosePlayerInsteadOfCenter(string) bool {
 	input.lock.Lock()
-	input.expecting = ChoosePlayerInsteadOfCenterMsgType
+	input.expecting = gamelogic.ChoosePlayerInsteadOfCenterMsg
 	input.lock.Unlock()
 
 	choice := <-input.message
@@ -128,9 +130,9 @@ func (input *BrowserUserInput) ReceiveMessage(msgType string, msgBody interface{
 
 	isKnonwMessage := utils.Contains(
 		[]string{
-			ChooseCenterCardMsgType,
-			ChoosePlayerMsgType,
-			ChoosePlayerInsteadOfCenterMsgType,
+			gamelogic.ChooseCenterCardMsg,
+			gamelogic.ChoosePlayerMsg,
+			gamelogic.ChoosePlayerInsteadOfCenterMsg,
 		}, msgType)
 	if input.expecting == "" {
 		return errors.New(fmt.Sprintf("Game engine is not expecting input " +
@@ -139,17 +141,17 @@ func (input *BrowserUserInput) ReceiveMessage(msgType string, msgBody interface{
 		return errors.New(fmt.Sprintf(
 			"Received message of type \"%s\". Expected message of "+
 				"type \"%s\"", msgType, input.expecting))
-	} else if msgType == ChooseCenterCardMsgType && !msgIsInt {
+	} else if msgType == gamelogic.ChooseCenterCardMsg && !msgIsInt {
 		return errors.New(fmt.Sprintf(
-			"Message body for ChooseCenterCardMsgType should be <int>. "+
+			"Message body for ChooseCenterCardMsg should be <int>. "+
 				"Received %x", msgBody))
-	} else if msgType == ChoosePlayerMsgType && !msgIsString {
+	} else if msgType == gamelogic.ChoosePlayerMsg && !msgIsString {
 		return errors.New(fmt.Sprintf(
-			"Message body for ChoosePlayerMsgType should be <string>. "+
+			"Message body for ChoosePlayerMsg should be <string>. "+
 				"Received %x", msgBody))
-	} else if msgType == ChoosePlayerInsteadOfCenterMsgType && !msgIsBool {
+	} else if msgType == gamelogic.ChoosePlayerInsteadOfCenterMsg && !msgIsBool {
 		return errors.New(fmt.Sprintf(
-			"Message body for ChoosePlayerInsteadOfCenterMsgType "+
+			"Message body for ChoosePlayerInsteadOfCenterMsg "+
 				" should be <bool>. Received %x", msgBody))
 	} else if !isKnonwMessage {
 		return errors.New(fmt.Sprintf("Unknown message type \"%s\"", msgType))

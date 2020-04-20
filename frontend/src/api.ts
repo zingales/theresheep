@@ -76,9 +76,10 @@ export const getBackendState = async (
   gameId: string,
   playerId: string,
 ): Promise<BackendState> => {
-  const {player: stateFromBackend, phase} = await req<StateFromBackend>(
+  const stateFromBackend = await req<StateFromBackend>(
     `/api/games/${gameId}/players/${playerId}/state`,
   );
+  const playerState = stateFromBackend.player;
 
   type HasSeen = StateFromBackend['player']['hasSeen'];
   type ParseHasSeenRetType = {
@@ -108,12 +109,12 @@ export const getBackendState = async (
     return {center, knownPlayers};
   };
 
-  const {center, knownPlayers} = parseHasSeen(stateFromBackend.hasSeen);
+  const {center, knownPlayers} = parseHasSeen(playerState.hasSeen);
   const backendState = {
     ...stateFromBackend,
+    ...playerState,
     center,
     knownPlayers,
-    phase,
   };
 
   return backendState;
@@ -123,19 +124,24 @@ export const chooseCenterCard = async (
   gameId: string,
   playerId: string,
   cardIdx: number,
-): Promise<{}> => {
-  const body = JSON.stringify({
-    actionType: 'choose-center-card',
-    action: cardIdx,
-  });
-  return await req<{}>(`/api/games/${gameId}/player/${playerId}/do_action`, {
+): Promise<{}> =>
+  await req<{}>(`/api/games/${gameId}/player/${playerId}/do_action`, {
     method: 'POST',
-    body,
+    body: JSON.stringify({
+      actionType: 'choose-center-card',
+      action: cardIdx,
+    }),
   });
-};
 
-export const swapRole = async (player1: string, player2: string): Promise<{}> =>
-  await req<{}>(`swap-role`, {
+export const nominateToKill = async (
+  gameId: string,
+  playerId: string,
+  player: string,
+): Promise<{}> =>
+  await req<{}>(`/api/games/${gameId}/player/${playerId}/do_action`, {
     method: 'POST',
-    body: JSON.stringify({player1, player2}),
+    body: JSON.stringify({
+      actionType: 'nominate-to-kill',
+      action: player,
+    }),
   });

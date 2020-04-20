@@ -288,8 +288,9 @@ func GetGameStateForPlayer(
 	responseWriter http.ResponseWriter, request *http.Request,
 ) (JsonBody, HttpStatus, error) {
 	body := map[string]interface{}{
-		"phase":  game.Phase,
-		"player": player,
+		"allPlayers": game.PlayerNames(),
+		"phase":      game.Phase,
+		"player":     player,
 	}
 	return body, http.StatusOK, nil
 }
@@ -354,7 +355,7 @@ func DoAction(
 		action.Action = int(asFloat)
 	}
 
-	err := player.ReceiveMessage(action.ActionType, action.Action)
+	err := player.UserAction(action.ActionType, action.Action)
 	if err != nil {
 		return nil, http.StatusBadRequest, err
 	}

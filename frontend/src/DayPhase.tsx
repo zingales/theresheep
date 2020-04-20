@@ -1,17 +1,34 @@
-import React, {useState} from 'react';
+import React, {FC, useState} from 'react';
+import {useParams} from 'react-router-dom';
 import {
   FormControl,
   RadioGroup,
   Radio,
   FormControlLabel,
 } from '@material-ui/core';
+import {BackendState} from 'types';
+import {nominateToKill} from 'api';
 
 import './DayPhase.scss';
 import Timer from 'Timer';
 
-const DayPhase = () => {
+const DayPhase: FC<{backendState: BackendState}> = props => {
+  const {
+    backendState: {allPlayers},
+  } = props;
   const [radioGroupValue, setRadio] = useState<string | null>(null);
 
+  const {gameId, playerId} = useParams();
+  if (gameId === undefined || playerId === undefined) {
+    return null;
+  }
+
+  const choosePlayer = async (player: string) => {
+    setRadio(player);
+    await nominateToKill(gameId, playerId, player);
+  };
+
+  // Making the assumption that all person names are unique
   return (
     <div className="DayPhase">
       <div className="DayPhase__column DayPhase__timer-column">
@@ -24,22 +41,15 @@ const DayPhase = () => {
             aria-label="people"
             name="people"
             value={radioGroupValue}
-            onChange={(_, value) => setRadio(value)}>
-            <FormControlLabel
-              value="person-1"
-              control={<Radio />}
-              label="Person 1"
-            />
-            <FormControlLabel
-              value="person-2"
-              control={<Radio />}
-              label="Person 2"
-            />
-            <FormControlLabel
-              value="person-3"
-              control={<Radio />}
-              label="Person 3"
-            />
+            onChange={(_, value) => choosePlayer(value)}>
+            {allPlayers.map(person => (
+              <FormControlLabel
+                key={`day-phase-radio-buttons-${person}`}
+                value={person}
+                control={<Radio />}
+                label={person}
+              />
+            ))}
           </RadioGroup>
         </FormControl>
       </div>
