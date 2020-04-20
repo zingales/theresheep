@@ -8,21 +8,45 @@ import (
 	"github.com/zingales/theresheep/utils"
 )
 
-// The game engine calls ChooseCenterCard(), ChoosePlayer() or
-// DoesChoosePlayerInsteadOfCenter(). These methods are request for input.
-// These methods set BrowserUserInput.expecting to indicate that the game
-// engine is expecting a message of the corresponding message type. When the
-// user polls, he will see that the game engine is expecting the corresponding
-// message type from him and fill the message chan.
+// BrowserUserInput is how the game engine pulls information from the browser.
+// It maintains one interface to GameEngine, and one to the Server.
 //
-// I find the mix of locks and channels a bit confusing. The lock is necessary
-// to protect the "expecting" state. "expecting" needs to be state instead of a
-// channel/message because the browser may poll multiple times. If "expecting"
-// were a message in a channel it would be "used up" on the first poll.
-// Consider an alternate architecture where each player has its own goroutine
-// and instead of protecting the expecting state with a lock the game engine
-// sends a message to the relevant player's goroutine that it's expecting a
-// message.
+// GameEngine:
+//     To the game engine, BrowserUserInput is how the game engine pulls
+//     information from the browser. A pull flow might look like this
+//
+//     <- GameEngine.f()
+//       <- Player.g()
+//         <- BrowserUserInput.h()
+//
+//     It is BrowserUserInput's resonsibility to block until it gets the
+//     appropriate information from the browser. When GameEngine pulls something
+//     from BrowserUserInput, BrowserUserInput sets the state 'expecting' to the
+//     the thing the GameEngine needs.
+//
+//
+// Server:
+//     BrowserUserInput can't pull something directly from the browser, because
+//     we're not using websocket. Instead, browser is constantly polling.
+//     Server checks on each poll if BrowserUserInput is currently being pulled
+//     on by game engine (via Prompt()). When GameEngine initiates a pull
+//     BrowserUserInput sets state "expecting" to be something, so when browser
+//     polls it can check "expecting" and know to call do action which will
+//     push info via ReceiveMessage
+//     TODO: fix that last sentence.
+//
+//
+// ** Not all information destined for the game engine goes through
+// BrowserUserInput. Only information that the game engine is "pulling" from
+// the browser. I.e. a flow that the game engine initiates (e.g. the game
+// engine decides that the seer needs to see a card, so it initiates the
+// request to the browser). "Push flows" do not go through BrowserUserInput.
+// E.g. the browser initiates when to decide who to kill. That "push flow"
+// doesn't need to go through BrowserUserInput, the player object handles that
+// directly. The seperation is useful because for pull flows it's nice to have
+// a channel that the game engine can pull on (BrowserUserInput.message). For
+// push flows, where nothing needs to block, the browser can just set state
+// directly on Player protected with a lock
 
 // Message types
 const ChooseCenterCardMsgType string = "choose-center-card"
@@ -30,13 +54,14 @@ const ChoosePlayerMsgType string = "choose-player"
 const ChoosePlayerInsteadOfCenterMsgType string = "choose-player-instead-of-center"
 
 type BrowserUserInput struct {
-	// lock protects the expecting variable. So that writes to the
-	// variable are read atomically
-	lock sync.RWMutex
 
 	// message takes a message from goroutine for the user request and
 	// gives it to the game engine
 	message chan interface{}
+
+	// lock protects the expecting variable. So that writes to the
+	// variable are read atomically
+	lock sync.RWMutex
 
 	// expecting is the type of message the game engine is expecting from this
 	// player right now, or "" if the game engine is not expecting a
@@ -49,6 +74,10 @@ func NewBrowserUserInput() *BrowserUserInput {
 		message: make(chan interface{}, 0),
 	}
 }
+
+/*****************************************************************************
+ ************************ Game Engine Interface ******************************
+ ****************************************************************************/
 
 func (input *BrowserUserInput) ChooseCenterCard(string) int {
 	input.lock.Lock()
@@ -80,6 +109,9 @@ func (input *BrowserUserInput) DoesChoosePlayerInsteadOfCenter(string) bool {
 	return choice.(bool)
 }
 
+/*****************************************************************************
+ **************************** Server Interface *******************************
+ ****************************************************************************/
 func (input *BrowserUserInput) Prompt() string {
 	input.lock.RLock()
 	defer input.lock.RUnlock()
