@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"math/rand"
 	"sync"
+
+	"github.com/zingales/theresheep/utils"
 )
 
 type Player struct {
@@ -165,7 +167,12 @@ func (player *Player) GetKillNomination(playerNames []string) string {
 		if player.killNomination == "" {
 			// user didn't choose a characeter. Choose a character
 			// randomly on behalf of the user
-			player.killNomination = playerNames[rand.Intn(len(playerNames))]
+			playersMinusCurrent := utils.Filter(
+				playerNames, func(name string) bool {
+					return name != player.Name
+				})
+			player.killNomination =
+				playersMinusCurrent[rand.Intn(len(playerNames))]
 		}
 		return player.killNomination
 	} else {

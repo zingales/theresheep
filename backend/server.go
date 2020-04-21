@@ -292,6 +292,12 @@ func GetGameStateForPlayer(
 		"phase":      game.Phase,
 		"player":     player,
 	}
+
+	// It should always be the case that both (game.Phase == "end" and
+	// game.EndGameState != nil) or neither
+	if game.Phase == "end" && game.EndGameState != nil {
+		body["endgame"] = game.EndGameState
+	}
 	return body, http.StatusOK, nil
 }
 

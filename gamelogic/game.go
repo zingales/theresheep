@@ -1,6 +1,7 @@
 package gamelogic
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -27,6 +28,32 @@ func (err InvalidNumberOfPlayersError) Error() string {
 var CouldNotFindPlayer = errors.New("There was no player by that filter found in this game")
 var GameInProgressError = errors.New("Action Cannot Be complete while a game is in progress")
 
+// EndGameState is a struct of information that is useful to display on the
+// frontend once the game is over
+type EndGameState struct {
+	Winner           string
+	WhoNominatesWhom map[string]string
+	OriginalRoles    map[string]Role
+	CurrentRoles     map[string]Role
+}
+
+func (state *EndGameState) MarshalJSON() ([]byte, error) {
+
+	translateRolesMap := func(orig map[string]Role) map[string]string {
+		newMap := make(map[string]string)
+		for playerName, roleID := range orig {
+			newMap[playerName] = RoleIDToName[roleID]
+		}
+		return newMap
+	}
+	body := map[string]interface{}{}
+	body["winner"] = state.Winner
+	body["killMap"] = state.WhoNominatesWhom
+	body["originalRoles"] = translateRolesMap(state.OriginalRoles)
+	body["currentRoles"] = translateRolesMap(state.CurrentRoles)
+	return json.Marshal(body)
+}
+
 type Game struct {
 	Id            string
 	players       []*Player
@@ -35,6 +62,9 @@ type Game struct {
 	Center        [3]*Player
 	inProgress    bool
 	Phase         string
+
+	// null until Phase == "end"
+	EndGameState *EndGameState
 }
 
 func CreateGame(id string) (*Game, error) {
@@ -109,7 +139,11 @@ func (game *Game) Start() error {
 		game.actionManager.OriginalAssigment(player, role)
 	}
 
-	game.actionManager.AssignCenter(game.rolePool[roleOrderAssigment[index]], game.rolePool[roleOrderAssigment[index+1]], game.rolePool[roleOrderAssigment[index+2]])
+	game.actionManager.AssignCenter(
+		game.rolePool[roleOrderAssigment[index]],
+		game.rolePool[roleOrderAssigment[index+1]],
+		game.rolePool[roleOrderAssigment[index+2]],
+	)
 
 	return nil
 }
@@ -245,7 +279,9 @@ func (game *Game) ExecuteDay() {
 
 const NoWereWolfs string = "NoWerewolfs"
 
+// Figure out who kills who and run the hunter action if necessary
 func (game *Game) EndGame() {
+	game.Phase = "end"
 	killcount := make(map[string]int)
 	whoNominatesWhom := make(map[string]string)
 	// each player chooses whom to kill
@@ -322,22 +358,53 @@ func (game *Game) EndGame() {
 		centerWerewolfs++
 	}
 
-	fmt.Printf("Werewolf Death %t, Tanner Death %t, No Werewolfs Selected %t, number of central werewolfs %d\n", werewolfDeath, tannerDeath, NoWereWolfsSelected, centerWerewolfs)
+	fmt.Printf(
+		"Werewolf Death %t, Tanner Death %t, No Werewolfs Selected %t, "+
+			"number of central werewolfs %d\n",
+		werewolfDeath, tannerDeath, NoWereWolfsSelected, centerWerewolfs)
 
+	var winner string
 	if werewolfDeath {
+		winner = "Team Villager"
 		game.VillagerWin()
 	}
 
 	if tannerDeath {
+		winner = "Tanner"
 		game.TannerWin()
 	} else {
 
 		if NoWereWolfsSelected && centerWerewolfs > 1 {
+			winner = "Team Villager"
 			game.VillagerWin()
 		} else if !werewolfDeath {
+			winner = "Team Werewolf"
 			game.WerewolfWin()
 		}
 	}
+
+	game.EndGameState = &EndGameState{
+		Winner:           winner,
+		WhoNominatesWhom: whoNominatesWhom,
+		OriginalRoles:    game.getOriginalRolesMap(),
+		CurrentRoles:     game.getCurrentRolesMap(),
+	}
+}
+
+func (game *Game) getOriginalRolesMap() map[string]Role {
+	originalRolesMap := map[string]Role{}
+	for _, p := range game.players {
+		originalRolesMap[p.Name] = p.originalRole
+	}
+	return originalRolesMap
+}
+
+func (game *Game) getCurrentRolesMap() map[string]Role {
+	currentRolesMap := map[string]Role{}
+	for _, p := range game.players {
+		currentRolesMap[p.Name] = p.currentRole
+	}
+	return currentRolesMap
 }
 
 func (game *Game) TannerWin() {

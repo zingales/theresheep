@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC} from 'react';
 import ReactDOM from 'react-dom';
 
 import {
@@ -138,35 +138,81 @@ const Game = () => {
   }
   const backendState = backendStateAsyncResult.result;
 
-  const component = getComponent(backendState.phase, backendState);
+  const component = getMainComponent(backendState.phase, backendState);
 
   return (
     <div className="App">
       <AppBar color="primary" className="App__appbar " position="static">
-        {backendState.phase === 'day' ? 'Day Phase' : 'Night Phase'}
+        {backendState.phase === 'day'
+          ? 'Day Phase'
+          : backendState.phase === 'night'
+          ? 'Night Phase'
+          : backendState.phase === 'end'
+          ? 'Game Over'
+          : assertNever('Non exhaustive switch', backendState.phase)}
       </AppBar>
       {component}
     </div>
   );
 };
 
-const getComponent = (
+const getMainComponent = (
   phase: Phase,
   backendState: BackendState,
-): JSX.Element => {
-  if (phase === 'day') {
-    return <DayPhase backendState={backendState} />;
-  }
-  const role = backendState.originalRole;
-
-  switch (role) {
-    case 'werewolf':
-      return <WerewolfNightPhase backendState={backendState} />;
-    case 'villager':
-      return <VillagerNightPhase />;
+): React.ReactNode => {
+  switch (phase) {
+    case 'day':
+      return <DayPhase backendState={backendState} />;
+    case 'night':
+      const role = backendState.originalRole;
+      switch (role) {
+        case 'werewolf':
+          return <WerewolfNightPhase backendState={backendState} />;
+        case 'villager':
+          return <VillagerNightPhase />;
+        default:
+          return assertNever('Non Exhaustive switch', role);
+      }
+    case 'end':
+      return <Endgame backendState={backendState} />;
     default:
-      return assertNever('Non Exhaustive switch', role);
+      assertNever('Non exhaustive switch', phase);
   }
+};
+
+const Endgame: FC<{backendState: BackendState}> = props => {
+  // TODO:
+  const {phase, allPlayers, endgame} = props.backendState;
+  if (phase !== 'end' || endgame === undefined) {
+    return <div style={{color: 'red'}}>Endgame called when phase isnt end</div>;
+  }
+
+  const {winner, killMap, originalRoles, currentRoles} = endgame;
+
+  // TODO: show center
+  return (
+    <div className="EndGame">
+      <div className="EndGame__winner">Winner: {winner}</div>
+      <div className="EndGame__endgame-info-table">
+        <div className="EndGame__info-row">
+          <div className="EndGame__info-item"></div>
+          <div className="EndGame__info-item">Killed</div>
+          <div className="EndGame__info-item">Original Role</div>
+          <div className="EndGame__info-item">Current Role</div>
+        </div>
+        {allPlayers.map(playerName => (
+          <div className="EndGame__info-row">
+            <div className="EndGame__info-item">{playerName}</div>
+            <div className="EndGame__info-item">{killMap[playerName]}</div>
+            <div className="EndGame__info-item">
+              {originalRoles[playerName]}
+            </div>
+            <div className="EndGame__info-item">{currentRoles[playerName]}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 ReactDOM.render(<App />, document.getElementById('root'));
