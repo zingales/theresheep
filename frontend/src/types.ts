@@ -21,18 +21,32 @@ export type StateFromBackend = {
   };
   phase: Phase;
   allPlayers: string[];
+  endgame?: {
+    winner: string;
+    killMap: {[player: string]: string};
+    originalRoles: {[player: string]: Role};
+    currentRoles: {[player: string]: Role};
+  };
 };
 
-export type Phase = 'day' | 'night';
+export type Phase = 'day' | 'night' | 'end';
 
+// TODO: BackendState = StateFromBackend['player'] & Omit<StateFromBackend, 'player'>
 export type BackendState = {
-  name: string;
+  name: string; // name of this player
   allPlayers: string[];
   originalRole: Role;
   knownPlayers: {[playerName: string]: Role};
   center: (Role | null)[];
   actionPrompt: ActionPrompt;
   phase: Phase;
+
+  endgame?: {
+    winner: string;
+    killMap: {[player: string]: string};
+    originalRoles: {[player: string]: Role};
+    currentRoles: {[player: string]: Role};
+  };
 };
 
 /*****************************************************************************

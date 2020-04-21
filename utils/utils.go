@@ -41,3 +41,21 @@ func MustAtoi(s string) int {
 	}
 	return n
 }
+
+func Filter(arr []string, condition func(string) bool) []string {
+	var newArr []string
+	for _, s := range arr {
+		if condition(s) {
+			newArr = append(newArr, s)
+		}
+	}
+	return newArr
+}
+
+func MapI2S(arr []int, f func(int) string) []string {
+	newArr := make([]string, len(arr))
+	for i, s := range arr {
+		newArr[i] = f(s)
+	}
+	return newArr
+}
