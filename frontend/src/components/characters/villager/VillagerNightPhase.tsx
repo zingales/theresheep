@@ -1,7 +1,7 @@
 import React from 'react';
 import villagerImg from 'pics/villager.png';
 import './VillagerNightPhase.scss';
-import Elipsis from 'Elipsis';
+import Elipsis from 'components/shared/Elipsis';
 
 const VillagerNightPhase = () => {
   return (
