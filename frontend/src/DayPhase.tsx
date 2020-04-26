@@ -6,13 +6,13 @@ import {
   Radio,
   FormControlLabel,
 } from '@material-ui/core';
-import {BackendState} from 'types';
+import {State} from 'types';
 import {nominateToKill} from 'api';
 
 import './DayPhase.scss';
 import Timer from 'Timer';
 
-const DayPhase: FC<{backendState: BackendState}> = props => {
+const DayPhase: FC<{backendState: State}> = props => {
   const {
     backendState: {allPlayers},
   } = props;

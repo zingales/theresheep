@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import './WerewolfNightPhase.scss';
-import {BackendState, Role} from 'types';
+import {State, Role} from 'types';
 import {assertNever} from 'utils';
 import classNames from 'classnames';
 import {chooseCenterCard} from 'api';
@@ -9,7 +9,7 @@ import {useParams} from 'react-router-dom';
 import werewolfImg from 'pics/werewolf.png';
 import villagerImg from 'pics/villager.png';
 
-const WerewolfNightPhase: FC<{backendState: BackendState}> = props => {
+const WerewolfNightPhase: FC<{backendState: State}> = props => {
   const {
     backendState: {knownPlayers, center},
   } = props;

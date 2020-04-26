@@ -9,7 +9,7 @@ export type ActionPrompt =
   | 'choose-player-instead-of-center'
   | ''; // indicates no action is expected
 
-// state as it comes in from backend. This is different from BackendState as
+// state as it comes in from backend. This is different from State as
 // this state gets "massaged" into something more palatable for the frontend.
 // Specifically hasSeen gets changed
 export type StateFromBackend = {
@@ -31,8 +31,7 @@ export type StateFromBackend = {
 
 export type Phase = 'day' | 'night' | 'end';
 
-// TODO: BackendState = StateFromBackend['player'] & Omit<StateFromBackend, 'player'>
-export type BackendState = {
+export type State = {
   name: string; // name of this player
   allPlayers: string[];
   originalRole: Role;

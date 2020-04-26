@@ -1,10 +1,10 @@
 import {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
-import {BackendState, AsyncResult, DefaultFetchError} from './types';
+import {State, AsyncResult, DefaultFetchError} from './types';
 import {getBackendState} from './api';
 
 /*
- * A hook that polls the backend and reutrns an AsyncResult<BackendState>.
+ * A hook that polls the backend and reutrns an AsyncResult<State>.
  * Before the first response returns this hook will return {type: 'pending'}.
  * After that this hook will cause a rerender in the calling component every
  * time a request returns. Either {type: 'success'} if the poll was successful
@@ -17,9 +17,9 @@ import {getBackendState} from './api';
  * 2. Continue returning the last successful response in the case of an error
  * so the calling component can continue displaying reasonable information
  */
-export const useBackendState = (): AsyncResult<BackendState> => {
+export const useBackendState = (): AsyncResult<State> => {
   const {gameId, playerId} = useParams();
-  const [backendState, setBackendState] = useState<AsyncResult<BackendState>>({
+  const [backendState, setBackendState] = useState<AsyncResult<State>>({
     type: 'pending',
   });
 

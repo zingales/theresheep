@@ -1,5 +1,5 @@
 import {
-  BackendState,
+  State,
   ConnectionError,
   NonJsonError,
   HttpError,
@@ -75,7 +75,7 @@ export const setRolePool = async (gameId: string, roles: string[]) =>
 export const getBackendState = async (
   gameId: string,
   playerId: string,
-): Promise<BackendState> => {
+): Promise<State> => {
   const stateFromBackend = await req<StateFromBackend>(
     `/api/games/${gameId}/players/${playerId}/state`,
   );
@@ -83,12 +83,12 @@ export const getBackendState = async (
 
   type HasSeen = StateFromBackend['player']['hasSeen'];
   type ParseHasSeenRetType = {
-    knownPlayers: BackendState['knownPlayers'];
-    center: BackendState['center'];
+    knownPlayers: State['knownPlayers'];
+    center: State['center'];
   };
   const parseHasSeen = (hasSeen: HasSeen): ParseHasSeenRetType => {
-    let center: BackendState['center'] = [null, null, null];
-    let knownPlayers: BackendState['knownPlayers'] = {};
+    let center: State['center'] = [null, null, null];
+    let knownPlayers: State['knownPlayers'] = {};
 
     for (const [key, value] of Object.entries(hasSeen)) {
       const match = key.match(/Center_(\d+)/);
