@@ -171,8 +171,9 @@ func (player *Player) GetKillNomination(playerNames []string) string {
 				playerNames, func(name string) bool {
 					return name != player.Name
 				})
+			randIdx := rand.Intn(len(playersMinusCurrent))
 			player.killNomination =
-				playersMinusCurrent[rand.Intn(len(playerNames))]
+				playersMinusCurrent[randIdx]
 		}
 		return player.killNomination
 	} else {
