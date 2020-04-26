@@ -67,6 +67,10 @@ const CreateGame = () => {
         'villager',
       ]);
       await startGame(gameId);
+      if (process.env.NODE_ENV === 'development') {
+        window.open('/game/Game1/player/1');
+        window.open('/game/Game1/player/1');
+      }
       history.push(`/game/${gameId}/player/${player1Id}`);
     } catch (untypedError) {
       const error = untypedError as DefaultFetchError;
