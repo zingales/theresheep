@@ -10,7 +10,7 @@ import {State} from 'types';
 import {nominateToKill} from 'api';
 
 import './DayPhase.scss';
-import Timer from 'Timer';
+import Timer from 'components/shared/Timer';
 
 const DayPhase: FC<{backendState: State}> = props => {
   const {
