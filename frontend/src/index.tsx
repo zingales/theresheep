@@ -14,7 +14,7 @@ import VillagerNightPhase from './villager/VillagerNightPhase';
 import DayPhase from './DayPhase';
 import {useBackendState, assertNever} from './utils';
 import {createNewGame, createPlayer, setRolePool, startGame} from './api';
-import {BackendState, DefaultFetchError, Phase} from 'types';
+import {State, DefaultFetchError, Phase} from 'types';
 
 import {createMuiTheme, ThemeProvider} from '@material-ui/core';
 import {grey} from '@material-ui/core/colors';
@@ -162,7 +162,7 @@ const Game = () => {
 
 const getMainComponent = (
   phase: Phase,
-  backendState: BackendState,
+  backendState: State,
 ): React.ReactNode => {
   switch (phase) {
     case 'day':
@@ -184,7 +184,7 @@ const getMainComponent = (
   }
 };
 
-const Endgame: FC<{backendState: BackendState}> = props => {
+const Endgame: FC<{backendState: State}> = props => {
   // TODO:
   const {phase, allPlayers, endgame} = props.backendState;
   if (phase !== 'end' || endgame === undefined) {
