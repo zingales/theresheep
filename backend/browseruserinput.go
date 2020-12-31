@@ -87,7 +87,7 @@ func (input *BrowserUserInput) ChooseCenterCard(string) int {
 	input.lock.Unlock()
 
 	card := <-input.message
-	input.expecting = ""
+	input.expecting = "" // TODO: is it safe to assign to expecting like this without a lock?
 	return card.(int)
 }
 
