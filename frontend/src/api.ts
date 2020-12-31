@@ -4,6 +4,7 @@ import {
   NonJsonError,
   HttpError,
   StateFromBackend,
+  Role,
 } from './types';
 
 /*
@@ -66,7 +67,7 @@ export const startGame = async (gameId: string) =>
     method: 'POST',
   });
 
-export const setRolePool = async (gameId: string, roles: string[]) =>
+export const setRolePool = async (gameId: string, roles: Role[]) =>
   await req<{}>(`/api/games/${gameId}/role_pool`, {
     method: 'PUT',
     body: JSON.stringify({roles}),
@@ -130,6 +131,19 @@ export const chooseCenterCard = async (
     body: JSON.stringify({
       actionType: 'choose-center-card',
       action: cardIdx,
+    }),
+  });
+
+export const choosePlayerOrCenter = async (
+  gameId: string,
+  playerId: string,
+  playerOrCenter: 'player' | 'center',
+): Promise<{}> =>
+  await req<{}>(`/api/games/${gameId}/player/${playerId}/do_action`, {
+    method: 'POST',
+    body: JSON.stringify({
+      actionType: 'choose-player-instead-of-center',
+      action: playerOrCenter === 'player',
     }),
   });
 

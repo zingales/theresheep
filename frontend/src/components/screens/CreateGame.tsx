@@ -21,7 +21,7 @@ const CreateGame = () => {
       await setRolePool(gameId, [
         'werewolf',
         'werewolf',
-        'villager',
+        'seer',
         'villager',
         'villager',
         'villager',

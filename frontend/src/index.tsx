@@ -6,6 +6,7 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import './index.scss';
 import WerewolfNightPhase from 'components/characters/werewolf/WerewolfNightPhase';
 import VillagerNightPhase from 'components/characters/villager/VillagerNightPhase';
+import SeerNightPhase from 'components/characters/seer/SeerNightPhase';
 
 import DayPhase from 'components/screens/DayPhase';
 import CreateGame from 'components/screens/CreateGame';
@@ -109,6 +110,8 @@ const getMainComponent = (
           return <WerewolfNightPhase backendState={backendState} />;
         case 'villager':
           return <VillagerNightPhase />;
+        case 'seer':
+          return <SeerNightPhase />;
         default:
           return assertNever('Non Exhaustive switch', role);
       }
