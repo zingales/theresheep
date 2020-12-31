@@ -147,6 +147,19 @@ export const choosePlayerOrCenter = async (
     }),
   });
 
+export const choosePlayer = async (
+  gameId: string,
+  playerId: string,
+  playerName: string,
+): Promise<{}> =>
+  await req<{}>(`/api/games/${gameId}/player/${playerId}/do_action`, {
+    method: 'POST',
+    body: JSON.stringify({
+      actionType: 'choose-player',
+      action: playerName,
+    }),
+  });
+
 export const nominateToKill = async (
   gameId: string,
   playerId: string,

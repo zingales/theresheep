@@ -3,10 +3,15 @@ import seerImg from 'pics/seer.png';
 import './SeerNightPhase.scss';
 import classNames from 'classnames';
 import {Button} from '@material-ui/core';
-import {chooseCenterCard, choosePlayerOrCenter} from 'api';
+import {chooseCenterCard, choosePlayerOrCenter, choosePlayer} from 'api';
 import {useParams} from 'react-router-dom';
+import {State} from 'types';
 
-const SeerNightPhase = () => {
+const SeerNightPhase: FC<{backendState: State}> = props => {
+  const {
+    backendState: {allPlayers},
+  } = props;
+
   return (
     <div className="SeerNightPhase">
       <div className="SeerNightPhase__column">
@@ -20,6 +25,7 @@ const SeerNightPhase = () => {
 
       <span className="SeerNightPhase__column SeerNightPhase__waiting-column">
         <CenterChooseWidget />
+        <ChoosePlayerWidget playerNames={allPlayers} />
       </span>
     </div>
   );
@@ -93,6 +99,45 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = () => {
       </div>
       <Button onClick={submit}>Submit</Button>
     </div>
+  );
+};
+
+type ChoosePlayerWidgetProps = {
+  playerNames: string[];
+};
+const ChoosePlayerWidget: FC<ChoosePlayerWidgetProps> = props => {
+  const {playerNames} = props;
+  // TODO: maybe do useParams in the parent and pass it down
+  const {gameId, playerId} = useParams();
+  if (gameId === undefined) {
+    alert('bad url, must include gameId');
+    return null;
+  }
+
+  if (playerId === undefined) {
+    alert('bad url, must include playerId');
+    return null;
+  }
+
+  const choose = async (
+    gameId: string,
+    playerId: string,
+    playerName: string,
+  ) => {
+    await choosePlayerOrCenter(gameId, playerId, 'player');
+    await choosePlayer(gameId, playerId, playerName);
+  };
+
+  return (
+    <ul>
+      {playerNames.map((playerName, idx) => (
+        <li
+          key={`player-name-picker-${idx}`}
+          onClick={() => choose(gameId, playerId, playerName)}>
+          {playerName}
+        </li>
+      ))}
+    </ul>
   );
 };
 
