@@ -111,7 +111,7 @@ const getMainComponent = (
         case 'villager':
           return <VillagerNightPhase />;
         case 'seer':
-          return <SeerNightPhase />;
+          return <SeerNightPhase backendState={backendState} />;
         default:
           return assertNever('Non Exhaustive switch', role);
       }
