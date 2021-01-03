@@ -60,7 +60,7 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = () => {
     });
 
   const submit = async () => {
-    const indexes = [];
+    const indexes: number[] = [];
     for (let i = 0; i < chosenState.length; i++) {
       if (chosenState[i]) {
         indexes.push(i);
@@ -73,7 +73,7 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = () => {
     }
     await choosePlayerOrCenter(gameId, playerId, 'center');
     for (const i of indexes) {
-      await chooseCenterCard(gameId, playerId, indexes[i]);
+      await chooseCenterCard(gameId, playerId, i);
     }
   };
 
