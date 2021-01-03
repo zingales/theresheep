@@ -32,6 +32,7 @@ export async function req<T>(path: string, options?: RequestInit): Promise<T> {
   try {
     resp = await fetch(url, modifiedOptions);
   } catch (error) {
+    console.error(error);
     throw new ConnectionError(url);
   }
 
@@ -41,10 +42,12 @@ export async function req<T>(path: string, options?: RequestInit): Promise<T> {
       const respJson = JSON.parse(text);
       return respJson;
     } catch (error) {
+      console.error(error);
       throw new NonJsonError(text);
     }
   } else {
     const respJson = await resp.json();
+    console.log(resp.status, respJson);
     throw new HttpError(url, resp.status, respJson);
   }
 }
