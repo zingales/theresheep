@@ -15,7 +15,7 @@ import Timer from 'components/shared/Timer';
 
 const DayPhase: FC<{backendState: State}> = props => {
   const {
-    backendState: {allPlayers, originalRole, center, knownPlayers},
+    backendState: {allPlayers, originalRole, center, knownPlayers, name},
   } = props;
   const [radioGroupValue, setRadio] = useState<string | null>(null);
 
@@ -57,7 +57,7 @@ const DayPhase: FC<{backendState: State}> = props => {
       <div className="DayPhase__column">
         <div className="DayPhase__info">
           This is what i know:
-          My Original Role {originalRole} <br></br>
+          My Original Role {originalRole}<br></br>
           Things i know
           <ul>
             {Object.entries(knownPlayers).map(([key, value]) => {
