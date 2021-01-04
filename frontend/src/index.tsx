@@ -11,6 +11,7 @@ import Seer from 'components/characters/seer/Seer';
 import CreateGame from 'components/screens/CreateGame';
 import Endgame from 'components/screens/Endgame';
 import Timer from 'components/shared/Timer';
+import ChooseWhoToKill from 'components/shared/ChooseWhoToKill';
 
 import {useBackendState, assertNever} from 'utils';
 import {State, Phase} from 'types';
@@ -91,7 +92,12 @@ const Game = () => {
           ? 'Game Over'
           : assertNever('Non exhaustive switch', backendState.phase)}
       </AppBar>
-      {backendState.phase === 'day' && <Timer />}
+      <span>
+        {backendState.phase === 'day' && <Timer />}
+        {backendState.phase === 'day' && (
+          <ChooseWhoToKill playerNames={backendState.allPlayers} />
+        )}
+      </span>
       {component}
     </div>
   );
