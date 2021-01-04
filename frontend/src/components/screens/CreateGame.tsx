@@ -14,9 +14,9 @@ const CreateGame = () => {
   const createGameSequence = async () => {
     try {
       const gameId = await createNewGame();
-      const player1Id = await createPlayer(gameId, 'player 1');
-      const player2Id = await createPlayer(gameId, 'player 2');
-      const player3Id = await createPlayer(gameId, 'player 3');
+      const player1Id = await createPlayer(gameId, 'Adrian');
+      const player2Id = await createPlayer(gameId, 'G');
+      const player3Id = await createPlayer(gameId, 'Evan');
 
       await setRolePool(gameId, [
         'werewolf',
@@ -51,7 +51,7 @@ const CreateGame = () => {
   };
 
   return (
-    <div className="App">
+    <div className="">
       <AppBar color="primary" className="App__appbar " position="static">
         Create Game
       </AppBar>
