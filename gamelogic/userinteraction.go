@@ -34,7 +34,7 @@ func (input *RandomUserInput) ChooseCenterCard(additionalInfo string) int {
 
 func (input *RandomUserInput) DoesChoosePlayerInsteadOfCenter(additionalInfo string) bool {
 	choice := rand.Intn(1) == 0
-	log.Printf("ranomly choose player or center %b", choice)
+	log.Printf("ranomly choose player or center %t", choice)
 	return choice
 }
 

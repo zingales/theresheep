@@ -150,7 +150,7 @@ func (player *Player) UserAction(actionType string, actionBody interface{}) erro
 		player.SetNominateToKill(actionBodyAsStr)
 		return nil
 	default:
-		return fmt.Errorf("Unknown user action ", actionType)
+		return fmt.Errorf("Unknown user action %s", actionType)
 	}
 }
 
