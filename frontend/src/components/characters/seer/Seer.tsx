@@ -1,6 +1,6 @@
 import React, {FC, useState} from 'react';
 import seerImg from 'pics/seer.png';
-import './SeerNightPhase.scss';
+import './Seer.scss';
 import classNames from 'classnames';
 import {Button} from '@material-ui/core';
 import {chooseCenterCard, choosePlayerOrCenter, choosePlayer} from 'api';
@@ -8,7 +8,7 @@ import {useParams} from 'react-router-dom';
 import {State} from 'types';
 import PlayersList from '../../shared/PlayersList';
 
-const SeerNightPhase: FC<{backendState: State}> = props => {
+const Seer: FC<{backendState: State}> = props => {
   const {
     backendState: {allPlayers, knownPlayers, name, originalRole},
   } = props;
@@ -90,17 +90,17 @@ const SeerNightPhase: FC<{backendState: State}> = props => {
   };
 
   return (
-    <div className="SeerNightPhase">
-      <div className="SeerNightPhase__column">
-        <div className="SeerNightPhase__role">Your Role: seer</div>
-        <div className="SeerNightPhase__team">Team: villager</div>
-        <div className="SeerNightPhase__description">
+    <div className="Seer">
+      <div className="Seer__column">
+        <div className="Seer__role">Your Role: seer</div>
+        <div className="Seer__team">Team: villager</div>
+        <div className="Seer__description">
           You're a seer. See some shit
         </div>
-        <img src={seerImg} className="SeerNightPhase__image" alt="logo" />
+        <img src={seerImg} className="Seer__image" alt="logo" />
       </div>
 
-      <span className="SeerNightPhase__column SeerNightPhase__waiting-column">
+      <span className="Seer__column Seer__waiting-column">
         <CenterChooseWidget
           chosenState={centerChosenState}
           setChosenState={setCenterChosenState}
@@ -170,4 +170,4 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
   );
 };
 
-export default SeerNightPhase;
+export default Seer;

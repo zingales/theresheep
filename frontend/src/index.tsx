@@ -4,11 +4,10 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 import './index.scss';
-import WerewolfNightPhase from 'components/characters/werewolf/WerewolfNightPhase';
-import VillagerNightPhase from 'components/characters/villager/VillagerNightPhase';
-import SeerNightPhase from 'components/characters/seer/SeerNightPhase';
+import Werewolf from 'components/characters/werewolf/Werewolf';
+import Villager from 'components/characters/villager/Villager';
+import Seer from 'components/characters/seer/Seer';
 
-import DayPhase from 'components/screens/DayPhase';
 import CreateGame from 'components/screens/CreateGame';
 import Endgame from 'components/screens/Endgame';
 import Timer from 'components/shared/Timer';
@@ -108,11 +107,11 @@ const getMainComponent = (
       const role = backendState.originalRole;
       switch (role) {
         case 'werewolf':
-          return <WerewolfNightPhase backendState={backendState} />;
+          return <Werewolf backendState={backendState} />;
         case 'villager':
-          return <VillagerNightPhase />;
+          return <Villager />;
         case 'seer':
-          return <SeerNightPhase backendState={backendState} />;
+          return <Seer backendState={backendState} />;
         default:
           return assertNever('Non Exhaustive switch', role);
       }
