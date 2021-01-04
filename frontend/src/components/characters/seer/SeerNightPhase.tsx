@@ -6,11 +6,88 @@ import {Button} from '@material-ui/core';
 import {chooseCenterCard, choosePlayerOrCenter, choosePlayer} from 'api';
 import {useParams} from 'react-router-dom';
 import {State} from 'types';
+import PlayersList from '../../shared/PlayersList';
 
 const SeerNightPhase: FC<{backendState: State}> = props => {
   const {
-    backendState: {allPlayers},
+    backendState: {allPlayers, knownPlayers, name, originalRole},
   } = props;
+
+  const [playerSelectedState, setPlayerSelectedState] = useState<{
+    [playerName: string]: boolean;
+  }>({});
+
+  const [centerChosenState, setCenterChosenState] = useState<boolean[]>([
+    false,
+    false,
+    false,
+  ]);
+
+  const {gameId, playerId} = useParams();
+  if (gameId === undefined) {
+    alert('bad url, must include gameId');
+    return null;
+  }
+
+  if (playerId === undefined) {
+    alert('bad url, must include playerId');
+    return null;
+  }
+
+  const allPlayersToRoles = Object.fromEntries(
+    allPlayers
+      .filter(playerName => playerName !== name)
+      .map(playerName => [playerName, knownPlayers[playerName] || null]),
+  );
+
+  const submit = async () => {
+    const playerChosenCount = Object.entries(playerSelectedState).filter(
+      ([_, isSelected]) => isSelected,
+    ).length;
+    const somePlayerIsChosen = playerChosenCount > 0;
+
+    const centerChosenIndexes: number[] = [];
+    for (let i = 0; i < centerChosenState.length; i++) {
+      if (centerChosenState[i]) {
+        centerChosenIndexes.push(i);
+      }
+    }
+
+    const someCenterCardIsChosen = centerChosenIndexes.length > 0;
+
+    const exactlyOneOfCenterOrPlayerIsChosen =
+      (someCenterCardIsChosen && !somePlayerIsChosen) ||
+      (!someCenterCardIsChosen && somePlayerIsChosen);
+
+    if (!exactlyOneOfCenterOrPlayerIsChosen) {
+      alert('Must only click cards in center OR click players');
+      return;
+    }
+
+    if (someCenterCardIsChosen) {
+      if (centerChosenIndexes.length !== 2) {
+        alert('must click on exactly 2 center cards');
+        return;
+      }
+
+      await choosePlayerOrCenter(gameId, playerId, 'center');
+      for (const i of centerChosenIndexes) {
+        await chooseCenterCard(gameId, playerId, i);
+      }
+    } else {
+      if (playerChosenCount !== 1) {
+        alert('must choose exactly 1 player');
+        return;
+      }
+
+      const [playerName] = Object.entries(playerSelectedState).find(
+        ([_, isSelected]) => isSelected,
+      )!;
+
+      await choosePlayerOrCenter(gameId, playerId, 'player');
+      await choosePlayer(gameId, playerId, playerName);
+    }
+  };
 
   return (
     <div className="SeerNightPhase">
@@ -24,22 +101,32 @@ const SeerNightPhase: FC<{backendState: State}> = props => {
       </div>
 
       <span className="SeerNightPhase__column SeerNightPhase__waiting-column">
-        <CenterChooseWidget />
-        <ChoosePlayerWidget playerNames={allPlayers} />
+        <CenterChooseWidget
+          chosenState={centerChosenState}
+          setChosenState={setCenterChosenState}
+        />
+        {/* <ChoosePlayerWidget playerNames={allPlayers} /> */}
+        <PlayersList
+          players={allPlayersToRoles}
+          currentPlayer={{name, roleToDisplay: originalRole}}
+          selectedState={playerSelectedState}
+          setSelectedState={setPlayerSelectedState}
+        />
+
+        <Button onClick={submit}>Submit</Button>
       </span>
     </div>
   );
 };
 
-type CenterChooseWidgetProps = {};
+type CenterChooseWidgetProps = {
+  chosenState: boolean[];
+  setChosenState: React.Dispatch<React.SetStateAction<boolean[]>>;
+};
 
-const CenterChooseWidget: FC<CenterChooseWidgetProps> = () => {
+const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
   // what i really want here is a set, but i don't think js lets me do that
-  const [chosenState, setChosenState] = useState<boolean[]>([
-    false,
-    false,
-    false,
-  ]);
+  const {chosenState, setChosenState} = props;
 
   const {gameId, playerId} = useParams();
   if (gameId === undefined) {
@@ -58,24 +145,6 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = () => {
       newState[idx] = !newState[idx];
       return newState;
     });
-
-  const submit = async () => {
-    const indexes: number[] = [];
-    for (let i = 0; i < chosenState.length; i++) {
-      if (chosenState[i]) {
-        indexes.push(i);
-      }
-    }
-
-    if (indexes.length !== 2) {
-      alert('must click on exactly 2');
-      return;
-    }
-    await choosePlayerOrCenter(gameId, playerId, 'center');
-    for (const i of indexes) {
-      await chooseCenterCard(gameId, playerId, i);
-    }
-  };
 
   // TODO: I don't know how this is getting the css for CenterChooseWidget
   return (
@@ -97,47 +166,7 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = () => {
           {chosenState[2] ? 'T' : 'F'}
         </div>
       </div>
-      <Button onClick={submit}>Submit</Button>
     </div>
-  );
-};
-
-type ChoosePlayerWidgetProps = {
-  playerNames: string[];
-};
-const ChoosePlayerWidget: FC<ChoosePlayerWidgetProps> = props => {
-  const {playerNames} = props;
-  // TODO: maybe do useParams in the parent and pass it down
-  const {gameId, playerId} = useParams();
-  if (gameId === undefined) {
-    alert('bad url, must include gameId');
-    return null;
-  }
-
-  if (playerId === undefined) {
-    alert('bad url, must include playerId');
-    return null;
-  }
-
-  const choose = async (
-    gameId: string,
-    playerId: string,
-    playerName: string,
-  ) => {
-    await choosePlayerOrCenter(gameId, playerId, 'player');
-    await choosePlayer(gameId, playerId, playerName);
-  };
-
-  return (
-    <ul>
-      {playerNames.map((playerName, idx) => (
-        <li
-          key={`player-name-picker-${idx}`}
-          onClick={() => choose(gameId, playerId, playerName)}>
-          {playerName}
-        </li>
-      ))}
-    </ul>
   );
 };
 

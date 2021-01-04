@@ -1,14 +1,12 @@
 import React, {FC} from 'react';
 import './WerewolfNightPhase.scss';
 import {State, Role} from 'types';
-import {assertNever} from 'utils';
+import {getImgForRole} from 'compUtils';
 import classNames from 'classnames';
 import {chooseCenterCard} from 'api';
 import {useParams} from 'react-router-dom';
 
 import werewolfImg from 'pics/werewolf.png';
-import villagerImg from 'pics/villager.png';
-import seerImg from 'pics/seer.png';
 
 const WerewolfNightPhase: FC<{backendState: State}> = props => {
   const {
@@ -105,19 +103,3 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
 };
 
 export default WerewolfNightPhase;
-
-export const getImgForRole = (
-  role: Role,
-  className?: string,
-): React.ReactNode => {
-  switch (role) {
-    case 'villager':
-      return <img className={className} src={villagerImg} alt="logo" />;
-    case 'werewolf':
-      return <img className={className} src={werewolfImg} alt="logo" />;
-    case 'seer':
-      return <img className={className} src={seerImg} alt="logo" />;
-    default:
-      return assertNever('Non exhaustive switch', role);
-  }
-};
