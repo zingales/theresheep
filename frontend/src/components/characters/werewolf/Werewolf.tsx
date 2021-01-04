@@ -66,7 +66,7 @@ type CenterChooseWidgetProps = {
 const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
   const {center} = props;
 
-  const {gameId, playerId} = useParams();
+  const {gameId, playerId} = useParams<{gameId:string, playerId:string}>();  
   if (gameId === undefined || playerId === undefined) {
     // TODO: return error here? Or maybe attach game and playerid to context
     // and make them not undefined

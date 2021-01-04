@@ -18,7 +18,7 @@ import {getBackendState} from './api';
  * so the calling component can continue displaying reasonable information
  */
 export const useBackendState = (): AsyncResult<State> => {
-  const {gameId, playerId} = useParams();
+  const {gameId, playerId} = useParams<{gameId:string, playerId:string}>();
   const [backendState, setBackendState] = useState<AsyncResult<State>>({
     type: 'pending',
   });
