@@ -11,6 +11,7 @@ import SeerNightPhase from 'components/characters/seer/SeerNightPhase';
 import DayPhase from 'components/screens/DayPhase';
 import CreateGame from 'components/screens/CreateGame';
 import Endgame from 'components/screens/Endgame';
+import Timer from 'components/shared/Timer';
 
 import {useBackendState, assertNever} from 'utils';
 import {State, Phase} from 'types';
@@ -91,6 +92,7 @@ const Game = () => {
           ? 'Game Over'
           : assertNever('Non exhaustive switch', backendState.phase)}
       </AppBar>
+      {backendState.phase === 'day' && <Timer />}
       {component}
     </div>
   );
@@ -102,7 +104,6 @@ const getMainComponent = (
 ): React.ReactNode => {
   switch (phase) {
     case 'day':
-      return <DayPhase backendState={backendState} />;
     case 'night':
       const role = backendState.originalRole;
       switch (role) {

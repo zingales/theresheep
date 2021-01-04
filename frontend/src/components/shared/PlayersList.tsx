@@ -46,7 +46,7 @@ const PlayersList: FC<PlayersListProps> = props => {
               )}>
               {role === null
                 ? '?'
-                : getImgForRole(role, 'PlayersList__center-card no-hover')}
+                : getImgForRole(role, 'PlayersList__card no-hover')}
             </div>
           </div>
         ))}
