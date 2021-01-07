@@ -1,0 +1,40 @@
+$centerCardHeight: 200px;
+$cardAspectRatio: 200.75 / 275;
+
+.CenterChooseWidget {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+
+  &__cards-row {
+    display: flex;
+  }
+
+  &__prompt-row {
+    margin-top: 10px;
+  }
+
+  &__center-card {
+    margin: 5px;
+    height: $centerCardHeight;
+    width: $centerCardHeight * $cardAspectRatio;
+    background-color: #444;
+    border-radius: 20px;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: $centerCardHeight * 0.6;
+
+    &--border {
+      border: 5px solid yellow;
+    }
+  }
+
+  &__center-card:not(.no-hover):hover {
+    cursor: pointer;
+    transform: scale(1.05);
+  }
+}

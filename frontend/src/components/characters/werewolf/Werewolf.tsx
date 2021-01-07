@@ -1,10 +1,12 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import './Werewolf.scss';
-import {State, Role} from 'types';
+import {State} from 'types';
+import {Button} from '@material-ui/core';
 import {getImgForRole} from 'compUtils';
 import classNames from 'classnames';
-import {chooseCenterCard} from 'api';
 import {useParams} from 'react-router-dom';
+import CenterChooseWidget from '../../shared/CenterChooseWidget';
+import {chooseCenterCard, choosePlayerOrCenter, choosePlayer} from 'api';
 
 import werewolfImg from 'pics/werewolf.png';
 
@@ -12,6 +14,39 @@ const Werewolf: FC<{backendState: State}> = props => {
   const {
     backendState: {knownPlayers, center},
   } = props;
+
+  const [centerChosenState, setCenterChosenState] = useState<boolean[]>([
+    false,
+    false,
+    false,
+  ]);
+
+  const {gameId, playerId} = useParams();
+  if (gameId === undefined) {
+    alert('bad url, must include gameId');
+    return null;
+  }
+
+  if (playerId === undefined) {
+    alert('bad url, must include playerId');
+    return null;
+  }
+
+  const submit = async () => {
+    const centerChosenIndexes: number[] = [];
+    for (let i = 0; i < centerChosenState.length; i++) {
+      if (centerChosenState[i]) {
+        centerChosenIndexes.push(i);
+      }
+    }
+
+    if (centerChosenIndexes.length !== 1) {
+      alert('must click on exactly 1 center cards');
+      return;
+    }
+
+    await chooseCenterCard(gameId, playerId, centerChosenIndexes[0]);
+  };
 
   const originalWerewolves = Object.entries(knownPlayers)
     .filter(([, role]) => role === 'werewolf')
@@ -29,11 +64,7 @@ const Werewolf: FC<{backendState: State}> = props => {
           werewolves. If no one else opens their eyes, the other Werewolves are
           in the center. Werewolves are on the werewolf team.
         </div>
-        <img
-          src={werewolfImg}
-          className="Werewolf__image"
-          alt="logo"
-        />
+        <img src={werewolfImg} className="Werewolf__image" alt="logo" />
       </div>
       <div className="Werewolf__column">
         <div className="Werewolf__box">
@@ -43,7 +74,11 @@ const Werewolf: FC<{backendState: State}> = props => {
               : 'Your werewolves are'}
           </div>
           {showCenterWidget ? (
-            <CenterChooseWidget center={center} />
+            <CenterChooseWidget
+              chosenState={centerChosenState}
+              setChosenState={setCenterChosenState}
+              center={center}
+            />
           ) : (
             originalWerewolves.map((name, idx) => (
               <div
@@ -53,50 +88,9 @@ const Werewolf: FC<{backendState: State}> = props => {
               </div>
             ))
           )}
+
+          <Button onClick={submit}>Submit</Button>
         </div>
-      </div>
-    </div>
-  );
-};
-
-type CenterChooseWidgetProps = {
-  center: (Role | null)[];
-};
-
-const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
-  const {center} = props;
-
-  const {gameId, playerId} = useParams();
-  if (gameId === undefined || playerId === undefined) {
-    // TODO: return error here? Or maybe attach game and playerid to context
-    // and make them not undefined
-    return null;
-  }
-
-  const chooseCard = (cardIdx: number) =>
-    chooseCenterCard(gameId, playerId, cardIdx);
-
-  const knownCard = center.find(x => x !== null);
-
-  return (
-    <div className="CenterChooseWidget">
-      <div className="CenterChooseWidget__cards-row">
-        {center.map((card, idx) => (
-          <div
-            key={`center-card-${idx}`}
-            onClick={() => chooseCard(idx)}
-            className={classNames(
-              'CenterChooseWidget__center-card',
-              card !== null && 'no-hover',
-            )}>
-            {card === null
-              ? '?'
-              : getImgForRole(card, 'CenterChooseWidget__center-card no-hover')}
-          </div>
-        ))}
-      </div>
-      <div className="CenterChooseWidget__prompt-row">
-        {knownCard && `You saw ${knownCard} in the center!`}
       </div>
     </div>
   );
