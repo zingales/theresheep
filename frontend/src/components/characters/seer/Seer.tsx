@@ -1,16 +1,24 @@
 import React, {FC, useState} from 'react';
 import seerImg from 'pics/seer.png';
 import './Seer.scss';
-import {Button} from '@material-ui/core';
 import {chooseCenterCard, choosePlayerOrCenter, choosePlayer} from 'api';
 import {useParams} from 'react-router-dom';
 import {State} from 'types';
 import PlayersList from '../../shared/PlayersList';
 import CenterChooseWidget from '../../shared/CenterChooseWidget';
+import ActionSubmitButton from '../../shared/ActionSubmitButton';
 
 const Seer: FC<{backendState: State}> = props => {
   const {
-    backendState: {allPlayers, knownPlayers, name, originalRole, center},
+    backendState: {
+      allPlayers,
+      knownPlayers,
+      name,
+      originalRole,
+      center,
+      actionPrompt,
+    },
+    backendState,
   } = props;
 
   const [playerSelectedState, setPlayerSelectedState] = useState<{
@@ -112,7 +120,9 @@ const Seer: FC<{backendState: State}> = props => {
           setSelectedState={setPlayerSelectedState}
         />
 
-        <Button onClick={submit}>Submit</Button>
+        {backendState.phase === 'night' && (
+          <ActionSubmitButton onClick={submit} actionPrompt={actionPrompt} />
+        )}
       </span>
     </div>
   );
