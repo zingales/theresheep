@@ -30,6 +30,10 @@ $cardAspectRatio: 200.75 / 275;
     &--border {
       border: 5px solid yellow;
     }
+
+    &--oldRole {
+      opacity: 0.5;
+    }
   }
 
   &__card:not(.no-hover):hover {

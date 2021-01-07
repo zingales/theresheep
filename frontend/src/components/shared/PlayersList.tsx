@@ -9,6 +9,7 @@ type PlayersListProps = {
   currentPlayer: {name: string; roleToDisplay: Role};
   players: {[playerName: string]: Role | null};
   selectedState: {[playerName: string]: boolean};
+  fadedPlayers?: string[];
 
   // type of setFoo in const [foo, setFoo] = useState();
   setSelectedState: React.Dispatch<
@@ -18,7 +19,13 @@ type PlayersListProps = {
   >;
 };
 const PlayersList: FC<PlayersListProps> = props => {
-  const {players, selectedState, setSelectedState} = props;
+  const {
+    players,
+    selectedState,
+    setSelectedState,
+    fadedPlayers: _fadedPlayers,
+  } = props;
+  const fadedPlayers = _fadedPlayers || [];
 
   const toggleChosen = (playerName: string) => {
     setSelectedState(currentSelectedState => {
@@ -46,7 +53,15 @@ const PlayersList: FC<PlayersListProps> = props => {
               )}>
               {role === null
                 ? '?'
-                : getImgForRole(role, 'PlayersList__card no-hover')}
+                : getImgForRole(
+                    role,
+                    classNames(
+                      'PlayersList__card',
+                      'no-hover',
+                      fadedPlayers.includes(playerName) &&
+                        'PlayersList__card--oldRole',
+                    ),
+                  )}
             </div>
           </div>
         ))}
