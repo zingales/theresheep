@@ -14,7 +14,7 @@ const ChooseWhoToKill: FC<ChooseWhoToKillProps> = props => {
   const {playerNames} = props;
   const [chosenPlayer, setChosenPlayer] = useState<string>('');
 
-  const {gameId, playerId} = useParams<{gameId:string, playerId:string}>();
+  const {gameId, playerId} = useParams();
   if (gameId === undefined || playerId === undefined) {
     return null;
   }

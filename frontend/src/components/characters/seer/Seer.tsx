@@ -23,7 +23,7 @@ const Seer: FC<{backendState: State}> = props => {
     false,
   ]);
 
-  const {gameId, playerId} = useParams<{gameId:string, playerId:string}>();
+  const {gameId, playerId} = useParams();
   if (gameId === undefined) {
     alert('bad url, must include gameId');
     return null;
@@ -128,7 +128,7 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
   // what i really want here is a set, but i don't think js lets me do that
   const {chosenState, setChosenState} = props;
 
-  const {gameId, playerId} = useParams<{gameId:string, playerId:string}>();
+  const {gameId, playerId} = useParams();
   if (gameId === undefined) {
     alert('bad url, must include gameId');
     return null;
