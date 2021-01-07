@@ -7,12 +7,13 @@ import classNames from 'classnames';
 import {useParams} from 'react-router-dom';
 import CenterChooseWidget from '../../shared/CenterChooseWidget';
 import {chooseCenterCard, choosePlayerOrCenter, choosePlayer} from 'api';
+import ActionSubmitButton from '../../shared/ActionSubmitButton';
 
 import werewolfImg from 'pics/werewolf.png';
 
 const Werewolf: FC<{backendState: State}> = props => {
   const {
-    backendState: {knownPlayers, center},
+    backendState: {knownPlayers, center, phase, actionPrompt},
   } = props;
 
   const [centerChosenState, setCenterChosenState] = useState<boolean[]>([
@@ -89,7 +90,9 @@ const Werewolf: FC<{backendState: State}> = props => {
             ))
           )}
 
-          <Button onClick={submit}>Submit</Button>
+          {phase === 'night' && (
+            <ActionSubmitButton onClick={submit} actionPrompt={actionPrompt} />
+          )}
         </div>
       </div>
     </div>
