@@ -1,16 +1,16 @@
 import React, {FC, useState} from 'react';
 import seerImg from 'pics/seer.png';
 import './Seer.scss';
-import classNames from 'classnames';
 import {Button} from '@material-ui/core';
 import {chooseCenterCard, choosePlayerOrCenter, choosePlayer} from 'api';
 import {useParams} from 'react-router-dom';
 import {State} from 'types';
 import PlayersList from '../../shared/PlayersList';
+import CenterChooseWidget from '../../shared/CenterChooseWidget';
 
 const Seer: FC<{backendState: State}> = props => {
   const {
-    backendState: {allPlayers, knownPlayers, name, originalRole},
+    backendState: {allPlayers, knownPlayers, name, originalRole, center},
   } = props;
 
   const [playerSelectedState, setPlayerSelectedState] = useState<{
@@ -23,7 +23,7 @@ const Seer: FC<{backendState: State}> = props => {
     false,
   ]);
 
-  const {gameId, playerId} = useParams<{gameId:string, playerId:string}>();
+  const {gameId, playerId} = useParams<{gameId: string; playerId: string}>();
   if (gameId === undefined) {
     alert('bad url, must include gameId');
     return null;
@@ -94,9 +94,7 @@ const Seer: FC<{backendState: State}> = props => {
       <div className="Seer__column">
         <div className="Seer__role">Your Role: seer</div>
         <div className="Seer__team">Team: villager</div>
-        <div className="Seer__description">
-          You're a seer. See some shit
-        </div>
+        <div className="Seer__description">You're a seer. See some shit</div>
         <img src={seerImg} className="Seer__image" alt="logo" />
       </div>
 
@@ -104,6 +102,7 @@ const Seer: FC<{backendState: State}> = props => {
         <CenterChooseWidget
           chosenState={centerChosenState}
           setChosenState={setCenterChosenState}
+          center={center}
         />
         {/* <ChoosePlayerWidget playerNames={allPlayers} /> */}
         <PlayersList
@@ -115,57 +114,6 @@ const Seer: FC<{backendState: State}> = props => {
 
         <Button onClick={submit}>Submit</Button>
       </span>
-    </div>
-  );
-};
-
-type CenterChooseWidgetProps = {
-  chosenState: boolean[];
-  setChosenState: React.Dispatch<React.SetStateAction<boolean[]>>;
-};
-
-const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
-  // what i really want here is a set, but i don't think js lets me do that
-  const {chosenState, setChosenState} = props;
-
-  const {gameId, playerId} = useParams<{gameId:string, playerId:string}>();
-  if (gameId === undefined) {
-    alert('bad url, must include gameId');
-    return null;
-  }
-
-  if (playerId === undefined) {
-    alert('bad url, must include playerId');
-    return null;
-  }
-
-  const toggleChosen = (idx: number) =>
-    setChosenState(oldState => {
-      const newState = [...oldState];
-      newState[idx] = !newState[idx];
-      return newState;
-    });
-
-  // TODO: I don't know how this is getting the css for CenterChooseWidget
-  return (
-    <div>
-      <div className="CenterChooseWidget__cards-row">
-        <div
-          onClick={() => toggleChosen(0)}
-          className={classNames('CenterChooseWidget__center-card')}>
-          {chosenState[0] ? 'T' : 'F'}
-        </div>
-        <div
-          onClick={() => toggleChosen(1)}
-          className={classNames('CenterChooseWidget__center-card')}>
-          {chosenState[1] ? 'T' : 'F'}
-        </div>
-        <div
-          onClick={() => toggleChosen(2)}
-          className={classNames('CenterChooseWidget__center-card')}>
-          {chosenState[2] ? 'T' : 'F'}
-        </div>
-      </div>
     </div>
   );
 };
