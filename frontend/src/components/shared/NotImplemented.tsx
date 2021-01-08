@@ -4,8 +4,8 @@ import React, {FC} from 'react';
 const NotImplemented: FC<{props: any}> = props => {
     return(
         <div>
-            This Componeneted was not implemented <br/>
-            {JSON.stringify(props, null, 4)}
+            This Component was not implemented <br/>
+           <pre>{JSON.stringify(props, null, 4)}</pre> 
         </div>
     )
 
