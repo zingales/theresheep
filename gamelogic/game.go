@@ -374,7 +374,7 @@ func (game *Game) EndGame() {
 		game.TannerWin()
 	} else {
 
-		if NoWereWolfsSelected && centerWerewolfs > 1 {
+		if NoWereWolfsSelected && len(game.GetPlayerByCurrentRole(Werewolf)) == 0 {
 			winner = "Team Villager"
 			game.VillagerWin()
 		} else if !werewolfDeath {

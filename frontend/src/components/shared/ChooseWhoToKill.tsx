@@ -7,12 +7,18 @@ import {nominateToKill} from 'api';
 import {useParams} from 'react-router-dom';
 // import CheckIcon from '@material-ui/icons/Check';
 
+
+// If all the werewolves are in the "center". The only way team vilalger can win is if they choose to "kill" the werewovles in the center
+const noWerewolfsString = 'NoWerewolfs'
+
 type ChooseWhoToKillProps = {
   playerNames: string[];
 };
 const ChooseWhoToKill: FC<ChooseWhoToKillProps> = props => {
   const {playerNames} = props;
   const [chosenPlayer, setChosenPlayer] = useState<string>('');
+
+  const killOptions = [...playerNames, noWerewolfsString];
 
   const {gameId, playerId} = useParams<{gameId:string, playerId:string}>();
   if (gameId === undefined || playerId === undefined) {
@@ -36,7 +42,7 @@ const ChooseWhoToKill: FC<ChooseWhoToKillProps> = props => {
         id="demo-simple-select"
         value={chosenPlayer}
         onChange={handleChange}>
-        {playerNames.map(playerName => (
+        {killOptions.map(playerName => (
           <MenuItem value={playerName}>{playerName}</MenuItem>
         ))}
       </Select>
