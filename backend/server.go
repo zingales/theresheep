@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/gorilla/pat"
 
@@ -18,8 +17,9 @@ import (
 
 var games = new(sync.Map)
 
-func StartServer(port string) {
+func StartServer(port string, timeinSeconds int) {
 
+	defaultDayTime = timeinSeconds
 	err := http.ListenAndServe(":8090", DefineRoutes())
 	fmt.Println(err)
 }
@@ -38,6 +38,8 @@ type GameApiHandlerFunc func(
 type PlayerApiHandlerFunc func(
 	*gamelogic.Player, *gamelogic.Game, http.ResponseWriter, *http.Request,
 ) (JsonBody, HttpStatus, error)
+
+var defaultDayTime int
 
 // allowCors is useful in development mode when react is being served from a
 // webpack dev server on a different port than the backend. allowCors can
@@ -247,14 +249,6 @@ func StartGame(
 		// TODO: thread a context through here
 		game.ExecuteNight()
 
-		// wait 3 seconds before starting day phase to allow people to
-		// see their night information.
-		// TODO: add a countdown so people
-		// can see when the transition will happen, or add a continue
-		// button and wait for everyone to press it before coninuing
-		timer := time.NewTimer(3 * time.Second)
-		<-timer.C
-
 		game.ExecuteDay()
 
 		game.EndGame()
@@ -269,7 +263,7 @@ func CreateGame(
 ) (JsonBody, HttpStatus, error) {
 	name := "Game1"
 
-	game, err := gamelogic.CreateGame(name)
+	game, err := gamelogic.CreateGame(name, defaultDayTime)
 	if err != nil {
 		return nil, http.StatusInternalServerError, err
 	}

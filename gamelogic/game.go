@@ -55,23 +55,25 @@ func (state *EndGameState) MarshalJSON() ([]byte, error) {
 }
 
 type Game struct {
-	Id            string
-	players       []*Player
-	rolePool      []Role
-	actionManager *ActionManager
-	Center        [3]*Player
-	inProgress    bool
-	Phase         string
+	Id                string
+	players           []*Player
+	rolePool          []Role
+	actionManager     *ActionManager
+	Center            [3]*Player
+	inProgress        bool
+	Phase             string
+	dayLengthDuration time.Duration
 
 	// null until Phase == "end"
 	EndGameState *EndGameState
 }
 
-func CreateGame(id string) (*Game, error) {
+func CreateGame(id string, dayLengthInSec int) (*Game, error) {
 	game := &Game{Id: id}
 	game.players = make([]*Player, 0)
 	game.actionManager = &ActionManager{game: game, History: make([]*Event, 0)}
 	game.inProgress = false
+	game.dayLengthDuration = time.Duration(dayLengthInSec) * time.Second
 	return game, nil
 }
 
@@ -266,14 +268,7 @@ func (game *Game) ExecuteNight() {
 
 func (game *Game) ExecuteDay() {
 	game.Phase = "day"
-
-	var timer *time.Timer
-	if os.Getenv("DEBUG_DAY_TIME_IN_SECONDS") == "" {
-		timer = time.NewTimer(5 * time.Minute)
-	} else {
-		nseconds := utils.MustAtoi(os.Getenv("DEBUG_DAY_TIME_IN_SECONDS"))
-		timer = time.NewTimer(time.Duration(nseconds) * time.Second)
-	}
+	timer := time.NewTimer(game.dayLengthDuration)
 	<-timer.C
 }
 

@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/zingales/theresheep/backend"
 	"github.com/zingales/theresheep/gamelogic"
+	"github.com/zingales/theresheep/utils"
 )
 
 func main() {
@@ -16,8 +18,15 @@ func main() {
 	// rand.Seed(time.Now().UTC().UnixNano())
 	rand.Seed(0)
 
+	var defaultDayTime int
+	if os.Getenv("DEBUG_DAY_TIME_IN_SECONDS") == "" {
+		defaultDayTime = 5 * 60
+	} else {
+		defaultDayTime = utils.MustAtoi(os.Getenv("DEBUG_DAY_TIME_IN_SECONDS"))
+	}
+
 	log.Print("Let the games begin...")
-	backend.StartServer("8080")
+	backend.StartServer("8080", defaultDayTime)
 
 }
 
@@ -25,11 +34,10 @@ func termainlmain() {
 	// Required, otherwise the games "random" order is the same after each refresh
 	rand.Seed(time.Now().UTC().UnixNano())
 
-	game, err := gamelogic.CreateGame("Game1")
+	game, err := gamelogic.CreateGame("Game1", 5*60)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	// create a game with this number of players
 	var num int = 11
 	{
