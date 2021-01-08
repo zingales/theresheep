@@ -1,7 +1,7 @@
 /*****************************************************************************
  **************************** Game State Types *******************************
  *****************************************************************************/
-export type Role = 'werewolf' | 'villager' | 'seer' | 'robber';
+export type Role = 'werewolf' | 'villager' | 'seer' | 'robber' | 'troublemaker';
 
 export type ActionPrompt =
   | 'choose-center-card'
@@ -16,7 +16,6 @@ export type StateFromBackend = {
   player: {
     name: string;
     originalRole: Role;
-    currentRole: Role;
     hasSeen: {[x: string]: Role};
     actionPrompt: ActionPrompt;
   };
@@ -36,7 +35,6 @@ export type State = {
   name: string; // name of this player
   allPlayers: string[];
   originalRole: Role;
-  currentRole: Role;
   knownPlayers: {[playerName: string]: Role};
   center: (Role | null)[];
   actionPrompt: ActionPrompt;

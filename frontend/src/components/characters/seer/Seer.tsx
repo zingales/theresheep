@@ -112,10 +112,8 @@ const Seer: FC<{backendState: State}> = props => {
           setChosenState={setCenterChosenState}
           center={center}
         />
-        {/* <ChoosePlayerWidget playerNames={allPlayers} /> */}
         <PlayersList
           players={allPlayersToRoles}
-          currentPlayer={{name, roleToDisplay: originalRole}}
           selectedState={playerSelectedState}
           setSelectedState={setPlayerSelectedState}
         />

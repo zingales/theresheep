@@ -8,6 +8,7 @@ import Werewolf from 'components/characters/werewolf/Werewolf';
 import Villager from 'components/characters/villager/Villager';
 import Seer from 'components/characters/seer/Seer';
 import Robber from 'components/characters/robber/Robber';
+import TroubleMaker from 'components/characters/troublemaker/TroubleMaker';
 
 import CreateGame from 'components/screens/CreateGame';
 import Endgame from 'components/screens/Endgame';
@@ -121,6 +122,8 @@ const getMainComponent = (
           return <Seer backendState={backendState} />;
         case 'robber':
           return <Robber backendState={backendState} />;
+        case 'troublemaker':
+          return <TroubleMaker backendState={backendState} />;
         default:
           return assertNever('Non Exhaustive switch', role);
       }

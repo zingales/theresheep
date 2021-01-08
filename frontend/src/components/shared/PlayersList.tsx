@@ -6,10 +6,8 @@ import './PlayersList.scss';
 import {getImgForRole} from 'compUtils';
 
 type PlayersListProps = {
-  currentPlayer: {name: string; roleToDisplay: Role};
   players: {[playerName: string]: Role | null};
   selectedState: {[playerName: string]: boolean};
-  playerOverride?: {[playerName: string]: Role};
 
   // type of setFoo in const [foo, setFoo] = useState();
   setSelectedState: React.Dispatch<
@@ -17,6 +15,7 @@ type PlayersListProps = {
       [playerName: string]: boolean;
     }>
   >;
+  playerOverride?: {[playerName: string]: Role};
 };
 const PlayersList: FC<PlayersListProps> = props => {
   const {
