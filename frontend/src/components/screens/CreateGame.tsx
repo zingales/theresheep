@@ -24,7 +24,7 @@ const CreateGame = () => {
         'seer',
         'villager',
         'villager',
-        'villager',
+        'robber',
       ]);
       await startGame(gameId);
       history.push(`/game/${gameId}/player/${player1Id}`);

@@ -1,7 +1,7 @@
 $centerCardHeight: 200px;
 $cardAspectRatio: 200.75 / 275;
 
-.PlayersList {
+.CenterChooseWidget {
   display: flex;
   flex-direction: column;
   margin-top: 10px;
@@ -14,7 +14,7 @@ $cardAspectRatio: 200.75 / 275;
     margin-top: 10px;
   }
 
-  &__card {
+  &__center-card {
     margin: 5px;
     height: $centerCardHeight;
     width: $centerCardHeight * $cardAspectRatio;
@@ -27,16 +27,13 @@ $cardAspectRatio: 200.75 / 275;
     justify-content: center;
 
     font-size: $centerCardHeight * 0.6;
+
     &--border {
       border: 5px solid yellow;
     }
-
-    &--oldRole {
-      opacity: 0.5;
-    }
   }
 
-  &__card:not(.no-hover):hover {
+  &__center-card:not(.no-hover):hover {
     cursor: pointer;
     transform: scale(1.05);
   }

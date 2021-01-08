@@ -32,6 +32,7 @@ func (p *Player) MarshalJSON() ([]byte, error) {
 		"originalRole": RoleIDToName[p.originalRole],
 		"hasSeen":      hasSeen,
 		"actionPrompt": p.input.Prompt(),
+		"currentRole":  RoleIDToName[p.currentRole],
 	})
 }
 
