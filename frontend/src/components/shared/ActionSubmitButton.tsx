@@ -9,7 +9,7 @@ type Props = {
 };
 const ActionSubmitButton: FC<Props> = props => {
   const {onClick, actionPrompt} = props;
-  const disabled = actionPrompt == '';
+  const disabled = actionPrompt === '';
   return (
     <span>
       <Button onClick={onClick} disabled={disabled}>

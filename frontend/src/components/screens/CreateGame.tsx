@@ -19,7 +19,7 @@ const CreateGame = () => {
       const player3Id = await createPlayer(gameId, 'Evan');
 
       await setRolePool(gameId, [
-        'werewolf',
+        'troublemaker',
         'werewolf',
         'seer',
         'villager',

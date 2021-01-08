@@ -1,0 +1,60 @@
+// https://create-react-app.dev/docs/adding-a-sass-stylesheet/
+@import 'common';
+
+.TroubleMaker__role--changed {
+  text-decoration: line-through;
+}
+
+.TroubleMaker {
+  flex: 1 1 0;
+  min-height: 0;
+
+  display: flex;
+
+  @media only screen and (max-width: 600px) {
+    flex-direction: column;
+  }
+
+  &__role,
+  &__team {
+    @include boldPrompt;
+    flex: 1 1 0;
+  }
+
+  &__role {
+    &--changed {
+      text-decoration: line-through;
+    }
+  }
+
+  &__description {
+    flex: 2 2 0;
+  }
+
+  &__column {
+    @include column;
+  }
+
+  &__image {
+    &--oldRole {
+      opacity: 0.5;
+    }
+    &--oldRole::before {
+      content: 'soup';
+      font-size: 50px;
+      line-height: 100px;
+    }
+    align-self: center;
+    width: auto;
+    height: 275px;
+    -webkit-filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
+  }
+
+  &__waiting-column {
+    display: flex;
+    font-size: 32px;
+    align-items: center;
+    justify-content: center;
+  }
+}

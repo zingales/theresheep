@@ -6,13 +6,12 @@ import {useParams} from 'react-router-dom';
 import {State} from 'types';
 import PlayersList from '../../shared/PlayersList';
 import {getImgForRole} from 'compUtils';
-// import CenterChooseWidget from '../../shared/CenterChooseWidget';
 import ActionSubmitButton from '../../shared/ActionSubmitButton';
 import classNames from 'classnames';
 
 const Robber: FC<{backendState: State}> = props => {
   const {
-    backendState: {allPlayers, knownPlayers, name, originalRole, actionPrompt},
+    backendState: {allPlayers, knownPlayers, name, actionPrompt},
     backendState,
   } = props;
 
@@ -56,7 +55,9 @@ const Robber: FC<{backendState: State}> = props => {
       .map(playerName => [playerName, knownPlayers[playerName] || null]),
   );
 
-  const roleChanged = backendState.originalRole != backendState.currentRole;
+  const currentRole = Object.values(backendState.knownPlayers)[0] || 'robber';
+  const roleChanged = backendState.originalRole !== currentRole;
+
   return (
     <div className="Robber">
       <div className="Robber__column">
@@ -65,7 +66,7 @@ const Robber: FC<{backendState: State}> = props => {
           <span className={classNames(roleChanged && 'Robber__role--changed')}>
             robber
           </span>
-          {roleChanged && ` ${backendState.currentRole}`}
+          {roleChanged && ` ${currentRole}`}
         </div>
         <div className="Robber__team">Team: villager</div>
         <div className="Robber__description">
@@ -81,14 +82,13 @@ const Robber: FC<{backendState: State}> = props => {
             alt="logo"
           />
           {roleChanged &&
-            getImgForRole(backendState.currentRole, 'Robber__image')}
+            getImgForRole(currentRole, 'Robber__image')}
         </div>
       </div>
 
       <span className="Robber__column Robber__waiting-column">
         <PlayersList
           players={allPlayersToRoles}
-          currentPlayer={{name, roleToDisplay: originalRole}}
           selectedState={playerSelectedState}
           setSelectedState={setPlayerSelectedState}
           playerOverride={

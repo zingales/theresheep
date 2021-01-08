@@ -4,6 +4,7 @@ import werewolfImg from 'pics/werewolf.png';
 import villagerImg from 'pics/villager.png';
 import seerImg from 'pics/seer.png';
 import robberImg from 'pics/robber.png';
+import troublemakerImg from 'pics/troublemaker.png';
 
 import {assertNever} from './utils';
 
@@ -20,6 +21,8 @@ export const getImgForRole = (
       return <img className={className} src={seerImg} alt="logo" />;
     case 'robber':
       return <img className={className} src={robberImg} alt="logo" />;
+    case 'troublemaker':
+      return <img className={className} src={troublemakerImg} alt="logo" />;
     default:
       return assertNever('Non exhaustive switch', role);
   }

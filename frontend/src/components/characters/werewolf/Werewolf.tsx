@@ -1,12 +1,9 @@
 import React, {FC, useState} from 'react';
 import './Werewolf.scss';
 import {State} from 'types';
-import {Button} from '@material-ui/core';
-import {getImgForRole} from 'compUtils';
-import classNames from 'classnames';
 import {useParams} from 'react-router-dom';
 import CenterChooseWidget from '../../shared/CenterChooseWidget';
-import {chooseCenterCard, choosePlayerOrCenter, choosePlayer} from 'api';
+import {chooseCenterCard } from 'api';
 import ActionSubmitButton from '../../shared/ActionSubmitButton';
 
 import werewolfImg from 'pics/werewolf.png';
