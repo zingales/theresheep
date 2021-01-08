@@ -14,7 +14,6 @@ const Seer: FC<{backendState: State}> = props => {
       allPlayers,
       knownPlayers,
       name,
-      originalRole,
       center,
       actionPrompt,
     },

@@ -1,19 +1,16 @@
 import React, {FC, useState} from 'react';
 import './TroubleMaker.scss';
 import {State} from 'types';
-import {Button} from '@material-ui/core';
-import {getImgForRole} from 'compUtils';
-import classNames from 'classnames';
 import {useParams} from 'react-router-dom';
 import PlayersList from '../../shared/PlayersList';
-import {chooseCenterCard, choosePlayerOrCenter, choosePlayer} from 'api';
+import {choosePlayer} from 'api';
 import ActionSubmitButton from '../../shared/ActionSubmitButton';
 
 import troublemakerImg from 'pics/troublemaker.png';
 
 const TroubleMaker: FC<{backendState: State}> = props => {
   const {
-    backendState: {knownPlayers, center, phase, actionPrompt, allPlayers, name},
+    backendState: {knownPlayers, phase, actionPrompt, allPlayers, name},
   } = props;
 
 
@@ -48,7 +45,8 @@ const TroubleMaker: FC<{backendState: State}> = props => {
     }
 
 
-    // should have a guaauntee
+    // should have a guarauntee here that the next line returns an array of
+    // size exactly 2
     const [player1, player2] = Object.entries(playerSelectedState).filter(
       ([_, isSelected]) => isSelected,
     ).map(([playerName, ]) => playerName);

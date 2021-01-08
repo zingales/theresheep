@@ -11,7 +11,7 @@ import classNames from 'classnames';
 
 const Robber: FC<{backendState: State}> = props => {
   const {
-    backendState: {allPlayers, knownPlayers, name, originalRole, actionPrompt},
+    backendState: {allPlayers, knownPlayers, name, actionPrompt},
     backendState,
   } = props;
 
@@ -56,7 +56,7 @@ const Robber: FC<{backendState: State}> = props => {
   );
 
   const currentRole = Object.values(backendState.knownPlayers)[0] || 'robber';
-  const roleChanged = backendState.originalRole != currentRole;
+  const roleChanged = backendState.originalRole !== currentRole;
 
   return (
     <div className="Robber">
