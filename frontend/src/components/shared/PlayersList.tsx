@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, {FC, useState} from 'react';
+import React, {FC} from 'react';
 import {Role} from 'types';
 import './PlayersList.scss';
 
@@ -9,7 +9,7 @@ type PlayersListProps = {
   currentPlayer: {name: string; roleToDisplay: Role};
   players: {[playerName: string]: Role | null};
   selectedState: {[playerName: string]: boolean};
-  fadedPlayers?: string[];
+  playerOverride?: {[playerName: string]: Role};
 
   // type of setFoo in const [foo, setFoo] = useState();
   setSelectedState: React.Dispatch<
@@ -23,9 +23,9 @@ const PlayersList: FC<PlayersListProps> = props => {
     players,
     selectedState,
     setSelectedState,
-    fadedPlayers: _fadedPlayers,
+    playerOverride: _playersOverride,
   } = props;
-  const fadedPlayers = _fadedPlayers || [];
+  const playersOverride = _playersOverride || {};
 
   const toggleChosen = (playerName: string) => {
     setSelectedState(currentSelectedState => {
@@ -54,13 +54,8 @@ const PlayersList: FC<PlayersListProps> = props => {
               {role === null
                 ? '?'
                 : getImgForRole(
-                    role,
-                    classNames(
-                      'PlayersList__card',
-                      'no-hover',
-                      fadedPlayers.includes(playerName) &&
-                        'PlayersList__card--oldRole',
-                    ),
+                    playersOverride[playerName] || role,
+                    classNames('PlayersList__card', 'no-hover'),
                   )}
             </div>
           </div>

@@ -50,77 +50,11 @@ const Robber: FC<{backendState: State}> = props => {
     await choosePlayer(gameId, playerId, playerName);
   };
 
-  // const [centerChosenState, setCenterChosenState] = useState<boolean[]>([
-  //   false,
-  //   false,
-  //   false,
-  // ]);
-
-  // const {gameId, playerId} = useParams();
-  // if (gameId === undefined) {
-  //   alert('bad url, must include gameId');
-  //   return null;
-  // }
-
-  // if (playerId === undefined) {
-  //   alert('bad url, must include playerId');
-  //   return null;
-  // }
-
   const allPlayersToRoles = Object.fromEntries(
     allPlayers
       .filter(playerName => playerName !== name)
       .map(playerName => [playerName, knownPlayers[playerName] || null]),
   );
-
-  // const submit = async () => {
-  //   const playerChosenCount = Object.entries(playerSelectedState).filter(
-  //     ([_, isSelected]) => isSelected,
-  //   ).length;
-  //   const somePlayerIsChosen = playerChosenCount > 0;
-
-  //   const centerChosenIndexes: number[] = [];
-  //   for (let i = 0; i < centerChosenState.length; i++) {
-  //     if (centerChosenState[i]) {
-  //       centerChosenIndexes.push(i);
-  //     }
-  //   }
-
-  //   const someCenterCardIsChosen = centerChosenIndexes.length > 0;
-
-  //   const exactlyOneOfCenterOrPlayerIsChosen =
-  //     (someCenterCardIsChosen && !somePlayerIsChosen) ||
-  //     (!someCenterCardIsChosen && somePlayerIsChosen);
-
-  //   if (!exactlyOneOfCenterOrPlayerIsChosen) {
-  //     alert('Must only click cards in center OR click players');
-  //     return;
-  //   }
-
-  //   if (someCenterCardIsChosen) {
-  //     if (centerChosenIndexes.length !== 2) {
-  //       alert('must click on exactly 2 center cards');
-  //       return;
-  //     }
-
-  //     await choosePlayerOrCenter(gameId, playerId, 'center');
-  //     for (const i of centerChosenIndexes) {
-  //       await chooseCenterCard(gameId, playerId, i);
-  //     }
-  //   } else {
-  //     if (playerChosenCount !== 1) {
-  //       alert('must choose exactly 1 player');
-  //       return;
-  //     }
-
-  //     const [playerName] = Object.entries(playerSelectedState).find(
-  //       ([_, isSelected]) => isSelected,
-  //     )!;
-
-  //     await choosePlayerOrCenter(gameId, playerId, 'player');
-  //     await choosePlayer(gameId, playerId, playerName);
-  //   }
-  // };
 
   const roleChanged = backendState.originalRole != backendState.currentRole;
   return (
@@ -157,7 +91,11 @@ const Robber: FC<{backendState: State}> = props => {
           currentPlayer={{name, roleToDisplay: originalRole}}
           selectedState={playerSelectedState}
           setSelectedState={setPlayerSelectedState}
-          fadedPlayers={[switchedPlayer]}
+          playerOverride={
+            switchedPlayer === undefined
+              ? undefined
+              : {[switchedPlayer]: 'robber'}
+          }
         />
 
         {backendState.phase === 'night' && (
