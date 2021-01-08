@@ -22,7 +22,7 @@ const Werewolf: FC<{backendState: State}> = props => {
     false,
   ]);
 
-  const {gameId, playerId} = useParams();
+  const {gameId, playerId} = useParams<{gameId: string; playerId: string}>();
   if (gameId === undefined) {
     alert('bad url, must include gameId');
     return null;

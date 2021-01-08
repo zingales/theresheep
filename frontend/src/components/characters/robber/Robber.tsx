@@ -22,7 +22,7 @@ const Robber: FC<{backendState: State}> = props => {
 
   const switchedPlayer: string | undefined = Object.keys(knownPlayers)[0];
 
-  const {gameId, playerId} = useParams();
+  const {gameId, playerId} = useParams<{gameId: string; playerId: string}>();
   if (gameId === undefined) {
     alert('bad url, must include gameId');
     return null;

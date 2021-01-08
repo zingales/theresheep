@@ -15,7 +15,7 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
   // what i really want here is a set, but i don't think js lets me do that
   const {chosenState, setChosenState, center} = props;
 
-  const {gameId, playerId} = useParams();
+  const {gameId, playerId} = useParams<{gameId: string; playerId: string}>();
   if (gameId === undefined) {
     alert('bad url, must include gameId');
     return null;
