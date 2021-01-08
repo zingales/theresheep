@@ -5,8 +5,7 @@ import {useParams} from 'react-router-dom';
 import CenterChooseWidget from '../../shared/CenterChooseWidget';
 import {chooseCenterCard } from 'api';
 import ActionSubmitButton from '../../shared/ActionSubmitButton';
-
-import werewolfImg from 'pics/werewolf.png';
+import { getImgForRole } from 'compUtils';
 
 const Werewolf: FC<{backendState: State}> = props => {
   const {
@@ -62,7 +61,7 @@ const Werewolf: FC<{backendState: State}> = props => {
           werewolves. If no one else opens their eyes, the other Werewolves are
           in the center. Werewolves are on the werewolf team.
         </div>
-        <img src={werewolfImg} className="Werewolf__image" alt="logo" />
+        {getImgForRole('werewolf', "Werewolf__image")}
       </div>
       <div className="Werewolf__column">
         <div className="Werewolf__box">

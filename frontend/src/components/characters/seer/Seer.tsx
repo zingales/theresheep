@@ -1,5 +1,4 @@
 import React, {FC, useState} from 'react';
-import seerImg from 'pics/seer.png';
 import './Seer.scss';
 import {chooseCenterCard, choosePlayerOrCenter, choosePlayer} from 'api';
 import {useParams} from 'react-router-dom';
@@ -7,6 +6,7 @@ import {State} from 'types';
 import PlayersList from '../../shared/PlayersList';
 import CenterChooseWidget from '../../shared/CenterChooseWidget';
 import ActionSubmitButton from '../../shared/ActionSubmitButton';
+import { getImgForRole } from 'compUtils';
 
 const Seer: FC<{backendState: State}> = props => {
   const {
@@ -102,7 +102,7 @@ const Seer: FC<{backendState: State}> = props => {
         <div className="Seer__role">Your Role: seer</div>
         <div className="Seer__team">Team: villager</div>
         <div className="Seer__description">You're a seer. See some shit</div>
-        <img src={seerImg} className="Seer__image" alt="logo" />
+        {getImgForRole('seer', "Seer__image")}
       </div>
 
       <span className="Seer__column Seer__waiting-column">

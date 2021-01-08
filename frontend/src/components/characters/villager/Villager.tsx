@@ -1,7 +1,8 @@
 import React from 'react';
-import villagerImg from 'pics/villager.png';
 import './Villager.scss';
 import Elipsis from 'components/shared/Elipsis';
+import { getImgForRole } from 'compUtils';
+
 
 const Villager = () => {
   return (
@@ -14,11 +15,7 @@ const Villager = () => {
           werewolves. If no one else opens their eyes, the other Werewolves are
           in the center. Werewolves are on the werewolf team.
         </div>
-        <img
-          src={villagerImg}
-          className="Villager__image"
-          alt="logo"
-        />
+        {getImgForRole('villager', "Villager__image")}
       </div>
 
       <span className="Villager__column Villager__waiting-column">
