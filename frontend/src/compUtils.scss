@@ -1,0 +1,31 @@
+@import 'common';
+
+.imgContainer {
+  position: relative;
+  height: $imgHeight;
+  display: flex;
+  justify-content: center;
+
+  -webkit-filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
+}
+
+$topOffset: 10%;
+$rightOffset: 15%;
+.oldRole {
+  opacity: 0.5;
+  z-index: 0;
+
+  position: relative;
+
+  top: -$topOffset / 2;
+  left: -$rightOffset;
+}
+
+.currentRole.offset {
+  position: absolute;
+  z-index: 1;
+  height: 100%;
+
+  top: $topOffset / 2;
+}
