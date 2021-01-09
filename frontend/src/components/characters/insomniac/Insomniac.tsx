@@ -4,10 +4,12 @@ import {useParams} from 'react-router-dom';
 import {State} from 'types';
 import {getImgForRole} from 'compUtils';
 import classNames from 'classnames';
+import PlayersList from '../../shared/PlayersList';
+
 
 const Insomniac: FC<{backendState: State}> = props => {
   const {
-    backendState: {knownPlayers, originalRole},
+    backendState: {allPlayers, name, knownPlayers, originalRole},
   } = props;
 
   const {gameId, playerId} = useParams<{gameId: string; playerId: string}>();
@@ -24,6 +26,12 @@ const Insomniac: FC<{backendState: State}> = props => {
   const currentRole = Object.values(knownPlayers)[0] || 'insomniac';
   const roleChanged = originalRole !== currentRole;
 
+  const allPlayersToRoles = Object.fromEntries(
+    allPlayers
+      .filter(playerName => playerName !== name)
+      .map(playerName => [playerName, knownPlayers[playerName] || null]),
+  );
+
   return (
     <div className="Insomniac">
       <div className="Insomniac__column">
@@ -36,7 +44,7 @@ const Insomniac: FC<{backendState: State}> = props => {
         </div>
         <div className="Insomniac__team">Team: villager</div>
         <div className="Insomniac__description">
-          You're a insomniac. Rob some shit
+          You're a insomniac.
         </div>
         <div>
           {getImgForRole('insomniac', classNames(
@@ -47,6 +55,13 @@ const Insomniac: FC<{backendState: State}> = props => {
             getImgForRole(currentRole, 'Insomniac__image')}
         </div>
       </div>
+      <span className="Insomniac__column Insomniac__waiting-column">
+      <PlayersList
+          players={allPlayersToRoles}
+          selectedState={{}}
+          setSelectedState={() => {}}
+        />
+      </span>
     </div>
   );
 };
