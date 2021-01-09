@@ -12,6 +12,7 @@ import TroubleMaker from 'components/characters/troublemaker/TroubleMaker';
 import Mason from 'components/characters/mason/Mason';
 import Minion from 'components/characters/minion/Minion';
 import Insomniac from 'components/characters/insomniac/Insomniac';
+import Tanner from 'components/characters/tanner/Tanner';
 
 import CreateGame from 'components/screens/CreateGame';
 import Endgame from 'components/screens/Endgame';
@@ -122,6 +123,8 @@ const getMainComponent = (
           return <Werewolf backendState={backendState} />;
         case 'villager':
           return <Villager />;
+        case 'tanner':
+            return <Tanner />;
         case 'seer':
           return <Seer backendState={backendState} />;
         case 'robber':
