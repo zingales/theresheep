@@ -10,6 +10,7 @@ import Seer from 'components/characters/seer/Seer';
 import Robber from 'components/characters/robber/Robber';
 import TroubleMaker from 'components/characters/troublemaker/TroubleMaker';
 import Mason from 'components/characters/mason/Mason';
+import Minion from 'components/characters/minion/Minion';
 
 import CreateGame from 'components/screens/CreateGame';
 import Endgame from 'components/screens/Endgame';
@@ -128,6 +129,8 @@ const getMainComponent = (
           return <TroubleMaker backendState={backendState} />;
         case 'mason':
           return <Mason backendState={backendState} />;
+        case 'minion':
+            return <Minion backendState={backendState} />;
         default:
           return <NotImplemented props={backendState} />
       }
