@@ -4,7 +4,7 @@ import {choosePlayer} from 'api';
 import {useParams} from 'react-router-dom';
 import {State} from 'types';
 import PlayersList from '../../shared/PlayersList';
-import {getImgForRole} from 'compUtils';
+import {getImgForRole2} from 'compUtils';
 import ActionSubmitButton from '../../shared/ActionSubmitButton';
 import classNames from 'classnames';
 
@@ -71,17 +71,10 @@ const Robber: FC<{backendState: State}> = props => {
         <div className="Robber__description">
           You're a robber. Rob some shit
         </div>
-        <div className="Robber__imgContainer">
-          {getImgForRole(
-            'robber',
-            classNames(
-              'Robber__image',
-              roleChanged && 'Robber__image--oldRole',
-            ),
-          )}
-          {roleChanged &&
-            getImgForRole(currentRole, 'Robber__image Robber__image--newRole')}
-        </div>
+        {getImgForRole2(currentRole, {
+          oldRole: roleChanged ? 'robber' : undefined,
+          className: 'Robber__image',
+        })}
       </div>
 
       <span className="Robber__column Robber__waiting-column">
