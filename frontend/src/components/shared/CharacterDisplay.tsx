@@ -1,29 +1,31 @@
-import React from 'react';
-import {Role} from './types';
-import werewolfImg from 'pics/werewolf.png';
-import villagerImg from 'pics/villager.png';
-import seerImg from 'pics/seer.png';
-import robberImg from 'pics/robber.png';
-import troublemakerImg from 'pics/troublemaker.png';
+import React, {FC} from 'react';
+import {Role} from '../../types';
+import werewolfImg from '../../pics/werewolf.png';
+import villagerImg from '../../pics/villager.png';
+import seerImg from '../../pics/seer.png';
+import robberImg from '../../pics/robber.png';
+import troublemakerImg from '../../pics/troublemaker.png';
 
-import drunkImg from 'pics/drunk.png';
-import hunterImg from 'pics/hunter.png';
-import insomniacImg from 'pics/insomniac.png';
-import masonImg from 'pics/mason.png';
-import minionImg from 'pics/minion.png';
-import tannerImg from 'pics/tanner.png';
+import drunkImg from '../../pics/drunk.png';
+import hunterImg from '../../pics/hunter.png';
+import insomniacImg from '../../pics/insomniac.png';
+import masonImg from '../../pics/mason.png';
+import minionImg from '../../pics/minion.png';
+import tannerImg from '../../pics/tanner.png';
 
-import {assertNever} from './utils';
+import {assertNever} from '../../utils';
 import classNames from 'classnames';
 
-import './compUtils.scss';
+import './CharacterDisplay.scss';
 
-export const getImgForRole2 = (
-  currentRole: Role,
-  opts?: {oldRole?: Role; className?: string},
-): React.ReactNode => {
-  const oldRole = opts && opts.oldRole;
-  const className = opts && opts.className;
+type CharacerDisplayProps = {
+  currentRole: Role;
+  oldRole?: Role;
+  className?: string;
+};
+
+const CharacterDisplay: FC<CharacerDisplayProps> = props => {
+  const {currentRole, oldRole, className} = props;
 
   const getImg = (role: Role, className: string) => {
     switch (role) {
@@ -64,3 +66,5 @@ export const getImgForRole2 = (
     </div>
   );
 };
+
+export default CharacterDisplay;

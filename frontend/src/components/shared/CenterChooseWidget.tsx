@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import './CenterChooseWidget.scss';
 import {Role} from '../../types';
 import {useParams} from 'react-router-dom';
-import {getImgForRole2} from '../../compUtils';
+import CharacterDisplay from './CharacterDisplay';
 import classNames from 'classnames';
 
 type CenterChooseWidgetProps = {
@@ -44,11 +44,14 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
                 'CenterChooseWidget__center-card',
                 chosenState[idx] && 'CenterChooseWidget__center-card--border',
               )}>
-              {role === null
-                ? '?'
-                : getImgForRole2(role, {
-                    className: 'CenterChooseWidget__center-card no-hover',
-                  })}
+              {role === null ? (
+                '?'
+              ) : (
+                <CharacterDisplay
+                  currentRole={role}
+                  className={'CenterChooseWidget__center-card no-hover'}
+                />
+              )}
             </div>
           ))}
         </>

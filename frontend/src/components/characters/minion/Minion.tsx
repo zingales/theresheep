@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import './Minion.scss';
 import {State} from 'types';
-import {getImgForRole2} from 'compUtils';
+import CharacterDisplay from '../../shared/CharacterDisplay';
 import PlayersList from '../../shared/PlayersList';
 
 const Minion: FC<{backendState: State}> = props => {
@@ -23,7 +23,12 @@ const Minion: FC<{backendState: State}> = props => {
         <div className="Minion__description">
           You see the werewolves, they don't know who you are.
         </div>
-        {getImgForRole2('minion', {className: 'Minion__image'})}
+        {
+          <CharacterDisplay
+            currentRole={'minion'}
+            className={'Minion__image'}
+          />
+        }
       </div>
 
       <span className="Minion__column Minion__waiting-column">

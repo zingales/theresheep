@@ -6,7 +6,7 @@ import {State} from 'types';
 import PlayersList from '../../shared/PlayersList';
 import CenterChooseWidget from '../../shared/CenterChooseWidget';
 import ActionSubmitButton from '../../shared/ActionSubmitButton';
-import {getImgForRole2} from 'compUtils';
+import CharacterDisplay from '../../shared/CharacterDisplay';
 
 const Seer: FC<{backendState: State}> = props => {
   const {
@@ -96,7 +96,7 @@ const Seer: FC<{backendState: State}> = props => {
         <div className="Seer__role">Your Role: seer</div>
         <div className="Seer__team">Team: villager</div>
         <div className="Seer__description">You're a seer. See some shit</div>
-        {getImgForRole2('seer', {className: 'Seer__image'})}
+        <CharacterDisplay currentRole={'seer'} className={'Seer__image'} />
       </div>
 
       <span className="Seer__column Seer__waiting-column">

@@ -4,7 +4,7 @@ import {choosePlayer} from 'api';
 import {useParams} from 'react-router-dom';
 import {State} from 'types';
 import PlayersList from '../../shared/PlayersList';
-import {getImgForRole2} from 'compUtils';
+import CharacterDisplay from '../../shared/CharacterDisplay';
 import ActionSubmitButton from '../../shared/ActionSubmitButton';
 import classNames from 'classnames';
 
@@ -71,10 +71,11 @@ const Robber: FC<{backendState: State}> = props => {
         <div className="Robber__description">
           You're a robber. Rob some shit
         </div>
-        {getImgForRole2(currentRole, {
-          oldRole: roleChanged ? 'robber' : undefined,
-          className: 'Robber__image',
-        })}
+        <CharacterDisplay
+          currentRole={currentRole}
+          oldRole={roleChanged ? 'robber' : undefined}
+          className={'Robber__image'}
+        />
       </div>
 
       <span className="Robber__column Robber__waiting-column">

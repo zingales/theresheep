@@ -5,7 +5,7 @@ import {useParams} from 'react-router-dom';
 import PlayersList from '../../shared/PlayersList';
 import {choosePlayer} from 'api';
 import ActionSubmitButton from '../../shared/ActionSubmitButton';
-import {getImgForRole2} from 'compUtils';
+import CharacterDisplay from '../../shared/CharacterDisplay';
 
 const TroubleMaker: FC<{backendState: State}> = props => {
   const {
@@ -61,7 +61,10 @@ const TroubleMaker: FC<{backendState: State}> = props => {
           werewolves. If no one else opens their eyes, the other Werewolves are
           in the center. Werewolves are on the werewolf team.
         </div>
-        {getImgForRole2('troublemaker', {className: 'TroubleMaker__image'})}
+        <CharacterDisplay
+          currentRole={'troublemaker'}
+          className={'TroubleMaker__image'}
+        />
       </div>
       <div className="TroubleMaker__column">
         <div className="TroubleMaker__box">

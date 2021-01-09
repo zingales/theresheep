@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import './Mason.scss';
 import {State} from 'types';
-import {getImgForRole2} from 'compUtils';
+import CharacterDisplay from '../../shared/CharacterDisplay';
 import PlayersList from '../../shared/PlayersList';
 
 const Mason: FC<{backendState: State}> = props => {
@@ -23,7 +23,7 @@ const Mason: FC<{backendState: State}> = props => {
         <div className="Mason__description">
           You see the other players that are Mason. You're friends now.
         </div>
-        {getImgForRole2('mason', {className: 'Mason__image'})}
+        <CharacterDisplay currentRole={'mason'} className={'Mason__image'} />
       </div>
 
       <span className="Mason__column Mason__waiting-column">
