@@ -88,9 +88,9 @@ export const getImgForRole2 = (
   };
 
   return (
-    <div className={classNames('imgContainer', className)}>
-      {oldRole && getImg(oldRole, classNames('oldRole'))}
-      {getImg(currentRole, classNames('currentRole'))}
+    <div className={'imgContainer'}>
+      {oldRole && getImg(oldRole, classNames('oldRole', className))}
+      {getImg(currentRole, classNames('currentRole', className))}
     </div>
   );
 };
