@@ -1,10 +1,27 @@
-import React from 'react';
+import React, {FC}  from 'react';
 import './Tanner.scss';
+import {State} from 'types';
 import Elipsis from 'components/shared/Elipsis';
 import { getImgForRole } from 'compUtils';
+import PlayersList from '../../shared/PlayersList';
 
 
-const Tanner = () => {
+
+const Tanner: FC<{backendState: State}> = props => {
+  const {
+    backendState: {
+      allPlayers,
+      knownPlayers,
+      name,
+    },
+  } = props;
+
+  const allPlayersToRoles = Object.fromEntries(
+    allPlayers
+      .filter(playerName => playerName !== name)
+      .map(playerName => [playerName, knownPlayers[playerName] || null]),
+  );
+
   return (
     <div className="Tanner">
       <div className="Tanner__column">
@@ -22,6 +39,11 @@ const Tanner = () => {
           to do
           <Elipsis />
         </span>
+        <PlayersList
+          players={allPlayersToRoles}
+          selectedState={{}}
+          setSelectedState={() => {}}
+        />
       </span>
     </div>
   );

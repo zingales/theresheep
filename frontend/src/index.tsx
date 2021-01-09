@@ -123,9 +123,9 @@ const getMainComponent = (
         case 'werewolf':
           return <Werewolf backendState={backendState} />;
         case 'villager':
-          return <Villager />;
+          return <Villager backendState={backendState}/>;
         case 'tanner':
-            return <Tanner />;
+            return <Tanner backendState={backendState}/>;
         case 'seer':
           return <Seer backendState={backendState} />;
         case 'robber':

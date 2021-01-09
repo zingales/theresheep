@@ -6,10 +6,12 @@ import CenterChooseWidget from '../../shared/CenterChooseWidget';
 import {chooseCenterCard } from 'api';
 import ActionSubmitButton from '../../shared/ActionSubmitButton';
 import { getImgForRole } from 'compUtils';
+import PlayersList from '../../shared/PlayersList';
+
 
 const Drunk: FC<{backendState: State}> = props => {
   const {
-    backendState: {center, phase, actionPrompt},
+    backendState: {center, phase, actionPrompt, allPlayers, name, knownPlayers},
   } = props;
 
   const [centerChosenState, setCenterChosenState] = useState<boolean[]>([
@@ -45,6 +47,12 @@ const Drunk: FC<{backendState: State}> = props => {
     await chooseCenterCard(gameId, playerId, centerChosenIndexes[0]);
   };
 
+  const allPlayersToRoles = Object.fromEntries(
+    allPlayers
+      .filter(playerName => playerName !== name)
+      .map(playerName => [playerName, knownPlayers[playerName] || null]),
+  );
+
   return (
     <div className="Drunk">
       <div className="Drunk__column">
@@ -69,6 +77,11 @@ const Drunk: FC<{backendState: State}> = props => {
           {phase === 'night' && (
             <ActionSubmitButton onClick={submit} actionPrompt={actionPrompt} />
           )}
+          {phase === 'day' && <PlayersList
+          players={allPlayersToRoles}
+          selectedState={{}}
+          setSelectedState={() => {}}
+        />}
         </div>
       </div>
     </div>
