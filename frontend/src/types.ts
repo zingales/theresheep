@@ -1,19 +1,18 @@
 /*****************************************************************************
  **************************** Game State Types *******************************
  *****************************************************************************/
-export type Role = 
-                    'werewolf' |
-                    'villager' |
-                    'seer' |
-                    'robber' |
-                    'troublemaker' |
-                    'drunk' |
-                    'hunter' |
-                    'insomniac' |
-                    'mason' |
-                    'minion' |
-                    'tanner'
-;
+export type Role =
+  | 'werewolf'
+  | 'villager'
+  | 'seer'
+  | 'robber'
+  | 'troublemaker'
+  | 'drunk'
+  | 'hunter'
+  | 'insomniac'
+  | 'mason'
+  | 'minion'
+  | 'tanner';
 
 export type ActionPrompt =
   | 'choose-center-card'
@@ -28,16 +27,16 @@ export type StateFromBackend = {
   player: {
     name: string;
     originalRole: Role;
-    hasSeen: {[x: string]: Role};
+    hasSeen: { [x: string]: Role };
     actionPrompt: ActionPrompt;
   };
   phase: Phase;
   allPlayers: string[];
   endgame?: {
     winner: string;
-    killMap: {[player: string]: string};
-    originalRoles: {[player: string]: Role};
-    currentRoles: {[player: string]: Role};
+    killMap: { [player: string]: string };
+    originalRoles: { [player: string]: Role };
+    currentRoles: { [player: string]: Role };
   };
 };
 
@@ -47,16 +46,16 @@ export type State = {
   name: string; // name of this player
   allPlayers: string[];
   originalRole: Role;
-  knownPlayers: {[playerName: string]: Role};
+  knownPlayers: { [playerName: string]: Role };
   center: (Role | null)[];
   actionPrompt: ActionPrompt;
   phase: Phase;
 
   endgame?: {
     winner: string;
-    killMap: {[player: string]: string};
-    originalRoles: {[player: string]: Role};
-    currentRoles: {[player: string]: Role};
+    killMap: { [player: string]: string };
+    originalRoles: { [player: string]: Role };
+    currentRoles: { [player: string]: Role };
   };
 };
 
@@ -64,7 +63,7 @@ export type State = {
  ******************************* Utility Types *******************************
  *****************************************************************************/
 
-type AnyObject = {[key: string]: any};
+type AnyObject = { [key: string]: any };
 
 export class ConnectionError extends Error {
   type: 'ConnectionError' = 'ConnectionError';
@@ -97,7 +96,7 @@ export class HttpError<E extends AnyObject> extends Error {
 
 export type FetchError<E> = ConnectionError | NonJsonError | HttpError<E>;
 
-export type DefaultFetchError = FetchError<{error: string}>;
+export type DefaultFetchError = FetchError<{ error: string }>;
 
 export type AsyncResult<T> = AsyncResultWithErr<T, DefaultFetchError>;
 
@@ -109,4 +108,4 @@ export type AsyncResultWithErr<T, E extends FetchError<any>> =
   | {
       type: 'pending';
     }
-  | {type: 'error'; error: E};
+  | { type: 'error'; error: E };

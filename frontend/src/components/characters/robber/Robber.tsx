@@ -1,12 +1,12 @@
-import React, { FC, useState } from "react";
-import "./Robber.scss";
-import { choosePlayer } from "api";
-import { useParams } from "react-router-dom";
-import { State } from "types";
-import PlayersList from "components/shared/PlayersList";
-import CharacterDisplay from "components/shared/CharacterDisplay";
-import ActionSubmitButton from "components/shared/ActionSubmitButton";
-import classNames from "classnames";
+import React, { FC, useState } from 'react';
+import './Robber.scss';
+import { choosePlayer } from 'api';
+import { useParams } from 'react-router-dom';
+import { State } from 'types';
+import PlayersList from 'components/shared/PlayersList';
+import CharacterDisplay from 'components/shared/CharacterDisplay';
+import ActionSubmitButton from 'components/shared/ActionSubmitButton';
+import classNames from 'classnames';
 
 const Robber: FC<{ backendState: State }> = (props) => {
   const {
@@ -25,27 +25,27 @@ const Robber: FC<{ backendState: State }> = (props) => {
     playerId: string;
   }>();
   if (gameId === undefined) {
-    alert("bad url, must include gameId");
+    alert('bad url, must include gameId');
     return null;
   }
 
   if (playerId === undefined) {
-    alert("bad url, must include playerId");
+    alert('bad url, must include playerId');
     return null;
   }
 
   const submit = async () => {
     const playerChosenCount = Object.entries(playerSelectedState).filter(
-      ([_, isSelected]) => isSelected
+      ([_, isSelected]) => isSelected,
     ).length;
 
     if (playerChosenCount !== 1) {
-      alert("must choose exactly 1 player");
+      alert('must choose exactly 1 player');
       return;
     }
 
     const [playerName] = Object.entries(playerSelectedState).find(
-      ([_, isSelected]) => isSelected
+      ([_, isSelected]) => isSelected,
     )!;
 
     await choosePlayer(gameId, playerId, playerName);
@@ -54,18 +54,18 @@ const Robber: FC<{ backendState: State }> = (props) => {
   const allPlayersToRoles = Object.fromEntries(
     allPlayers
       .filter((playerName) => playerName !== name)
-      .map((playerName) => [playerName, knownPlayers[playerName] || null])
+      .map((playerName) => [playerName, knownPlayers[playerName] || null]),
   );
 
-  const currentRole = Object.values(backendState.knownPlayers)[0] || "robber";
+  const currentRole = Object.values(backendState.knownPlayers)[0] || 'robber';
   const roleChanged = backendState.originalRole !== currentRole;
 
   return (
     <div className="Robber">
       <div className="Robber__column">
         <div className="Robber__role">
-          Your Role:{" "}
-          <span className={classNames(roleChanged && "Robber__role--changed")}>
+          Your Role:{' '}
+          <span className={classNames(roleChanged && 'Robber__role--changed')}>
             robber
           </span>
           {roleChanged && ` ${currentRole}`}
@@ -76,8 +76,8 @@ const Robber: FC<{ backendState: State }> = (props) => {
         </div>
         <CharacterDisplay
           currentRole={currentRole}
-          oldRole={roleChanged ? "robber" : undefined}
-          className={"Robber__image"}
+          oldRole={roleChanged ? 'robber' : undefined}
+          className={'Robber__image'}
         />
       </div>
 
@@ -89,11 +89,11 @@ const Robber: FC<{ backendState: State }> = (props) => {
           playerOverride={
             switchedPlayer === undefined
               ? undefined
-              : { [switchedPlayer]: "robber" }
+              : { [switchedPlayer]: 'robber' }
           }
         />
 
-        {backendState.phase === "night" && (
+        {backendState.phase === 'night' && (
           <ActionSubmitButton onClick={submit} actionPrompt={actionPrompt} />
         )}
       </span>

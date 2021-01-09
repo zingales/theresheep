@@ -1,11 +1,11 @@
-import React, { FC, useState } from "react";
-import "./Werewolf.scss";
-import { State } from "types";
-import { useParams } from "react-router-dom";
-import CenterChooseWidget from "components/shared/CenterChooseWidget";
-import { chooseCenterCard } from "api";
-import ActionSubmitButton from "components/shared/ActionSubmitButton";
-import CharacterDisplay from "components/shared/CharacterDisplay";
+import React, { FC, useState } from 'react';
+import './Werewolf.scss';
+import { State } from 'types';
+import { useParams } from 'react-router-dom';
+import CenterChooseWidget from 'components/shared/CenterChooseWidget';
+import { chooseCenterCard } from 'api';
+import ActionSubmitButton from 'components/shared/ActionSubmitButton';
+import CharacterDisplay from 'components/shared/CharacterDisplay';
 
 const Werewolf: FC<{ backendState: State }> = (props) => {
   const {
@@ -23,12 +23,12 @@ const Werewolf: FC<{ backendState: State }> = (props) => {
     playerId: string;
   }>();
   if (gameId === undefined) {
-    alert("bad url, must include gameId");
+    alert('bad url, must include gameId');
     return null;
   }
 
   if (playerId === undefined) {
-    alert("bad url, must include playerId");
+    alert('bad url, must include playerId');
     return null;
   }
 
@@ -41,7 +41,7 @@ const Werewolf: FC<{ backendState: State }> = (props) => {
     }
 
     if (centerChosenIndexes.length !== 1) {
-      alert("must click on exactly 1 center cards");
+      alert('must click on exactly 1 center cards');
       return;
     }
 
@@ -49,7 +49,7 @@ const Werewolf: FC<{ backendState: State }> = (props) => {
   };
 
   const originalWerewolves = Object.entries(knownPlayers)
-    .filter(([, role]) => role === "werewolf")
+    .filter(([, role]) => role === 'werewolf')
     .map(([name]) => name);
 
   const showCenterWidget = originalWerewolves.length === 0;
@@ -65,16 +65,16 @@ const Werewolf: FC<{ backendState: State }> = (props) => {
           in the center. Werewolves are on the werewolf team.
         </div>
         <CharacterDisplay
-          currentRole={"werewolf"}
-          className={"Werewolf__image"}
+          currentRole={'werewolf'}
+          className={'Werewolf__image'}
         />
       </div>
       <div className="Werewolf__column">
         <div className="Werewolf__box">
           <div className="Werewolf__box-header">
             {showCenterWidget
-              ? "Choose card from center"
-              : "Your werewolves are"}
+              ? 'Choose card from center'
+              : 'Your werewolves are'}
           </div>
           {showCenterWidget ? (
             <CenterChooseWidget
@@ -93,7 +93,7 @@ const Werewolf: FC<{ backendState: State }> = (props) => {
             ))
           )}
 
-          {phase === "night" && (
+          {phase === 'night' && (
             <ActionSubmitButton onClick={submit} actionPrompt={actionPrompt} />
           )}
         </div>

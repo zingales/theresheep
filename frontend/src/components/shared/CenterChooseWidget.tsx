@@ -1,9 +1,9 @@
-import React, { FC } from "react";
-import "./CenterChooseWidget.scss";
-import { Role } from "types";
-import { useParams } from "react-router-dom";
-import CharacterDisplay from "./CharacterDisplay";
-import classNames from "classnames";
+import React, { FC } from 'react';
+import './CenterChooseWidget.scss';
+import { Role } from 'types';
+import { useParams } from 'react-router-dom';
+import CharacterDisplay from './CharacterDisplay';
+import classNames from 'classnames';
 
 type CenterChooseWidgetProps = {
   chosenState: boolean[];
@@ -20,12 +20,12 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = (props) => {
     playerId: string;
   }>();
   if (gameId === undefined) {
-    alert("bad url, must include gameId");
+    alert('bad url, must include gameId');
     return null;
   }
 
   if (playerId === undefined) {
-    alert("bad url, must include playerId");
+    alert('bad url, must include playerId');
     return null;
   }
 
@@ -44,16 +44,16 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = (props) => {
             <div
               onClick={() => toggleChosen(idx)}
               className={classNames(
-                "CenterChooseWidget__center-card",
-                chosenState[idx] && "CenterChooseWidget__center-card--border"
+                'CenterChooseWidget__center-card',
+                chosenState[idx] && 'CenterChooseWidget__center-card--border',
               )}
             >
               {role === null ? (
-                "?"
+                '?'
               ) : (
                 <CharacterDisplay
                   currentRole={role}
-                  className={"CenterChooseWidget__center-card no-hover"}
+                  className={'CenterChooseWidget__center-card no-hover'}
                 />
               )}
             </div>

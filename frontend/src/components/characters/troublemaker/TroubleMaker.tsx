@@ -1,11 +1,11 @@
-import React, { FC, useState } from "react";
-import "./TroubleMaker.scss";
-import { State } from "types";
-import { useParams } from "react-router-dom";
-import PlayersList from "components/shared/PlayersList";
-import { choosePlayer } from "api";
-import ActionSubmitButton from "components/shared/ActionSubmitButton";
-import CharacterDisplay from "components/shared/CharacterDisplay";
+import React, { FC, useState } from 'react';
+import './TroubleMaker.scss';
+import { State } from 'types';
+import { useParams } from 'react-router-dom';
+import PlayersList from 'components/shared/PlayersList';
+import { choosePlayer } from 'api';
+import ActionSubmitButton from 'components/shared/ActionSubmitButton';
+import CharacterDisplay from 'components/shared/CharacterDisplay';
 
 const TroubleMaker: FC<{ backendState: State }> = (props) => {
   const {
@@ -21,27 +21,27 @@ const TroubleMaker: FC<{ backendState: State }> = (props) => {
     playerId: string;
   }>();
   if (gameId === undefined) {
-    alert("bad url, must include gameId");
+    alert('bad url, must include gameId');
     return null;
   }
 
   if (playerId === undefined) {
-    alert("bad url, must include playerId");
+    alert('bad url, must include playerId');
     return null;
   }
 
   const otherPlayersToRoles = Object.fromEntries(
     allPlayers
       .filter((playerName) => playerName !== name)
-      .map((playerName) => [playerName, knownPlayers[playerName] || null])
+      .map((playerName) => [playerName, knownPlayers[playerName] || null]),
   );
 
   const submit = async () => {
     const playerChosenCount = Object.entries(playerSelectedState).filter(
-      ([_, isSelected]) => isSelected
+      ([_, isSelected]) => isSelected,
     ).length;
     if (playerChosenCount !== 2) {
-      alert("must choose exactly 2 players");
+      alert('must choose exactly 2 players');
       return;
     }
 
@@ -65,8 +65,8 @@ const TroubleMaker: FC<{ backendState: State }> = (props) => {
           in the center. Werewolves are on the werewolf team.
         </div>
         <CharacterDisplay
-          currentRole={"troublemaker"}
-          className={"TroubleMaker__image"}
+          currentRole={'troublemaker'}
+          className={'TroubleMaker__image'}
         />
       </div>
       <div className="TroubleMaker__column">
@@ -80,7 +80,7 @@ const TroubleMaker: FC<{ backendState: State }> = (props) => {
             />
           }
 
-          {phase === "night" && (
+          {phase === 'night' && (
             <ActionSubmitButton onClick={submit} actionPrompt={actionPrompt} />
           )}
         </div>

@@ -1,13 +1,13 @@
 import classNames from 'classnames';
-import React, {FC} from 'react';
-import {Role} from 'types';
+import React, { FC } from 'react';
+import { Role } from 'types';
 import './PlayersList.scss';
 
 import CharacterDisplay from './CharacterDisplay';
 
 type PlayersListProps = {
-  players: {[playerName: string]: Role | null};
-  selectedState: {[playerName: string]: boolean};
+  players: { [playerName: string]: Role | null };
+  selectedState: { [playerName: string]: boolean };
 
   setSelectedState: React.Dispatch<
     // type of setFoo in const [foo, setFoo] = useState();
@@ -15,9 +15,9 @@ type PlayersListProps = {
       [playerName: string]: boolean;
     }>
   >;
-  playerOverride?: {[playerName: string]: Role};
+  playerOverride?: { [playerName: string]: Role };
 };
-const PlayersList: FC<PlayersListProps> = props => {
+const PlayersList: FC<PlayersListProps> = (props) => {
   const {
     players,
     selectedState,
@@ -27,10 +27,10 @@ const PlayersList: FC<PlayersListProps> = props => {
   const playersOverride = _playersOverride || {};
 
   const toggleChosen = (playerName: string) => {
-    setSelectedState(currentSelectedState => {
+    setSelectedState((currentSelectedState) => {
       return {
         ...currentSelectedState,
-        ...{[playerName]: !currentSelectedState[playerName]},
+        ...{ [playerName]: !currentSelectedState[playerName] },
       };
     });
   };
@@ -45,7 +45,8 @@ const PlayersList: FC<PlayersListProps> = props => {
           return (
             <div
               key={`player-card-parent-${idx}`}
-              onClick={() => toggleChosen(playerName)}>
+              onClick={() => toggleChosen(playerName)}
+            >
               <div>{playerName}</div>
               <div
                 key={`player-card-${idx}`}
@@ -54,7 +55,8 @@ const PlayersList: FC<PlayersListProps> = props => {
                   role !== null && 'no-hover',
                   role !== null && 'no-background',
                   selectedState[playerName] && 'PlayersList__card--border',
-                )}>
+                )}
+              >
                 {role === null ? (
                   '?'
                 ) : (

@@ -1,29 +1,29 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-import "./index.scss";
-import Werewolf from "components/characters/werewolf/Werewolf";
-import Villager from "components/characters/villager/Villager";
-import Seer from "components/characters/seer/Seer";
-import Robber from "components/characters/robber/Robber";
-import TroubleMaker from "components/characters/troublemaker/TroubleMaker";
-import Mason from "components/characters/mason/Mason";
-import Minion from "components/characters/minion/Minion";
+import './index.scss';
+import Werewolf from 'components/characters/werewolf/Werewolf';
+import Villager from 'components/characters/villager/Villager';
+import Seer from 'components/characters/seer/Seer';
+import Robber from 'components/characters/robber/Robber';
+import TroubleMaker from 'components/characters/troublemaker/TroubleMaker';
+import Mason from 'components/characters/mason/Mason';
+import Minion from 'components/characters/minion/Minion';
 
-import CreateGame from "components/screens/CreateGame";
-import Endgame from "components/screens/Endgame";
-import Timer from "components/shared/Timer";
-import NotImplemented from "components/shared/NotImplemented";
-import ChooseWhoToKill from "components/shared/ChooseWhoToKill";
+import CreateGame from 'components/screens/CreateGame';
+import Endgame from 'components/screens/Endgame';
+import Timer from 'components/shared/Timer';
+import NotImplemented from 'components/shared/NotImplemented';
+import ChooseWhoToKill from 'components/shared/ChooseWhoToKill';
 
-import { useBackendState, assertNever } from "utils";
-import { State, Phase } from "types";
+import { useBackendState, assertNever } from 'utils';
+import { State, Phase } from 'types';
 
-import { createMuiTheme, ThemeProvider } from "@material-ui/core";
-import { grey } from "@material-ui/core/colors";
-import { AppBar } from "@material-ui/core";
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { grey } from '@material-ui/core/colors';
+import { AppBar } from '@material-ui/core';
 
 const App = () => {
   const theme = createMuiTheme({
@@ -56,13 +56,13 @@ const App = () => {
 const Game = () => {
   const backendStateAsyncResult = useBackendState();
 
-  if (backendStateAsyncResult.type === "pending") {
+  if (backendStateAsyncResult.type === 'pending') {
     return <div>pending</div>;
-  } else if (backendStateAsyncResult.type === "error") {
+  } else if (backendStateAsyncResult.type === 'error') {
     switch (backendStateAsyncResult.error.type) {
-      case "ConnectionError":
+      case 'ConnectionError':
         return <div>Failed to fetch</div>;
-      case "HttpError":
+      case 'HttpError':
         const status = backendStateAsyncResult.error.status;
         const json = backendStateAsyncResult.error.json;
         return (
@@ -70,15 +70,15 @@ const Game = () => {
             Http Error: {status} {json.error}
           </div>
         );
-      case "NonJsonError":
+      case 'NonJsonError':
         const body = backendStateAsyncResult.error.body;
         return <div>non-json error {body}</div>;
       default:
         // why do i have to return assertNever? Why can't I just assertNever?
         // https://github.com/microsoft/TypeScript/issues/10470
         return assertNever(
-          "Non Exhaustive switch statement",
-          backendStateAsyncResult.error
+          'Non Exhaustive switch statement',
+          backendStateAsyncResult.error,
         );
     }
   }
@@ -89,17 +89,17 @@ const Game = () => {
   return (
     <div className="App">
       <AppBar color="primary" className="App__appbar " position="static">
-        {backendState.phase === "day"
-          ? "Day Phase"
-          : backendState.phase === "night"
-          ? "Night Phase"
-          : backendState.phase === "end"
-          ? "Game Over"
-          : assertNever("Non exhaustive switch", backendState.phase)}
+        {backendState.phase === 'day'
+          ? 'Day Phase'
+          : backendState.phase === 'night'
+          ? 'Night Phase'
+          : backendState.phase === 'end'
+          ? 'Game Over'
+          : assertNever('Non exhaustive switch', backendState.phase)}
       </AppBar>
       <span>
-        {backendState.phase === "day" && <Timer />}
-        {backendState.phase === "day" && (
+        {backendState.phase === 'day' && <Timer />}
+        {backendState.phase === 'day' && (
           <ChooseWhoToKill playerNames={backendState.allPlayers} />
         )}
       </span>
@@ -110,35 +110,35 @@ const Game = () => {
 
 const getMainComponent = (
   phase: Phase,
-  backendState: State
+  backendState: State,
 ): React.ReactNode => {
   switch (phase) {
-    case "day":
-    case "night":
+    case 'day':
+    case 'night':
       const role = backendState.originalRole;
       switch (role) {
-        case "werewolf":
+        case 'werewolf':
           return <Werewolf backendState={backendState} />;
-        case "villager":
+        case 'villager':
           return <Villager />;
-        case "seer":
+        case 'seer':
           return <Seer backendState={backendState} />;
-        case "robber":
+        case 'robber':
           return <Robber backendState={backendState} />;
-        case "troublemaker":
+        case 'troublemaker':
           return <TroubleMaker backendState={backendState} />;
-        case "mason":
+        case 'mason':
           return <Mason backendState={backendState} />;
-        case "minion":
+        case 'minion':
           return <Minion backendState={backendState} />;
         default:
           return <NotImplemented props={backendState} />;
       }
-    case "end":
+    case 'end':
       return <Endgame backendState={backendState} />;
     default:
-      assertNever("Non exhaustive switch", phase);
+      assertNever('Non exhaustive switch', phase);
   }
 };
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<App />, document.getElementById('root'));

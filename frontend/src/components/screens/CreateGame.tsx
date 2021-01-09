@@ -1,11 +1,11 @@
 import React from 'react';
 
-import {useHistory} from 'react-router-dom';
-import {AppBar, Button} from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
+import { AppBar, Button } from '@material-ui/core';
 
-import {createNewGame, createPlayer, setRolePool, startGame} from 'api';
-import {DefaultFetchError} from 'types';
-import {assertNever} from 'utils';
+import { createNewGame, createPlayer, setRolePool, startGame } from 'api';
+import { DefaultFetchError } from 'types';
+import { assertNever } from 'utils';
 
 import './CreateGame.scss';
 
@@ -62,7 +62,8 @@ const CreateGame = () => {
           <Button
             onClick={createGameSequence}
             variant="contained"
-            className="CreateGame__button">
+            className="CreateGame__button"
+          >
             New game
           </Button>
         </div>

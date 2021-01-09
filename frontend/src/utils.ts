@@ -1,7 +1,7 @@
-import {useState, useEffect} from 'react';
-import {useParams} from 'react-router-dom';
-import {State, AsyncResult, DefaultFetchError} from './types';
-import {getBackendState} from './api';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { State, AsyncResult, DefaultFetchError } from './types';
+import { getBackendState } from './api';
 
 /*
  * A hook that polls the backend and reutrns an AsyncResult<State>.
@@ -18,7 +18,10 @@ import {getBackendState} from './api';
  * so the calling component can continue displaying reasonable information
  */
 export const useBackendState = (): AsyncResult<State> => {
-  const {gameId, playerId} = useParams<{gameId:string, playerId:string}>();
+  const { gameId, playerId } = useParams<{
+    gameId: string;
+    playerId: string;
+  }>();
   const [backendState, setBackendState] = useState<AsyncResult<State>>({
     type: 'pending',
   });
@@ -32,10 +35,10 @@ export const useBackendState = (): AsyncResult<State> => {
     const interval = setInterval(async () => {
       try {
         const result = await getBackendState(gameId, playerId);
-        setBackendState({type: 'success', result});
+        setBackendState({ type: 'success', result });
       } catch (untypedError) {
         const error = untypedError as DefaultFetchError;
-        setBackendState({type: 'error', error});
+        setBackendState({ type: 'error', error });
       }
     }, 1000);
 

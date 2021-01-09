@@ -1,8 +1,8 @@
-import React, { FC } from "react";
-import "./Minion.scss";
-import { State } from "types";
-import CharacterDisplay from "components/shared/CharacterDisplay";
-import PlayersList from "components/shared/PlayersList";
+import React, { FC } from 'react';
+import './Minion.scss';
+import { State } from 'types';
+import CharacterDisplay from 'components/shared/CharacterDisplay';
+import PlayersList from 'components/shared/PlayersList';
 
 const Minion: FC<{ backendState: State }> = (props) => {
   const {
@@ -12,7 +12,7 @@ const Minion: FC<{ backendState: State }> = (props) => {
   const allPlayersToRoles = Object.fromEntries(
     allPlayers
       .filter((playerName) => playerName !== name)
-      .map((playerName) => [playerName, knownPlayers[playerName] || null])
+      .map((playerName) => [playerName, knownPlayers[playerName] || null]),
   );
 
   return (
@@ -25,8 +25,8 @@ const Minion: FC<{ backendState: State }> = (props) => {
         </div>
         {
           <CharacterDisplay
-            currentRole={"minion"}
-            className={"Minion__image"}
+            currentRole={'minion'}
+            className={'Minion__image'}
           />
         }
       </div>
