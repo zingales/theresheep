@@ -6,10 +6,18 @@ import CenterChooseWidget from 'components/shared/CenterChooseWidget';
 import { chooseCenterCard } from 'api';
 import ActionSubmitButton from 'components/shared/ActionSubmitButton';
 import CharacterDisplay from 'components/shared/CharacterDisplay';
+import PlayersList from 'components/shared/PlayersList';
 
 const Werewolf: FC<{ backendState: State }> = (props) => {
   const {
-    backendState: { knownPlayers, center, phase, actionPrompt },
+    backendState: {
+      allPlayers,
+      name,
+      knownPlayers,
+      center,
+      phase,
+      actionPrompt,
+    },
   } = props;
 
   const [centerChosenState, setCenterChosenState] = useState<boolean[]>([
@@ -52,6 +60,12 @@ const Werewolf: FC<{ backendState: State }> = (props) => {
     .filter(([, role]) => role === 'werewolf')
     .map(([name]) => name);
 
+  const allPlayersToRoles = Object.fromEntries(
+    allPlayers
+      .filter((playerName) => playerName !== name)
+      .map((playerName) => [playerName, knownPlayers[playerName] || null]),
+  );
+
   const showCenterWidget = originalWerewolves.length === 0;
 
   return (
@@ -83,14 +97,11 @@ const Werewolf: FC<{ backendState: State }> = (props) => {
               center={center}
             />
           ) : (
-            originalWerewolves.map((name, idx) => (
-              <div
-                key={`original-werewolf-${idx}`}
-                className="Werewolf__list-item"
-              >
-                {name}
-              </div>
-            ))
+            <PlayersList
+              players={allPlayersToRoles}
+              selectedState={{}}
+              setSelectedState={() => {}}
+            />
           )}
 
           {phase === 'night' && (

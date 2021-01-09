@@ -11,6 +11,9 @@ import Robber from 'components/characters/robber/Robber';
 import TroubleMaker from 'components/characters/troublemaker/TroubleMaker';
 import Mason from 'components/characters/mason/Mason';
 import Minion from 'components/characters/minion/Minion';
+import Insomniac from 'components/characters/insomniac/Insomniac';
+import Tanner from 'components/characters/tanner/Tanner';
+import Drunk from 'components/characters/drunk/Drunk';
 
 import CreateGame from 'components/screens/CreateGame';
 import Endgame from 'components/screens/Endgame';
@@ -120,7 +123,9 @@ const getMainComponent = (
         case 'werewolf':
           return <Werewolf backendState={backendState} />;
         case 'villager':
-          return <Villager />;
+          return <Villager backendState={backendState} />;
+        case 'tanner':
+          return <Tanner backendState={backendState} />;
         case 'seer':
           return <Seer backendState={backendState} />;
         case 'robber':
@@ -131,6 +136,10 @@ const getMainComponent = (
           return <Mason backendState={backendState} />;
         case 'minion':
           return <Minion backendState={backendState} />;
+        case 'insomniac':
+          return <Insomniac backendState={backendState} />;
+        case 'drunk':
+          return <Drunk backendState={backendState} />;
         default:
           return <NotImplemented props={backendState} />;
       }

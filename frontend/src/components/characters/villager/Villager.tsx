@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { FC } from 'react';
+import { State } from 'types';
 import './Villager.scss';
 import Elipsis from 'components/shared/Elipsis';
 import CharacterDisplay from 'components/shared/CharacterDisplay';
+import PlayersList from '../../shared/PlayersList';
 
-const Villager = () => {
+const Villager: FC<{ backendState: State }> = (props) => {
+  const {
+    backendState: { allPlayers, knownPlayers, name, phase },
+  } = props;
+
+  const allPlayersToRoles = Object.fromEntries(
+    allPlayers
+      .filter((playerName) => playerName !== name)
+      .map((playerName) => [playerName, knownPlayers[playerName] || null]),
+  );
+
   return (
     <div className="Villager">
       <div className="Villager__column">
@@ -21,11 +33,18 @@ const Villager = () => {
       </div>
 
       <span className="Villager__column Villager__waiting-column">
-        <span>
-          Waiting for other characters to finish their actions. Nothing for you
-          to do
-          <Elipsis />
-        </span>
+        <PlayersList
+          players={allPlayersToRoles}
+          selectedState={{}}
+          setSelectedState={() => {}}
+        />
+        {phase === 'night' && (
+          <span>
+            Waiting for other characters to finish their actions. Nothing for
+            you to do
+            <Elipsis />
+          </span>
+        )}
       </span>
     </div>
   );

@@ -1,36 +1,58 @@
 import React from 'react';
 
-import { useHistory } from 'react-router-dom';
+// import {useHistory} from 'react-router-dom';
 import { AppBar, Button } from '@material-ui/core';
 
 import { createNewGame, createPlayer, setRolePool, startGame } from 'api';
-import { DefaultFetchError } from 'types';
+import { DefaultFetchError, Role } from 'types';
 import { assertNever } from 'utils';
 
 import './CreateGame.scss';
 
 const CreateGame = () => {
-  const history = useHistory();
+  // const history = useHistory();
   const createGameSequence = async () => {
     try {
       const gameId = await createNewGame();
-      const player1Id = await createPlayer(gameId, 'Adrian');
-      const player2Id = await createPlayer(gameId, 'G');
-      const player3Id = await createPlayer(gameId, 'Evan');
 
-      await setRolePool(gameId, [
-        'troublemaker',
+      const rolesInGame: Role[] = [
         'werewolf',
         'seer',
-        'werewolf',
-        'werewolf',
         'robber',
-      ]);
+        'troublemaker',
+        'drunk',
+        'hunter',
+        'insomniac',
+        'mason',
+        'mason',
+        'minion',
+        'villager',
+        'villager',
+        'villager',
+        'tanner',
+        'villager',
+      ];
+
+      const createPlayersInBatch = async () => {
+        return Promise.all(
+          Array(rolesInGame.length - 3)
+            .fill('')
+            .map(async (_, idx) => {
+              return await createPlayer(gameId, `player${idx}`);
+            }),
+        );
+      };
+      const playerIds = await createPlayersInBatch();
+
+      await setRolePool(gameId, rolesInGame);
       await startGame(gameId);
-      history.push(`/game/${gameId}/player/${player1Id}`);
+      // history.push(`/game/${gameId}/player/${playerIds[0]}`);
+
       if (process.env.NODE_ENV === 'development') {
-        window.open(`/game/${gameId}/player/${player2Id}`);
-        window.open(`/game/${gameId}/player/${player3Id}`);
+        playerIds.map((name) => {
+          window.open(`/game/${gameId}/player/${name}`);
+          return null;
+        });
       }
     } catch (untypedError) {
       const error = untypedError as DefaultFetchError;
