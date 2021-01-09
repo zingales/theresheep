@@ -1,18 +1,18 @@
-import React, {FC} from 'react';
-import './Mason.scss';
-import {State} from 'types';
-import CharacterDisplay from '../../shared/CharacterDisplay';
-import PlayersList from '../../shared/PlayersList';
+import React, { FC } from "react";
+import "./Mason.scss";
+import { State } from "types";
+import CharacterDisplay from "components/shared/CharacterDisplay";
+import PlayersList from "components/shared/PlayersList";
 
-const Mason: FC<{backendState: State}> = props => {
+const Mason: FC<{ backendState: State }> = (props) => {
   const {
-    backendState: {allPlayers, knownPlayers, name},
+    backendState: { allPlayers, knownPlayers, name },
   } = props;
 
   const allPlayersToRoles = Object.fromEntries(
     allPlayers
-      .filter(playerName => playerName !== name)
-      .map(playerName => [playerName, knownPlayers[playerName] || null]),
+      .filter((playerName) => playerName !== name)
+      .map((playerName) => [playerName, knownPlayers[playerName] || null])
   );
 
   return (
@@ -23,7 +23,7 @@ const Mason: FC<{backendState: State}> = props => {
         <div className="Mason__description">
           You see the other players that are Mason. You're friends now.
         </div>
-        <CharacterDisplay currentRole={'mason'} className={'Mason__image'} />
+        <CharacterDisplay currentRole={"mason"} className={"Mason__image"} />
       </div>
 
       <span className="Mason__column Mason__waiting-column">

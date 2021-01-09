@@ -1,7 +1,7 @@
-import React from 'react';
-import './Villager.scss';
-import Elipsis from 'components/shared/Elipsis';
-import CharacterDisplay from '../../shared/CharacterDisplay';
+import React from "react";
+import "./Villager.scss";
+import Elipsis from "components/shared/Elipsis";
+import CharacterDisplay from "components/shared/CharacterDisplay";
 
 const Villager = () => {
   return (
@@ -15,8 +15,8 @@ const Villager = () => {
           in the center. Werewolves are on the werewolf team.
         </div>
         <CharacterDisplay
-          currentRole={'villager'}
-          className={'Villager__image'}
+          currentRole={"villager"}
+          className={"Villager__image"}
         />
       </div>
 
