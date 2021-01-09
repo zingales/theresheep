@@ -9,6 +9,7 @@ import Villager from 'components/characters/villager/Villager';
 import Seer from 'components/characters/seer/Seer';
 import Robber from 'components/characters/robber/Robber';
 import TroubleMaker from 'components/characters/troublemaker/TroubleMaker';
+import Mason from 'components/characters/mason/Mason';
 
 import CreateGame from 'components/screens/CreateGame';
 import Endgame from 'components/screens/Endgame';
@@ -125,6 +126,8 @@ const getMainComponent = (
           return <Robber backendState={backendState} />;
         case 'troublemaker':
           return <TroubleMaker backendState={backendState} />;
+        case 'mason':
+          return <Mason backendState={backendState} />;
         default:
           return <NotImplemented props={backendState} />
       }

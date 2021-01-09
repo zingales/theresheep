@@ -9,8 +9,8 @@ type PlayersListProps = {
   players: {[playerName: string]: Role | null};
   selectedState: {[playerName: string]: boolean};
 
-  // type of setFoo in const [foo, setFoo] = useState();
   setSelectedState: React.Dispatch<
+  // type of setFoo in const [foo, setFoo] = useState();
     React.SetStateAction<{
       [playerName: string]: boolean;
     }>
@@ -34,7 +34,7 @@ const PlayersList: FC<PlayersListProps> = props => {
       };
     });
   };
-
+  
   return (
     <div className="PlayersList">
       <div className="PlayersList__cards-row">

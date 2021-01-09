@@ -22,8 +22,8 @@ const CreateGame = () => {
         'troublemaker',
         'werewolf',
         'seer',
-        'villager',
-        'villager',
+        'mason',
+        'mason',
         'robber',
       ]);
       await startGame(gameId);
