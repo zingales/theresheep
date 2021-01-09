@@ -35,15 +35,22 @@
     @include column;
   }
 
+  &__imgContainer {
+    position: relative;
+  }
   &__image {
     &--oldRole {
       opacity: 0.5;
+      z-index: 0;
     }
-    &--oldRole::before {
-      content: 'soup';
-      font-size: 50px;
-      line-height: 100px;
+
+    &--newRole {
+      position: absolute;
+      z-index: 1;
+      top: 10%;
+      left: 15%;
     }
+
     align-self: center;
     width: auto;
     height: 275px;

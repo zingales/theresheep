@@ -71,13 +71,16 @@ const Robber: FC<{backendState: State}> = props => {
         <div className="Robber__description">
           You're a robber. Rob some shit
         </div>
-        <div>
-          {getImgForRole('robber', classNames(
+        <div className="Robber__imgContainer">
+          {getImgForRole(
+            'robber',
+            classNames(
               'Robber__image',
               roleChanged && 'Robber__image--oldRole',
-            ))}
+            ),
+          )}
           {roleChanged &&
-            getImgForRole(currentRole, 'Robber__image')}
+            getImgForRole(currentRole, 'Robber__image Robber__image--newRole')}
         </div>
       </div>
 
