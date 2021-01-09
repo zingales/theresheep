@@ -1,7 +1,19 @@
 /*****************************************************************************
  **************************** Game State Types *******************************
  *****************************************************************************/
-export type Role = 'werewolf' | 'villager' | 'seer' | 'robber' | 'troublemaker';
+export type Role = 
+                    'werewolf' |
+                    'villager' |
+                    'seer' |
+                    'robber' |
+                    'troublemaker' |
+                    'drunk' |
+                    'hunter' |
+                    'insomniac' |
+                    'mason' |
+                    'minion' |
+                    'tanner'
+;
 
 export type ActionPrompt =
   | 'choose-center-card'

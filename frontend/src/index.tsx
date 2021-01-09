@@ -13,6 +13,7 @@ import TroubleMaker from 'components/characters/troublemaker/TroubleMaker';
 import CreateGame from 'components/screens/CreateGame';
 import Endgame from 'components/screens/Endgame';
 import Timer from 'components/shared/Timer';
+import NotImplemented from 'components/shared/NotImplemented';
 import ChooseWhoToKill from 'components/shared/ChooseWhoToKill';
 
 import {useBackendState, assertNever} from 'utils';
@@ -125,7 +126,7 @@ const getMainComponent = (
         case 'troublemaker':
           return <TroubleMaker backendState={backendState} />;
         default:
-          return assertNever('Non Exhaustive switch', role);
+          return <NotImplemented props={backendState} />
       }
     case 'end':
       return <Endgame backendState={backendState} />;

@@ -1,5 +1,4 @@
 import React, {FC, useState} from 'react';
-import robberImg from 'pics/robber.png';
 import './Robber.scss';
 import {choosePlayer} from 'api';
 import {useParams} from 'react-router-dom';
@@ -73,14 +72,10 @@ const Robber: FC<{backendState: State}> = props => {
           You're a robber. Rob some shit
         </div>
         <div>
-          <img
-            src={robberImg}
-            className={classNames(
+          {getImgForRole('robber', classNames(
               'Robber__image',
               roleChanged && 'Robber__image--oldRole',
-            )}
-            alt="logo"
-          />
+            ))}
           {roleChanged &&
             getImgForRole(currentRole, 'Robber__image')}
         </div>
