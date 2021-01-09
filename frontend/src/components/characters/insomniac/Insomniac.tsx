@@ -48,13 +48,11 @@ const Insomniac: FC<{ backendState: State }> = (props) => {
         </div>
         <div className="Insomniac__team">Team: villager</div>
         <div className="Insomniac__description">You're a insomniac.</div>
-        <div>
-          <CharacterDisplay
-            currentRole={currentRole}
-            oldRole={roleChanged ? originalRole : undefined}
-            className={'Insominac__image'}
-          />
-        </div>
+        <CharacterDisplay
+          currentRole={currentRole}
+          oldRole={roleChanged ? originalRole : undefined}
+          className={'Insomniac__image'}
+        />
       </div>
       <span className="Insomniac__column Insomniac__waiting-column">
         <PlayersList
