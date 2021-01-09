@@ -39,7 +39,9 @@ const PlayersList: FC<PlayersListProps> = props => {
     <div className="PlayersList">
       <div className="PlayersList__cards-row">
         {Object.entries(players).map(([playerName, role], idx) => {
-          const oldRole = playersOverride[playerName] ? role : undefined;
+          const oldRole = playersOverride[playerName]
+            ? role || undefined
+            : undefined;
           return (
             <div
               key={`player-card-parent-${idx}`}

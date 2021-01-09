@@ -8,18 +8,14 @@
 
   -webkit-filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
   filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
+  // width: auto;
 }
 
-$topOffset: 20%;
-$rightOffset: 15%;
+// $topOffset: 20%;
+// $rightOffset: 15%;
 .oldRole {
   opacity: 0.5;
   z-index: 0;
-
-  position: relative;
-
-  top: -$topOffset / 2;
-  left: -$rightOffset;
 }
 
 .currentRole.offset {
@@ -27,5 +23,6 @@ $rightOffset: 15%;
   z-index: 1;
   height: 100%;
 
-  top: $topOffset / 2;
+  top: 10%;
+  left: 15%;
 }

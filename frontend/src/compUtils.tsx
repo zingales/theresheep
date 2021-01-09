@@ -18,39 +18,6 @@ import classNames from 'classnames';
 
 import './compUtils.scss';
 
-export const getImgForRole = (
-  role: Role,
-  className?: string,
-): React.ReactNode => {
-  switch (role) {
-    case 'villager':
-      return <img className={className} src={villagerImg} alt="logo" />;
-    case 'werewolf':
-      return <img className={className} src={werewolfImg} alt="logo" />;
-    case 'seer':
-      return <img className={className} src={seerImg} alt="logo" />;
-    case 'robber':
-      return <img className={className} src={robberImg} alt="logo" />;
-    case 'troublemaker':
-      return <img className={className} src={troublemakerImg} alt="logo" />;
-
-    case 'drunk':
-      return <img className={className} src={drunkImg} alt="logo" />;
-    case 'hunter':
-      return <img className={className} src={hunterImg} alt="logo" />;
-    case 'insomniac':
-      return <img className={className} src={insomniacImg} alt="logo" />;
-    case 'mason':
-      return <img className={className} src={masonImg} alt="logo" />;
-    case 'minion':
-      return <img className={className} src={minionImg} alt="logo" />;
-    case 'tanner':
-      return <img className={className} src={tannerImg} alt="logo" />;
-    default:
-      return assertNever('Non exhaustive switch', role);
-  }
-};
-
 export const getImgForRole2 = (
   currentRole: Role,
   opts?: {oldRole?: Role; className?: string},
@@ -88,7 +55,7 @@ export const getImgForRole2 = (
   };
 
   return (
-    <div className={'imgContainer'}>
+    <div className={classNames('imgContainer', className)}>
       {oldRole && getImg(oldRole, classNames('oldRole offset', className))}
       {getImg(
         currentRole,

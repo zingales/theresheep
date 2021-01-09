@@ -1,18 +1,12 @@
 import React, {FC} from 'react';
 import './Minion.scss';
 import {State} from 'types';
-import { getImgForRole } from 'compUtils';
+import {getImgForRole2} from 'compUtils';
 import PlayersList from '../../shared/PlayersList';
-
-
 
 const Minion: FC<{backendState: State}> = props => {
   const {
-    backendState: {
-      allPlayers,
-      knownPlayers,
-      name,
-    },
+    backendState: {allPlayers, knownPlayers, name},
   } = props;
 
   const allPlayersToRoles = Object.fromEntries(
@@ -27,13 +21,13 @@ const Minion: FC<{backendState: State}> = props => {
         <div className="Minion__role">Your Role: minion</div>
         <div className="Minion__team">Team: Werewolf</div>
         <div className="Minion__description">
-          You see the werewolves, they don't know who you are. 
+          You see the werewolves, they don't know who you are.
         </div>
-        {getImgForRole('minion', "Minion__image")}
+        {getImgForRole2('minion', {className: 'Minion__image'})}
       </div>
 
       <span className="Minion__column Minion__waiting-column">
-      <PlayersList
+        <PlayersList
           players={allPlayersToRoles}
           selectedState={{}}
           setSelectedState={() => {}}

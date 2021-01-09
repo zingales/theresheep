@@ -1,18 +1,12 @@
 import React, {FC} from 'react';
 import './Mason.scss';
 import {State} from 'types';
-import { getImgForRole } from 'compUtils';
+import {getImgForRole2} from 'compUtils';
 import PlayersList from '../../shared/PlayersList';
-
-
 
 const Mason: FC<{backendState: State}> = props => {
   const {
-    backendState: {
-      allPlayers,
-      knownPlayers,
-      name,
-    },
+    backendState: {allPlayers, knownPlayers, name},
   } = props;
 
   const allPlayersToRoles = Object.fromEntries(
@@ -29,11 +23,11 @@ const Mason: FC<{backendState: State}> = props => {
         <div className="Mason__description">
           You see the other players that are Mason. You're friends now.
         </div>
-        {getImgForRole('mason', "Mason__image")}
+        {getImgForRole2('mason', {className: 'Mason__image'})}
       </div>
 
       <span className="Mason__column Mason__waiting-column">
-      <PlayersList
+        <PlayersList
           players={allPlayersToRoles}
           selectedState={{}}
           setSelectedState={() => {}}

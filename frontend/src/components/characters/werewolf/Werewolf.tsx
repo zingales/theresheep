@@ -3,9 +3,9 @@ import './Werewolf.scss';
 import {State} from 'types';
 import {useParams} from 'react-router-dom';
 import CenterChooseWidget from '../../shared/CenterChooseWidget';
-import {chooseCenterCard } from 'api';
+import {chooseCenterCard} from 'api';
 import ActionSubmitButton from '../../shared/ActionSubmitButton';
-import { getImgForRole } from 'compUtils';
+import {getImgForRole2} from 'compUtils';
 
 const Werewolf: FC<{backendState: State}> = props => {
   const {
@@ -61,7 +61,7 @@ const Werewolf: FC<{backendState: State}> = props => {
           werewolves. If no one else opens their eyes, the other Werewolves are
           in the center. Werewolves are on the werewolf team.
         </div>
-        {getImgForRole('werewolf', "Werewolf__image")}
+        {getImgForRole2('werewolf', {className: 'Werewolf__image'})}
       </div>
       <div className="Werewolf__column">
         <div className="Werewolf__box">
