@@ -18,7 +18,6 @@ $cardAspectRatio: 200.75 / 275;
     margin: 5px;
     height: $centerCardHeight;
     width: $centerCardHeight * $cardAspectRatio;
-    background-color: #444;
     border-radius: 20px;
     color: white;
 
@@ -34,6 +33,10 @@ $cardAspectRatio: 200.75 / 275;
     &--oldRole {
       opacity: 0.5;
     }
+  }
+
+  &__card:not(.no-background) {
+    background-color: #444;
   }
 
   &__card:not(.no-hover):hover {
