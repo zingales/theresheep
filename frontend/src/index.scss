@@ -1,19 +1,19 @@
-@import "common";
+@import 'common';
 
 body {
   color: #505050;
   /* background-color: #ECECEC; */
 
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
@@ -29,5 +29,21 @@ code {
     padding: 16px;
     font-size: 32px;
     background: black;
+  }
+}
+
+.DayPhaseTopBar {
+  display: flex;
+
+  &__gutter,
+  &__middle {
+    display: flex;
+    justify-content: center;
+  }
+  &__gutter {
+    flex: 1 1;
+  }
+  &__middle {
+    flex: 2 2;
   }
 }

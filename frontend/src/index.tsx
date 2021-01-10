@@ -100,13 +100,28 @@ const Game = () => {
           ? 'Game Over'
           : assertNever('Non exhaustive switch', backendState.phase)}
       </AppBar>
-      <span>
-        {backendState.phase === 'day' && <Timer />}
-        {backendState.phase === 'day' && (
-          <ChooseWhoToKill playerNames={backendState.allPlayers} />
-        )}
-      </span>
+      {backendState.phase == 'day' && (
+        <DayPhaseTopBar backendState={backendState} />
+      )}
       {component}
+    </div>
+  );
+};
+
+const DayPhaseTopBar: FC<{ backendState: State }> = (props) => {
+  const {
+    backendState: { phase, allPlayers },
+  } = props;
+  return (
+    <div className="DayPhaseTopBar">
+      <div className="DayPhaseTopBar__gutter" />
+      <div className="DayPhaseTopBar__middle">
+        {phase === 'day' && <Timer />}
+      </div>
+
+      <div className="DayPhaseTopBar__gutter">
+        {phase === 'day' && <ChooseWhoToKill playerNames={allPlayers} />}
+      </div>
     </div>
   );
 };
