@@ -19,12 +19,12 @@ const CreateGame = () => {
       const player3Id = await createPlayer(gameId, 'Evan');
 
       await setRolePool(gameId, [
-        'tanner',
-        'werewolf',
+        'robber',
+        'villager',
         'seer',
         'werewolf',
         'werewolf',
-        'drunk',
+        'insomniac',
       ]);
       await startGame(gameId);
       history.push(`/game/${gameId}/player/${player1Id}`);
