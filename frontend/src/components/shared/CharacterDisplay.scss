@@ -13,12 +13,12 @@
 
 // $topOffset: 20%;
 // $rightOffset: 15%;
-.oldRole {
+.CharacterDisplay__oldRole {
   opacity: 0.5;
   z-index: 0;
 }
 
-.currentRole.offset {
+.CharacterDisplay__currentRole.CharacterDisplay__offset {
   position: absolute;
   z-index: 1;
   height: 100%;

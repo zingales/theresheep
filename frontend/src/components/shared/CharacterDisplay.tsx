@@ -56,11 +56,22 @@ const CharacterDisplay: FC<CharacerDisplayProps> = (props) => {
   };
 
   return (
-    <div className={classNames('imgContainer', className)}>
-      {oldRole && getImg(oldRole, classNames('oldRole offset', className))}
+    <div className={classNames('CharacterDisplay__imgContainer', className)}>
+      {oldRole &&
+        getImg(
+          oldRole,
+          classNames(
+            'CharacterDisplay__oldRole CharacterDisplay__offset',
+            className,
+          ),
+        )}
       {getImg(
         currentRole,
-        classNames('currentRole', className, oldRole && 'offset'),
+        classNames(
+          'CharacterDisplay__currentRole',
+          className,
+          oldRole && 'CharacterDisplay__offset',
+        ),
       )}
     </div>
   );
