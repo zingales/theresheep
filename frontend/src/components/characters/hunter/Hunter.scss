@@ -1,0 +1,42 @@
+// https://create-react-app.dev/docs/adding-a-sass-stylesheet/
+@import 'common';
+
+.Hunter {
+  flex: 1 1 0;
+  min-height: 0;
+
+  display: flex;
+
+  @media only screen and (max-width: 600px) {
+    flex-direction: column;
+  }
+
+  &__role,
+  &__team {
+    @include boldPrompt;
+    flex: 1 1 0;
+  }
+
+  &__description {
+    flex: 2 2 0;
+  }
+
+  &__column {
+    @include column;
+  }
+
+  &__image {
+    align-self: center;
+    width: auto;
+    height: $imgHeight;
+    -webkit-filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
+  }
+
+  &__waiting-column {
+    display: flex;
+    font-size: 32px;
+    align-items: center;
+    justify-content: center;
+  }
+}

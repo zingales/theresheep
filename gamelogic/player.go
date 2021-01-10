@@ -140,15 +140,19 @@ func (player *Player) UserAction(actionType string, actionBody interface{}) erro
 	case ChoosePlayerInsteadOfCenterMsg:
 		return player.input.ReceiveMessage(actionType, actionBody)
 	case NominateToKillMsg:
-		actionBodyAsStr, isStr := actionBody.(string)
-		if !isStr {
-			return fmt.Errorf(
-				"Message must be type <string> for \"%s\". "+
-					"Received %x",
-				NominateToKillMsg, actionBody)
+		if player.input.GetExpecting() == BlockingNominateWhoToKillMsg {
+			return player.input.ReceiveMessage(BlockingNominateWhoToKillMsg, actionBody)
+		} else {
+			actionBodyAsStr, isStr := actionBody.(string)
+			if !isStr {
+				return fmt.Errorf(
+					"Message must be type <string> for \"%s\". "+
+						"Received %x",
+					NominateToKillMsg, actionBody)
+			}
+			player.SetNominateToKill(actionBodyAsStr)
+			return nil
 		}
-		player.SetNominateToKill(actionBodyAsStr)
-		return nil
 	default:
 		return fmt.Errorf("Unknown user action %s", actionType)
 	}

@@ -111,6 +111,16 @@ func (input *BrowserUserInput) DoesChoosePlayerInsteadOfCenter(string) bool {
 	return choice.(bool)
 }
 
+func (input *BrowserUserInput) BlockingChooseWhoToKill([]string) string {
+	input.lock.Lock()
+	input.expecting = gamelogic.BlockingNominateWhoToKillMsg
+	input.lock.Unlock()
+
+	choice := <-input.message
+	input.expecting = ""
+	return choice.(string)
+}
+
 /*****************************************************************************
  **************************** Server Interface *******************************
  ****************************************************************************/
@@ -133,6 +143,7 @@ func (input *BrowserUserInput) ReceiveMessage(msgType string, msgBody interface{
 			gamelogic.ChooseCenterCardMsg,
 			gamelogic.ChoosePlayerMsg,
 			gamelogic.ChoosePlayerInsteadOfCenterMsg,
+			gamelogic.BlockingNominateWhoToKillMsg,
 		}, msgType)
 	if input.expecting == "" {
 		return errors.New(fmt.Sprintf("Game engine is not expecting input " +
@@ -153,6 +164,10 @@ func (input *BrowserUserInput) ReceiveMessage(msgType string, msgBody interface{
 		return errors.New(fmt.Sprintf(
 			"Message body for ChoosePlayerInsteadOfCenterMsg "+
 				" should be <bool>. Received %x", msgBody))
+	} else if msgType == gamelogic.BlockingNominateWhoToKillMsg && !msgIsString {
+		return errors.New(fmt.Sprintf(
+			"Message body for BlockingNominateWhoToKillMsg "+
+				" should be <string>. Received %x", msgBody))
 	} else if !isKnonwMessage {
 		return errors.New(fmt.Sprintf("Unknown message type \"%s\"", msgType))
 	}
@@ -170,4 +185,10 @@ func (input *BrowserUserInput) ReceiveMessage(msgType string, msgBody interface{
 			fmt.Sprintf("cannot send message to message chan. " +
 				"Chan is full"))
 	}
+}
+
+func (input *BrowserUserInput) GetExpecting() string {
+	input.lock.RLock()
+	defer input.lock.RUnlock()
+	return input.expecting
 }

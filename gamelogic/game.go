@@ -321,7 +321,8 @@ func (game *Game) EndGame() {
 
 		player := game.GetPlayerByName(name)
 		if player.currentRole == Hunter {
-			name := game.actionManager.NominateToKill(player)
+			player.killNomination = ""
+			name := game.actionManager.BlockingChooseWhoToKill(player)
 			nominees = append(nominees, name)
 		}
 	}
