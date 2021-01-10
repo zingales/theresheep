@@ -5,6 +5,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import { nominateToKill } from 'api';
 import { useParams } from 'react-router-dom';
+import './ChooseWhoToKill.scss';
 // import CheckIcon from '@material-ui/icons/Check';
 
 // If all the werewolves are in the "center". The only way team vilalger can win is if they choose to "kill" the werewovles in the center
@@ -38,7 +39,7 @@ const ChooseWhoToKill: FC<ChooseWhoToKillProps> = (props) => {
   };
   return (
     <FormControl>
-      <InputLabel id="demo-simple-select-label">Choose who to kill</InputLabel>
+      <div className="ChooseWhoToKill__prompt">Choose who to kill</div>
       <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
