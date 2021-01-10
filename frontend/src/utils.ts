@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { State, AsyncResult, DefaultFetchError } from './types';
+import { State, AsyncResult, DefaultFetchError, Role} from './types';
 import { getBackendState } from './api';
+
 
 /*
  * A hook that polls the backend and reutrns an AsyncResult<State>.
@@ -50,3 +51,19 @@ export const useBackendState = (): AsyncResult<State> => {
 export const assertNever = (msg: string, _: never) => {
   throw new Error(msg);
 };
+
+export const SupportedRoles: ReadonlyArray<Role> =
+   [
+  'villager',
+  'werewolf',
+  'seer',
+  'robber',
+  'troublemaker',
+  'drunk',
+  'hunter',
+  'insomniac',
+  'mason',
+  'minion',
+  'tanner',
+] as const
+;

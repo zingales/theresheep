@@ -42,6 +42,8 @@ export type StateFromBackend = {
 
 export type Phase = 'day' | 'night' | 'end';
 
+export type RoleCountMap = { [role in Role]?: number };
+
 export type State = {
   name: string; // name of this player
   allPlayers: string[];

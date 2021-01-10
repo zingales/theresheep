@@ -7,28 +7,17 @@ import { createNewGame, createPlayer, setRolePool, startGame } from 'api';
 import { DefaultFetchError, Role, State } from 'types';
 import Input from '@material-ui/core/Input';
 import TextField from '@material-ui/core/TextField';
-import { assertNever } from 'utils';
+import { SupportedRoles } from 'utils';
 
 import './StagingRoom.scss';
 
-const supportedRoles: Role[] = [
-  'villager',
-  'werewolf',
-  'seer',
-  'robber',
-  'troublemaker',
-  'drunk',
-  'hunter',
-  'insomniac',
-  'mason',
-  'minion',
-  'tanner',
-];
-
 const StagingRoom: FC = () => {
+  // getRolePool;
   // Required State:
   //   1. The current Roles in this rolepool
   //   2. the current players in this game.
+
+  const supportedRoles = SupportedRoles;
 
   return (
     <div className="">

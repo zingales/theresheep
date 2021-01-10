@@ -190,7 +190,12 @@ func AllowPreflight(w http.ResponseWriter, r *http.Request) {
 func GetRolePool(
 	game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request,
 ) (JsonBody, HttpStatus, error) {
-	return nil, http.StatusInternalServerError, NotImplementedError
+
+	// for x := range game.rolePool {
+
+	// }
+
+	return nil, http.StatusOK, nil
 }
 
 var roleCast = map[string]gamelogic.Role{
