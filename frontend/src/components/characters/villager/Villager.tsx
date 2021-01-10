@@ -1,28 +1,21 @@
-import React, {FC} from 'react';
-import {State} from 'types';
+import React, { FC } from 'react';
+import { State } from 'types';
 import './Villager.scss';
 import Elipsis from 'components/shared/Elipsis';
-import { getImgForRole } from 'compUtils';
+import CharacterDisplay from 'components/shared/CharacterDisplay';
 import PlayersList from '../../shared/PlayersList';
 
-
-
-const Villager : FC<{backendState: State}> = props => {
+const Villager: FC<{ backendState: State }> = (props) => {
   const {
-    backendState: {
-      allPlayers,
-      knownPlayers,
-      name,
-      phase,
-    },
+    backendState: { allPlayers, knownPlayers, name, phase },
   } = props;
 
   const allPlayersToRoles = Object.fromEntries(
     allPlayers
-      .filter(playerName => playerName !== name)
-      .map(playerName => [playerName, knownPlayers[playerName] || null]),
+      .filter((playerName) => playerName !== name)
+      .map((playerName) => [playerName, knownPlayers[playerName] || null]),
   );
-  
+
   return (
     <div className="Villager">
       <div className="Villager__column">
@@ -33,21 +26,24 @@ const Villager : FC<{backendState: State}> = props => {
           werewolves. If no one else opens their eyes, the other Werewolves are
           in the center. Werewolves are on the werewolf team.
         </div>
-        {getImgForRole('villager', "Villager__image")}
+        <CharacterDisplay
+          currentRole={'villager'}
+          className={'Villager__image'}
+        />
       </div>
 
       <span className="Villager__column Villager__waiting-column">
-      <PlayersList
+        <PlayersList
           players={allPlayersToRoles}
           selectedState={{}}
           setSelectedState={() => {}}
         />
-        { phase === 'night' && (
-        <span>
-          Waiting for other characters to finish their actions. Nothing for you
-          to do
-          <Elipsis />
-        </span>
+        {phase === 'night' && (
+          <span>
+            Waiting for other characters to finish their actions. Nothing for
+            you to do
+            <Elipsis />
+          </span>
         )}
       </span>
     </div>

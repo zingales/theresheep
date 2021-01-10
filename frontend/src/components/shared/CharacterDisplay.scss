@@ -1,0 +1,28 @@
+@import 'common';
+
+.CharacterDisplay__imgContainer {
+  position: relative;
+  // height: $imgHeight;
+  display: flex;
+  justify-content: center;
+
+  -webkit-filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
+  // width: auto;
+}
+
+// $topOffset: 20%;
+// $rightOffset: 15%;
+.CharacterDisplay__oldRole {
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.CharacterDisplay__currentRole.CharacterDisplay__offset {
+  position: absolute;
+  z-index: 1;
+  height: 100%;
+
+  top: 10%;
+  left: 15%;
+}

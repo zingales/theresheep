@@ -1,24 +1,25 @@
-import React, {FC, useState} from 'react';
+import React, { FC, useState } from 'react';
 import './TroubleMaker.scss';
-import {State} from 'types';
-import {useParams} from 'react-router-dom';
-import PlayersList from '../../shared/PlayersList';
-import {choosePlayer} from 'api';
-import ActionSubmitButton from '../../shared/ActionSubmitButton';
-import { getImgForRole } from 'compUtils';
+import { State } from 'types';
+import { useParams } from 'react-router-dom';
+import PlayersList from 'components/shared/PlayersList';
+import { choosePlayer } from 'api';
+import ActionSubmitButton from 'components/shared/ActionSubmitButton';
+import CharacterDisplay from 'components/shared/CharacterDisplay';
 
-
-const TroubleMaker: FC<{backendState: State}> = props => {
+const TroubleMaker: FC<{ backendState: State }> = (props) => {
   const {
-    backendState: {knownPlayers, phase, actionPrompt, allPlayers, name},
+    backendState: { knownPlayers, phase, actionPrompt, allPlayers, name },
   } = props;
-
 
   const [playerSelectedState, setPlayerSelectedState] = useState<{
     [playerName: string]: boolean;
   }>({});
 
-  const {gameId, playerId} = useParams<{gameId: string; playerId: string}>();
+  const { gameId, playerId } = useParams<{
+    gameId: string;
+    playerId: string;
+  }>();
   if (gameId === undefined) {
     alert('bad url, must include gameId');
     return null;
@@ -31,8 +32,8 @@ const TroubleMaker: FC<{backendState: State}> = props => {
 
   const otherPlayersToRoles = Object.fromEntries(
     allPlayers
-      .filter(playerName => playerName !== name)
-      .map(playerName => [playerName, knownPlayers[playerName] || null]),
+      .filter((playerName) => playerName !== name)
+      .map((playerName) => [playerName, knownPlayers[playerName] || null]),
   );
 
   const submit = async () => {
@@ -44,18 +45,14 @@ const TroubleMaker: FC<{backendState: State}> = props => {
       return;
     }
 
-
     // should have a guarauntee here that the next line returns an array of
     // size exactly 2
-    const [player1, player2] = Object.entries(playerSelectedState).filter(
-      ([_, isSelected]) => isSelected,
-    ).map(([playerName, ]) => playerName);
+    const [player1, player2] = Object.entries(playerSelectedState)
+      .filter(([_, isSelected]) => isSelected)
+      .map(([playerName]) => playerName);
     await choosePlayer(gameId, playerId, player1);
     await choosePlayer(gameId, playerId, player2);
   };
-
-
-
 
   return (
     <div className="TroubleMaker">
@@ -67,17 +64,19 @@ const TroubleMaker: FC<{backendState: State}> = props => {
           werewolves. If no one else opens their eyes, the other Werewolves are
           in the center. Werewolves are on the werewolf team.
         </div>
-        {getImgForRole('troublemaker', "TroubleMaker__image")}
+        <CharacterDisplay
+          currentRole={'troublemaker'}
+          className={'TroubleMaker__image'}
+        />
       </div>
       <div className="TroubleMaker__column">
         <div className="TroubleMaker__box">
-          <div className="TroubleMaker__box-header">
-            Choose who to switch
-          </div>
+          <div className="TroubleMaker__box-header">Choose who to switch</div>
           {
-            <PlayersList players={otherPlayersToRoles}
-            selectedState={playerSelectedState}
-            setSelectedState={setPlayerSelectedState}
+            <PlayersList
+              players={otherPlayersToRoles}
+              selectedState={playerSelectedState}
+              setSelectedState={setPlayerSelectedState}
             />
           }
 

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { FC } from 'react';
 import ReactDOM from 'react-dom';
 
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import './index.scss';
 import Werewolf from 'components/characters/werewolf/Werewolf';
@@ -21,12 +21,12 @@ import Timer from 'components/shared/Timer';
 import NotImplemented from 'components/shared/NotImplemented';
 import ChooseWhoToKill from 'components/shared/ChooseWhoToKill';
 
-import {useBackendState, assertNever} from 'utils';
-import {State, Phase} from 'types';
+import { useBackendState, assertNever } from 'utils';
+import { State, Phase } from 'types';
 
-import {createMuiTheme, ThemeProvider} from '@material-ui/core';
-import {grey} from '@material-ui/core/colors';
-import {AppBar} from '@material-ui/core';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { grey } from '@material-ui/core/colors';
+import { AppBar } from '@material-ui/core';
 
 const App = () => {
   const theme = createMuiTheme({
@@ -100,13 +100,28 @@ const Game = () => {
           ? 'Game Over'
           : assertNever('Non exhaustive switch', backendState.phase)}
       </AppBar>
-      <span>
-        {backendState.phase === 'day' && <Timer />}
-        {backendState.phase === 'day' && (
-          <ChooseWhoToKill playerNames={backendState.allPlayers} />
-        )}
-      </span>
+      {backendState.phase == 'day' && (
+        <DayPhaseTopBar backendState={backendState} />
+      )}
       {component}
+    </div>
+  );
+};
+
+const DayPhaseTopBar: FC<{ backendState: State }> = (props) => {
+  const {
+    backendState: { phase, allPlayers },
+  } = props;
+  return (
+    <div className="DayPhaseTopBar">
+      <div className="DayPhaseTopBar__gutter" />
+      <div className="DayPhaseTopBar__middle">
+        {phase === 'day' && <Timer />}
+      </div>
+
+      <div className="DayPhaseTopBar__gutter">
+        {phase === 'day' && <ChooseWhoToKill playerNames={allPlayers} />}
+      </div>
     </div>
   );
 };
@@ -123,9 +138,9 @@ const getMainComponent = (
         case 'werewolf':
           return <Werewolf backendState={backendState} />;
         case 'villager':
-          return <Villager backendState={backendState}/>;
+          return <Villager backendState={backendState} />;
         case 'tanner':
-            return <Tanner backendState={backendState}/>;
+          return <Tanner backendState={backendState} />;
         case 'seer':
           return <Seer backendState={backendState} />;
         case 'robber':
@@ -135,13 +150,13 @@ const getMainComponent = (
         case 'mason':
           return <Mason backendState={backendState} />;
         case 'minion':
-            return <Minion backendState={backendState} />;
+          return <Minion backendState={backendState} />;
         case 'insomniac':
-            return <Insomniac backendState={backendState} />;
+          return <Insomniac backendState={backendState} />;
         case 'drunk':
-              return <Drunk backendState={backendState} />;
+          return <Drunk backendState={backendState} />;
         default:
-          return <NotImplemented props={backendState} />
+          return <NotImplemented props={backendState} />;
       }
     case 'end':
       return <Endgame backendState={backendState} />;

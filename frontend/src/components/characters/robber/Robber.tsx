@@ -1,16 +1,16 @@
-import React, {FC, useState} from 'react';
+import React, { FC, useState } from 'react';
 import './Robber.scss';
-import {choosePlayer} from 'api';
-import {useParams} from 'react-router-dom';
-import {State} from 'types';
-import PlayersList from '../../shared/PlayersList';
-import {getImgForRole} from 'compUtils';
-import ActionSubmitButton from '../../shared/ActionSubmitButton';
+import { choosePlayer } from 'api';
+import { useParams } from 'react-router-dom';
+import { State } from 'types';
+import PlayersList from 'components/shared/PlayersList';
+import CharacterDisplay from 'components/shared/CharacterDisplay';
+import ActionSubmitButton from 'components/shared/ActionSubmitButton';
 import classNames from 'classnames';
 
-const Robber: FC<{backendState: State}> = props => {
+const Robber: FC<{ backendState: State }> = (props) => {
   const {
-    backendState: {allPlayers, knownPlayers, name, actionPrompt},
+    backendState: { allPlayers, knownPlayers, name, actionPrompt },
     backendState,
   } = props;
 
@@ -20,7 +20,10 @@ const Robber: FC<{backendState: State}> = props => {
 
   const switchedPlayer: string | undefined = Object.keys(knownPlayers)[0];
 
-  const {gameId, playerId} = useParams<{gameId: string; playerId: string}>();
+  const { gameId, playerId } = useParams<{
+    gameId: string;
+    playerId: string;
+  }>();
   if (gameId === undefined) {
     alert('bad url, must include gameId');
     return null;
@@ -50,8 +53,8 @@ const Robber: FC<{backendState: State}> = props => {
 
   const allPlayersToRoles = Object.fromEntries(
     allPlayers
-      .filter(playerName => playerName !== name)
-      .map(playerName => [playerName, knownPlayers[playerName] || null]),
+      .filter((playerName) => playerName !== name)
+      .map((playerName) => [playerName, knownPlayers[playerName] || null]),
   );
 
   const currentRole = Object.values(backendState.knownPlayers)[0] || 'robber';
@@ -71,14 +74,11 @@ const Robber: FC<{backendState: State}> = props => {
         <div className="Robber__description">
           You're a robber. Rob some shit
         </div>
-        <div>
-          {getImgForRole('robber', classNames(
-              'Robber__image',
-              roleChanged && 'Robber__image--oldRole',
-            ))}
-          {roleChanged &&
-            getImgForRole(currentRole, 'Robber__image')}
-        </div>
+        <CharacterDisplay
+          currentRole={currentRole}
+          oldRole={roleChanged ? 'robber' : undefined}
+          className={'Robber__image'}
+        />
       </div>
 
       <span className="Robber__column Robber__waiting-column">
@@ -89,7 +89,7 @@ const Robber: FC<{backendState: State}> = props => {
           playerOverride={
             switchedPlayer === undefined
               ? undefined
-              : {[switchedPlayer]: 'robber'}
+              : { [switchedPlayer]: 'robber' }
           }
         />
 

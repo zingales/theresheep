@@ -1,8 +1,8 @@
-import React, {FC} from 'react';
+import React, { FC } from 'react';
 import './CenterChooseWidget.scss';
-import {Role} from '../../types';
-import {useParams} from 'react-router-dom';
-import {getImgForRole} from '../../compUtils';
+import { Role } from 'types';
+import { useParams } from 'react-router-dom';
+import CharacterDisplay from './CharacterDisplay';
 import classNames from 'classnames';
 
 type CenterChooseWidgetProps = {
@@ -11,11 +11,14 @@ type CenterChooseWidgetProps = {
   center: (Role | null)[];
 };
 
-const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
+const CenterChooseWidget: FC<CenterChooseWidgetProps> = (props) => {
   // what i really want here is a set, but i don't think js lets me do that
-  const {chosenState, setChosenState, center} = props;
+  const { chosenState, setChosenState, center } = props;
 
-  const {gameId, playerId} = useParams<{gameId: string; playerId: string}>();
+  const { gameId, playerId } = useParams<{
+    gameId: string;
+    playerId: string;
+  }>();
   if (gameId === undefined) {
     alert('bad url, must include gameId');
     return null;
@@ -27,7 +30,7 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
   }
 
   const toggleChosen = (idx: number) =>
-    setChosenState(oldState => {
+    setChosenState((oldState) => {
       const newState = [...oldState];
       newState[idx] = !newState[idx];
       return newState;
@@ -43,13 +46,16 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = props => {
               className={classNames(
                 'CenterChooseWidget__center-card',
                 chosenState[idx] && 'CenterChooseWidget__center-card--border',
-              )}>
-              {role === null
-                ? '?'
-                : getImgForRole(
-                    role,
-                    'CenterChooseWidget__center-card no-hover',
-                  )}
+              )}
+            >
+              {role === null ? (
+                '?'
+              ) : (
+                <CharacterDisplay
+                  currentRole={role}
+                  className={'CenterChooseWidget__center-card no-hover'}
+                />
+              )}
             </div>
           ))}
         </>

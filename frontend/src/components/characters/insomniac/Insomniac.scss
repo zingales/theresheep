@@ -1,5 +1,5 @@
 // https://create-react-app.dev/docs/adding-a-sass-stylesheet/
-@import 'common';
+@import "common";
 
 .Insomniac__role--changed {
   text-decoration: line-through;
@@ -36,17 +36,17 @@
   }
 
   &__image {
-    &--oldRole {
-      opacity: 0.5;
-    }
-    &--oldRole::before {
-      content: 'soup';
-      font-size: 50px;
-      line-height: 100px;
-    }
+    // &--oldRole {
+    //   opacity: 0.5;
+    // }
+    // &--oldRole::before {
+    //   content: 'soup';
+    //   font-size: 50px;
+    //   line-height: 100px;
+    // }
     align-self: center;
     width: auto;
-    height: 275px;
+    height: $imgHeight;
     -webkit-filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
     filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
   }

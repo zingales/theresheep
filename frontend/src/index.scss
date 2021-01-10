@@ -31,3 +31,20 @@ code {
     background: black;
   }
 }
+
+.DayPhaseTopBar {
+  display: flex;
+
+  &__gutter,
+  &__middle {
+    display: flex;
+    justify-content: center;
+  }
+  &__gutter {
+    flex: 1 1;
+    align-items: center;
+  }
+  &__middle {
+    flex: 2 2;
+  }
+}

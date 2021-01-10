@@ -5,6 +5,8 @@
 $colTopPadding: 64px;
 $colBottomPadding: 32px;
 
+$imgHeight: 275px;
+
 @mixin column {
   flex: 1 1 0;
   display: flex;

@@ -53,14 +53,14 @@ export async function req<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 export const createNewGame = async () => {
-  const {id} = await req<{id: string}>('/api/games', {method: 'POST'});
+  const { id } = await req<{ id: string }>('/api/games', { method: 'POST' });
   return id;
 };
 
 export const createPlayer = async (gameId: string, name: string) => {
-  const {id} = await req<{id: string}>(`/api/games/${gameId}/players`, {
+  const { id } = await req<{ id: string }>(`/api/games/${gameId}/players`, {
     method: 'POST',
-    body: JSON.stringify({name}),
+    body: JSON.stringify({ name }),
   });
   return id;
 };
@@ -73,7 +73,7 @@ export const startGame = async (gameId: string) =>
 export const setRolePool = async (gameId: string, roles: Role[]) =>
   await req<{}>(`/api/games/${gameId}/role_pool`, {
     method: 'PUT',
-    body: JSON.stringify({roles}),
+    body: JSON.stringify({ roles }),
   });
 
 export const getBackendState = async (
@@ -110,10 +110,10 @@ export const getBackendState = async (
       }
     }
 
-    return {center, knownPlayers};
+    return { center, knownPlayers };
   };
 
-  const {center, knownPlayers} = parseHasSeen(playerState.hasSeen);
+  const { center, knownPlayers } = parseHasSeen(playerState.hasSeen);
   const backendState = {
     ...stateFromBackend,
     ...playerState,

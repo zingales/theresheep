@@ -1,17 +1,23 @@
-import React, {FC, useState} from 'react';
+import React, { FC, useState } from 'react';
 import './Werewolf.scss';
-import {State} from 'types';
-import {useParams} from 'react-router-dom';
-import CenterChooseWidget from '../../shared/CenterChooseWidget';
-import {chooseCenterCard } from 'api';
-import ActionSubmitButton from '../../shared/ActionSubmitButton';
-import { getImgForRole } from 'compUtils';
-import PlayersList from '../../shared/PlayersList';
+import { State } from 'types';
+import { useParams } from 'react-router-dom';
+import CenterChooseWidget from 'components/shared/CenterChooseWidget';
+import { chooseCenterCard } from 'api';
+import ActionSubmitButton from 'components/shared/ActionSubmitButton';
+import CharacterDisplay from 'components/shared/CharacterDisplay';
+import PlayersList from 'components/shared/PlayersList';
 
-
-const Werewolf: FC<{backendState: State}> = props => {
+const Werewolf: FC<{ backendState: State }> = (props) => {
   const {
-    backendState: {allPlayers, name, knownPlayers, center, phase, actionPrompt},
+    backendState: {
+      allPlayers,
+      name,
+      knownPlayers,
+      center,
+      phase,
+      actionPrompt,
+    },
   } = props;
 
   const [centerChosenState, setCenterChosenState] = useState<boolean[]>([
@@ -20,7 +26,10 @@ const Werewolf: FC<{backendState: State}> = props => {
     false,
   ]);
 
-  const {gameId, playerId} = useParams<{gameId: string; playerId: string}>();
+  const { gameId, playerId } = useParams<{
+    gameId: string;
+    playerId: string;
+  }>();
   if (gameId === undefined) {
     alert('bad url, must include gameId');
     return null;
@@ -51,12 +60,11 @@ const Werewolf: FC<{backendState: State}> = props => {
     .filter(([, role]) => role === 'werewolf')
     .map(([name]) => name);
 
-
   const allPlayersToRoles = Object.fromEntries(
-      allPlayers
-        .filter(playerName => playerName !== name)
-        .map(playerName => [playerName, knownPlayers[playerName] || null]),
-    );
+    allPlayers
+      .filter((playerName) => playerName !== name)
+      .map((playerName) => [playerName, knownPlayers[playerName] || null]),
+  );
 
   const showCenterWidget = originalWerewolves.length === 0;
 
@@ -70,7 +78,10 @@ const Werewolf: FC<{backendState: State}> = props => {
           werewolves. If no one else opens their eyes, the other Werewolves are
           in the center. Werewolves are on the werewolf team.
         </div>
-        {getImgForRole('werewolf', "Werewolf__image")}
+        <CharacterDisplay
+          currentRole={'werewolf'}
+          className={'Werewolf__image'}
+        />
       </div>
       <div className="Werewolf__column">
         <div className="Werewolf__box">
@@ -87,10 +98,10 @@ const Werewolf: FC<{backendState: State}> = props => {
             />
           ) : (
             <PlayersList
-          players={allPlayersToRoles}
-          selectedState={{}}
-          setSelectedState={() => {}}
-        />
+              players={allPlayersToRoles}
+              selectedState={{}}
+              setSelectedState={() => {}}
+            />
           )}
 
           {phase === 'night' && (

@@ -1,18 +1,20 @@
-import React, {FC} from 'react';
+import React, { FC } from 'react';
 import './Insomniac.scss';
-import {useParams} from 'react-router-dom';
-import {State} from 'types';
-import {getImgForRole} from 'compUtils';
+import { useParams } from 'react-router-dom';
+import { State } from 'types';
+import CharacterDisplay from 'components/shared/CharacterDisplay';
 import classNames from 'classnames';
 import PlayersList from '../../shared/PlayersList';
 
-
-const Insomniac: FC<{backendState: State}> = props => {
+const Insomniac: FC<{ backendState: State }> = (props) => {
   const {
-    backendState: {allPlayers, name, knownPlayers, originalRole},
+    backendState: { allPlayers, name, knownPlayers, originalRole },
   } = props;
 
-  const {gameId, playerId} = useParams<{gameId: string; playerId: string}>();
+  const { gameId, playerId } = useParams<{
+    gameId: string;
+    playerId: string;
+  }>();
   if (gameId === undefined) {
     alert('bad url, must include gameId');
     return null;
@@ -28,8 +30,8 @@ const Insomniac: FC<{backendState: State}> = props => {
 
   const allPlayersToRoles = Object.fromEntries(
     allPlayers
-      .filter(playerName => playerName !== name)
-      .map(playerName => [playerName, knownPlayers[playerName] || null]),
+      .filter((playerName) => playerName !== name)
+      .map((playerName) => [playerName, knownPlayers[playerName] || null]),
   );
 
   return (
@@ -37,26 +39,23 @@ const Insomniac: FC<{backendState: State}> = props => {
       <div className="Insomniac__column">
         <div className="Insomniac__role">
           Your Role:{' '}
-          <span className={classNames(roleChanged && 'Insomniac__role--changed')}>
+          <span
+            className={classNames(roleChanged && 'Insomniac__role--changed')}
+          >
             insomniac
           </span>
           {roleChanged && ` ${currentRole}`}
         </div>
         <div className="Insomniac__team">Team: villager</div>
-        <div className="Insomniac__description">
-          You're a insomniac.
-        </div>
-        <div>
-          {getImgForRole('insomniac', classNames(
-              'Insomniac__image',
-              roleChanged && 'Insomniac__image--oldRole',
-            ))}
-          {roleChanged &&
-            getImgForRole(currentRole, 'Insomniac__image')}
-        </div>
+        <div className="Insomniac__description">You're a insomniac.</div>
+        <CharacterDisplay
+          currentRole={currentRole}
+          oldRole={roleChanged ? originalRole : undefined}
+          className={'Insomniac__image'}
+        />
       </div>
       <span className="Insomniac__column Insomniac__waiting-column">
-      <PlayersList
+        <PlayersList
           players={allPlayersToRoles}
           selectedState={{}}
           setSelectedState={() => {}}

@@ -1,11 +1,11 @@
 import React from 'react';
 
 // import {useHistory} from 'react-router-dom';
-import {AppBar, Button} from '@material-ui/core';
+import { AppBar, Button } from '@material-ui/core';
 
-import {createNewGame, createPlayer, setRolePool, startGame} from 'api';
-import {DefaultFetchError, Role} from 'types';
-import {assertNever} from 'utils';
+import { createNewGame, createPlayer, setRolePool, startGame } from 'api';
+import { DefaultFetchError, Role } from 'types';
+import { assertNever } from 'utils';
 
 import './CreateGame.scss';
 
@@ -33,22 +33,20 @@ const CreateGame = () => {
         'villager',
       ];
 
-      const createPlayersInBatch = async () => {
-        return Promise.all( Array(rolesInGame.length-3).fill('').map(async (_, idx) => {
-          return await createPlayer(gameId,`player${idx}`);
-        }))
-      };
-      const playerIds = await createPlayersInBatch();
+      const playerIds = await Promise.all(
+        rolesInGame
+          .filter((_, idx) => idx < rolesInGame.length - 3)
+          .map((_, idx) => createPlayer(gameId, `player${idx}`)),
+      );
 
       await setRolePool(gameId, rolesInGame);
       await startGame(gameId);
-      // history.push(`/game/${gameId}/player/${playerIds[0]}`);
 
       if (process.env.NODE_ENV === 'development') {
         playerIds.map((name) => {
           window.open(`/game/${gameId}/player/${name}`);
           return null;
-        })        
+        });
       }
     } catch (untypedError) {
       const error = untypedError as DefaultFetchError;
@@ -80,7 +78,8 @@ const CreateGame = () => {
           <Button
             onClick={createGameSequence}
             variant="contained"
-            className="CreateGame__button">
+            className="CreateGame__button"
+          >
             New game
           </Button>
         </div>
