@@ -1,6 +1,6 @@
 import React from 'react';
 
-// import {useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { AppBar, Button } from '@material-ui/core';
 
 import { createNewGame, createPlayer, setRolePool, startGame } from 'api';
@@ -10,7 +10,8 @@ import { assertNever } from 'utils';
 import './CreateGame.scss';
 
 const CreateGame = () => {
-  // const history = useHistory();
+  const history = useHistory();
+
   const createGameSequence = async () => {
     try {
       const gameId = await createNewGame();
@@ -48,6 +49,7 @@ const CreateGame = () => {
           return null;
         });
       }
+      history.push(`/game/${gameId}/`);
     } catch (untypedError) {
       const error = untypedError as DefaultFetchError;
       switch (error.type) {
@@ -80,7 +82,7 @@ const CreateGame = () => {
             variant="contained"
             className="CreateGame__button"
           >
-            New game
+            New Room
           </Button>
         </div>
       </div>

@@ -16,6 +16,7 @@ import Tanner from 'components/characters/tanner/Tanner';
 import Drunk from 'components/characters/drunk/Drunk';
 
 import CreateGame from 'components/screens/CreateGame';
+import StagingRoom from 'components/screens/StagingRoom';
 import Endgame from 'components/screens/Endgame';
 import Timer from 'components/shared/Timer';
 import NotImplemented from 'components/shared/NotImplemented';
@@ -48,6 +49,9 @@ const App = () => {
             </Route>
             <Route strict path="/game/:gameId/player/:playerId">
               <Game />
+            </Route>
+            <Route path="/game/:gameId/">
+              <StagingRoom />
             </Route>
           </Switch>
         </Router>
