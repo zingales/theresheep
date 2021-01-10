@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 
 // import {useHistory} from 'react-router-dom';
 import { AppBar, Button } from '@material-ui/core';
@@ -17,6 +17,7 @@ import TextField from '@material-ui/core/TextField';
 import { SupportedRoles, usePlayerNames } from 'utils';
 
 import './StagingRoom.scss';
+import { useParams } from 'react-router-dom';
 
 const StagingRoom: FC = () => {
   // getRolePool;
@@ -24,11 +25,20 @@ const StagingRoom: FC = () => {
   //   1. The current Roles in this rolepool
   //   2. the current players in this game.
 
-  const supportedRoles = SupportedRoles;
+  const { gameId } = useParams<{
+    gameId: string;
+  }>();
 
   const rolePoolState = useRollPool();
 
   const playerNames = usePlayerNames();
+
+  const [addPlayerNameText, setAddPlayerNameText] = useState<string>('');
+
+  const addPlayer = (event: any) => {
+    createPlayer(gameId, addPlayerNameText);
+    setAddPlayerNameText('');
+  };
 
   return (
     <div className="">
@@ -82,9 +92,17 @@ const StagingRoom: FC = () => {
                   <Input
                     placeholder="Player Name"
                     inputProps={{ 'aria-label': 'description' }}
+                    value={addPlayerNameText}
+                    onChange={(event) => {
+                      setAddPlayerNameText(event.target.value);
+                    }}
                   />
                 </div>
-                <Button className="StagingRoom__button" variant="contained">
+                <Button
+                  onClick={addPlayer}
+                  className="StagingRoom__button"
+                  variant="contained"
+                >
                   Add Player
                 </Button>
               </div>
@@ -92,7 +110,7 @@ const StagingRoom: FC = () => {
           </div>
           <div className="StagingRoom__column">
             <Button
-              // onClick={}
+              onClick={() => startGame(gameId)}
               variant="contained"
               className="StagingRoom__button"
             >

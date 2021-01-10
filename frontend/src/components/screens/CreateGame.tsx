@@ -41,7 +41,7 @@ const CreateGame = () => {
       );
 
       await setRolePool(gameId, rolesInGame);
-      await startGame(gameId);
+      // await startGame(gameId);
 
       if (process.env.NODE_ENV === 'development') {
         playerIds.map((name) => {
