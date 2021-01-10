@@ -195,7 +195,18 @@ func GetRolePool(
 
 	// }
 
-	return nil, http.StatusOK, nil
+	rolesAsString := []string{}
+
+	for _, role := range game.GetRolePool() {
+		rolesAsString = append(rolesAsString, gamelogic.RoleIDToName[role])
+	}
+
+	body := map[string]interface{}{
+		"roles": rolesAsString,
+	}
+
+	return body, http.StatusOK, nil
+
 }
 
 var roleCast = map[string]gamelogic.Role{

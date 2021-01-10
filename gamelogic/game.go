@@ -96,6 +96,10 @@ func (game *Game) AddPlayer(player *Player) (int, error) {
 	return len(game.players) - 1, nil
 }
 
+func (game *Game) GetRolePool() []Role {
+	return game.rolePool
+}
+
 func (game *Game) AssignRolePool(roles []Role) error {
 	if game.inProgress {
 		return GameInProgressError
