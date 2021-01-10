@@ -2,12 +2,19 @@ import React, { FC } from 'react';
 
 // import {useHistory} from 'react-router-dom';
 import { AppBar, Button } from '@material-ui/core';
+import { useRollPool } from 'utils';
 
-import { createNewGame, createPlayer, setRolePool, startGame } from 'api';
+import {
+  createNewGame,
+  createPlayer,
+  getRolePool,
+  setRolePool,
+  startGame,
+} from 'api';
 import { DefaultFetchError, Role, State } from 'types';
 import Input from '@material-ui/core/Input';
 import TextField from '@material-ui/core/TextField';
-import { SupportedRoles } from 'utils';
+import { SupportedRoles, usePlayerNames } from 'utils';
 
 import './StagingRoom.scss';
 
@@ -18,6 +25,10 @@ const StagingRoom: FC = () => {
   //   2. the current players in this game.
 
   const supportedRoles = SupportedRoles;
+
+  const rolePoolState = useRollPool();
+
+  const playerNames = usePlayerNames();
 
   return (
     <div className="">
@@ -33,11 +44,13 @@ const StagingRoom: FC = () => {
               <div className="StagingRoom__info-row">
                 <div className="StagingRoom__info-item"></div>
                 <div className="StagingRoom__info-item">Role</div>
-                <div className="StagingRoom__info-item">Number In Game</div>
+                <div className="StagingRoom__info-item">Current Count</div>
+                <div className="StagingRoom__info-item">Updated</div>
               </div>
-              {supportedRoles.map((roleName) => (
+              {Object.entries(rolePoolState).map(([roleName, count]) => (
                 <div className="StagingRoom__info-row">
                   <div className="StagingRoom__info-item">{roleName}</div>
+                  <div className="StagingRoom__info-item">{count}</div>
                   <div className="StagingRoom__info-item">
                     <TextField
                       id="standard-number"
@@ -59,7 +72,7 @@ const StagingRoom: FC = () => {
                 <div className="StagingRoom__info-item"></div>
                 <div className="StagingRoom__info-item">Name</div>
               </div>
-              {[].map((playerName) => (
+              {playerNames.map((playerName) => (
                 <div className="StagingRoom__info-row">
                   <div className="StagingRoom__info-item">{playerName}</div>
                 </div>

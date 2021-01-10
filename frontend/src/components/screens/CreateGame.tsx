@@ -45,7 +45,7 @@ const CreateGame = () => {
 
       if (process.env.NODE_ENV === 'development') {
         playerIds.map((name) => {
-          window.open(`/game/${gameId}/player/${name}`);
+          // window.open(`/game/${gameId}/player/${name}`);
           return null;
         });
       }

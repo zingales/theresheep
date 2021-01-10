@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { State, AsyncResult, DefaultFetchError, Role} from './types';
-import { getBackendState } from './api';
+import { State, AsyncResult, DefaultFetchError, Role, RoleCountMap} from './types';
+import { getBackendState, getRolePool, getPlayerNames} from './api';
+import userEvent from '@testing-library/user-event';
 
 
 /*
@@ -46,6 +47,64 @@ export const useBackendState = (): AsyncResult<State> => {
     return () => clearInterval(interval);
   }, [gameId, playerId]);
   return backendState;
+};
+
+export const usePlayerNames = (): string[] => {
+  const { gameId} = useParams<{
+    gameId: string;
+  }>();
+
+  const [playerNames, setPlayerNames] = useState<string[]>(Array());
+
+  useEffect(() => {
+
+    const interval = setInterval(async () => {
+      if (gameId === undefined) {
+        return;
+      }
+      try {
+        const playerNames = await getPlayerNames(gameId);
+        setPlayerNames(playerNames);
+      } catch (untypedError) {
+        console.error(untypedError);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [gameId]);
+
+
+  return playerNames;
+}
+
+
+export const useRollPool = (): RoleCountMap => {
+  const { gameId} = useParams<{
+    gameId: string;
+  }>();
+
+    const zeroMap = Object.fromEntries(SupportedRoles.map((role) => {
+      return [role, 0];
+    }));
+
+  const [roleStateMap, setRoleStateMap] = useState<RoleCountMap>(zeroMap);
+
+  useEffect(() => {
+    if (gameId === undefined) {
+      return;
+    }
+    const interval = setInterval(async () => {
+      try {
+        const result = await getRolePool(gameId);
+        setRoleStateMap(result);
+      } catch (untypedError) {
+        console.error(untypedError);
+        // setRoleStateMap(zeroMap);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [gameId])
+  return roleStateMap
 };
 
 export const assertNever = (msg: string, _: never) => {

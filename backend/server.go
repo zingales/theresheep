@@ -170,6 +170,7 @@ func DefineRoutes() http.Handler {
 	mux.Get("/api/games/{gameId}/players/{playerId}/state",
 		WrapPlayerApiEndpoint(GetGameStateForPlayer))
 	mux.Post("/api/games/{gameId}/players", WrapGameApiEndpoint(CreatePlayer))
+	mux.Get("/api/games/{gameId}/players_names", WrapGameApiEndpoint(GetPlayers))
 
 	mux.Post("/api/games/{gameId}/player/{playerId}/do_action",
 		WrapPlayerApiEndpoint(DoAction))
@@ -207,6 +208,21 @@ func GetRolePool(
 
 	return body, http.StatusOK, nil
 
+}
+
+func GetPlayers(game *gamelogic.Game, responseWriter http.ResponseWriter, request *http.Request,
+) (JsonBody, HttpStatus, error) {
+
+	playerNames := []string{}
+	for _, player := range game.GetPlayerNames() {
+		playerNames = append(playerNames, player.Name)
+	}
+
+	body := map[string]interface{}{
+		"names": playerNames,
+	}
+
+	return body, http.StatusOK, nil
 }
 
 var roleCast = map[string]gamelogic.Role{

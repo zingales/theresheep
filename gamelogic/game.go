@@ -100,6 +100,10 @@ func (game *Game) GetRolePool() []Role {
 	return game.rolePool
 }
 
+func (game *Game) GetPlayerNames() []*Player {
+	return game.players
+}
+
 func (game *Game) AssignRolePool(roles []Role) error {
 	if game.inProgress {
 		return GameInProgressError
