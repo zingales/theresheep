@@ -104,7 +104,7 @@ const Game = () => {
           ? 'Game Over'
           : assertNever('Non exhaustive switch', backendState.phase)}
       </AppBar>
-      {backendState.phase == 'day' && (
+      {backendState.phase === 'day' && (
         <DayPhaseTopBar backendState={backendState} />
       )}
       {component}

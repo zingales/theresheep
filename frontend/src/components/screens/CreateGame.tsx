@@ -3,8 +3,8 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { AppBar, Button } from '@material-ui/core';
 
-import { createNewGame, createPlayer, setRolePool, startGame } from 'api';
-import { DefaultFetchError, Role } from 'types';
+import { createNewGame } from 'api';
+import { DefaultFetchError } from 'types';
 import { assertNever } from 'utils';
 
 import './CreateGame.scss';
@@ -16,39 +16,6 @@ const CreateGame = () => {
     try {
       const gameId = await createNewGame();
 
-      const rolesInGame: Role[] = [
-        'werewolf',
-        'seer',
-        'robber',
-        'troublemaker',
-        'drunk',
-        'hunter',
-        'insomniac',
-        'mason',
-        'mason',
-        'minion',
-        'villager',
-        'villager',
-        'villager',
-        'tanner',
-        'villager',
-      ];
-
-      const playerIds = await Promise.all(
-        rolesInGame
-          .filter((_, idx) => idx < rolesInGame.length - 3)
-          .map((_, idx) => createPlayer(gameId, `player${idx}`)),
-      );
-
-      await setRolePool(gameId, rolesInGame);
-      // await startGame(gameId);
-
-      if (process.env.NODE_ENV === 'development') {
-        playerIds.map((name) => {
-          // window.open(`/game/${gameId}/player/${name}`);
-          return null;
-        });
-      }
       history.push(`/game/${gameId}/`);
     } catch (untypedError) {
       const error = untypedError as DefaultFetchError;

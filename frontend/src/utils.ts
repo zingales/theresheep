@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { State, AsyncResult, DefaultFetchError, Role, RoleCountMap} from './types';
 import { getBackendState, getRolePool, getPlayerNames} from './api';
-import userEvent from '@testing-library/user-event';
 
 
 /*
@@ -54,7 +53,7 @@ export const usePlayerNames = (): string[] => {
     gameId: string;
   }>();
 
-  const [playerNames, setPlayerNames] = useState<string[]>(Array());
+  const [playerNames, setPlayerNames] = useState<string[]>([]);
 
   useEffect(() => {
 

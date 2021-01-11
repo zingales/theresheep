@@ -4,22 +4,14 @@ import React, { FC, useState } from 'react';
 import { AppBar, Button } from '@material-ui/core';
 import { useRollPool } from 'utils';
 
-import {
-  createNewGame,
-  createPlayer,
-  getRolePool,
-  setRolePool,
-  startGame,
-} from 'api';
-import { DefaultFetchError, Role, State, RoleCountMap } from 'types';
+import { createPlayer, setRolePool, startGame } from 'api';
+import { Role, RoleCountMap } from 'types';
 import Input from '@material-ui/core/Input';
 import TextField from '@material-ui/core/TextField';
-import { SupportedRoles, usePlayerNames } from 'utils';
+import { usePlayerNames } from 'utils';
 
 import './StagingRoom.scss';
 import { useParams } from 'react-router-dom';
-import { keys } from '@material-ui/core/styles/createBreakpoints';
-import { resolveTripleslashReference } from 'typescript';
 
 const StagingRoom: FC = () => {
   // getRolePool;
