@@ -11,13 +11,15 @@ import {
   setRolePool,
   startGame,
 } from 'api';
-import { DefaultFetchError, Role, State } from 'types';
+import { DefaultFetchError, Role, State, RoleCountMap } from 'types';
 import Input from '@material-ui/core/Input';
 import TextField from '@material-ui/core/TextField';
 import { SupportedRoles, usePlayerNames } from 'utils';
 
 import './StagingRoom.scss';
 import { useParams } from 'react-router-dom';
+import { keys } from '@material-ui/core/styles/createBreakpoints';
+import { resolveTripleslashReference } from 'typescript';
 
 const StagingRoom: FC = () => {
   // getRolePool;
@@ -34,10 +36,23 @@ const StagingRoom: FC = () => {
   const playerNames = usePlayerNames();
 
   const [addPlayerNameText, setAddPlayerNameText] = useState<string>('');
+  const [roleInputValues, setRoleInputValues] = useState<RoleCountMap>(
+    rolePoolState,
+  );
 
   const addPlayer = (event: any) => {
     createPlayer(gameId, addPlayerNameText);
     setAddPlayerNameText('');
+  };
+
+  const updateRolePoolSubmit = () => {
+    // createPlayer(gameId, addPlayerNameText);
+    var rolesInGame: Role[] = [];
+
+    for (let [key, value] of Object.entries(roleInputValues)) {
+      rolesInGame.push(...Array(value).fill(key));
+    }
+    setRolePool(gameId, rolesInGame);
   };
 
   return (
@@ -63,9 +78,18 @@ const StagingRoom: FC = () => {
                   <div className="StagingRoom__info-item">{count}</div>
                   <div className="StagingRoom__info-item">
                     <TextField
-                      id="standard-number"
+                      id={roleName}
                       label="Number"
                       type="number"
+                      value={roleInputValues[roleName as Role]}
+                      onChange={(event) => {
+                        const value = parseInt(event.target.value);
+                        setRoleInputValues((oldRoleInputValues) => {
+                          const newInput = { ...oldRoleInputValues };
+                          newInput[roleName as Role] = value;
+                          return newInput;
+                        });
+                      }}
                       InputLabelProps={{
                         shrink: true,
                       }}
@@ -73,6 +97,19 @@ const StagingRoom: FC = () => {
                   </div>
                 </div>
               ))}
+              <div className="StagingRoom__info-row">
+                <div className="StagingRoom__info-item"></div>
+                <div className="StagingRoom__info-item"></div>
+                <div className="StagingRoom__info-item">
+                  <Button
+                    onClick={updateRolePoolSubmit}
+                    className="StagingRoom__button"
+                    variant="contained"
+                  >
+                    Update Role Pool
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
           <div className="StagingRoom__column">
