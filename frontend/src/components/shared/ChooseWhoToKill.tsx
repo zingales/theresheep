@@ -2,7 +2,6 @@ import React, { FC, useState } from 'react';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
 import { nominateToKill } from 'api';
 import { useParams } from 'react-router-dom';
 import './ChooseWhoToKill.scss';

@@ -1,3 +1,4 @@
+import { SupportedRoles } from 'utils';
 import {
   State,
   ConnectionError,
@@ -5,6 +6,7 @@ import {
   HttpError,
   StateFromBackend,
   Role,
+  RoleCountMap,
 } from './types';
 
 /*
@@ -75,6 +77,34 @@ export const setRolePool = async (gameId: string, roles: Role[]) =>
     method: 'PUT',
     body: JSON.stringify({ roles }),
   });
+
+  
+  export const getRolePool = async (gameId: string): Promise<RoleCountMap> => {
+
+    // const zeroMap = Object.fromEntries(SupportedRoles.map((role) => {
+    //   return [role, 0];
+    // }));
+
+    const zeroMap = SupportedRoles.reduce((map: RoleCountMap, item) => {
+      map[item] = 0;
+      return map;
+    }, {});
+
+    const randomThing = await req<{roles:Role[]}>(`/api/games/${gameId}/role_pool`);
+
+    const currentRoleCount = randomThing.roles.reduce((map: RoleCountMap, item)=>{
+      map[item] = (map[item] || 0 )+ 1 
+      return map;
+    }, {});
+
+    return {...zeroMap, ...currentRoleCount};
+  }
+  
+  export const getPlayerNames = async (gameId:string) : Promise<string[]> =>{
+    const returnObj = await req<{names: string[]}>(`/api/games/${gameId}/players_names`)
+    return returnObj.names;
+  }
+
 
 export const getBackendState = async (
   gameId: string,

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { State, AsyncResult, DefaultFetchError } from './types';
-import { getBackendState } from './api';
+import { State, AsyncResult, DefaultFetchError, Role, RoleCountMap} from './types';
+import { getBackendState, getRolePool, getPlayerNames} from './api';
+
 
 /*
  * A hook that polls the backend and reutrns an AsyncResult<State>.
@@ -47,6 +48,80 @@ export const useBackendState = (): AsyncResult<State> => {
   return backendState;
 };
 
+export const usePlayerNames = (): string[] => {
+  const { gameId} = useParams<{
+    gameId: string;
+  }>();
+
+  const [playerNames, setPlayerNames] = useState<string[]>([]);
+
+  useEffect(() => {
+
+    const interval = setInterval(async () => {
+      if (gameId === undefined) {
+        return;
+      }
+      try {
+        const playerNames = await getPlayerNames(gameId);
+        setPlayerNames(playerNames);
+      } catch (untypedError) {
+        console.error(untypedError);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [gameId]);
+
+
+  return playerNames;
+}
+
+
+export const useRollPool = (): RoleCountMap => {
+  const { gameId} = useParams<{
+    gameId: string;
+  }>();
+
+    const zeroMap = Object.fromEntries(SupportedRoles.map((role) => {
+      return [role, 0];
+    }));
+
+  const [roleStateMap, setRoleStateMap] = useState<RoleCountMap>(zeroMap);
+
+  useEffect(() => {
+    if (gameId === undefined) {
+      return;
+    }
+    const interval = setInterval(async () => {
+      try {
+        const result = await getRolePool(gameId);
+        setRoleStateMap(result);
+      } catch (untypedError) {
+        console.error(untypedError);
+        // setRoleStateMap(zeroMap);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [gameId])
+  return roleStateMap
+};
+
 export const assertNever = (msg: string, _: never) => {
   throw new Error(msg);
 };
+
+export const SupportedRoles: ReadonlyArray<Role> =
+   [
+  'villager',
+  'werewolf',
+  'seer',
+  'robber',
+  'troublemaker',
+  'drunk',
+  'hunter',
+  'insomniac',
+  'mason',
+  'minion',
+  'tanner',
+] as const
+;
