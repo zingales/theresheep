@@ -31,7 +31,7 @@ const Minion: FC<{ backendState: State }> = (props) => {
         }
       </div>
 
-      <span className="Minion__column Minion__waiting-column">
+      <span className="Minion__column">
         <PlayersList
           players={allPlayersToRoles}
           selectedState={{}}

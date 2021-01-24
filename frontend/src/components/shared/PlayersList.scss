@@ -1,4 +1,4 @@
-$centerCardHeight: 200px;
+$cardHeight: 120px;
 $cardAspectRatio: 200.75 / 275;
 
 .PlayersList {
@@ -8,16 +8,27 @@ $cardAspectRatio: 200.75 / 275;
 
   &__cards-row {
     display: flex;
+    flex-wrap: wrap;
   }
 
   &__prompt-row {
     margin-top: 10px;
   }
 
+  &__card-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  // &__name {
+  //   margin: 5px;
+  // }
+
   &__card {
-    margin: 5px;
-    height: $centerCardHeight;
-    width: $centerCardHeight * $cardAspectRatio;
+    margin: 5px 16px 32px 0;
+    height: $cardHeight;
+    width: $cardHeight * $cardAspectRatio;
     border-radius: 20px;
     color: white;
 
@@ -25,7 +36,7 @@ $cardAspectRatio: 200.75 / 275;
     align-items: center;
     justify-content: center;
 
-    font-size: $centerCardHeight * 0.6;
+    font-size: $cardHeight * 0.6;
     &--border {
       border: 5px solid yellow;
     }

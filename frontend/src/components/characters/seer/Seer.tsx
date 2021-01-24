@@ -102,12 +102,14 @@ const Seer: FC<{ backendState: State }> = (props) => {
         <CharacterDisplay currentRole={'seer'} className={'Seer__image'} />
       </div>
 
-      <span className="Seer__column Seer__waiting-column">
+      <span className="Seer__column">
+        <div className="Seer__box-header">Choose card from the center</div>
         <CenterChooseWidget
           chosenState={centerChosenState}
           setChosenState={setCenterChosenState}
           center={center}
         />
+        <div className="Seer__box-header">Choose who to switch</div>
         <PlayersList
           players={allPlayersToRoles}
           selectedState={playerSelectedState}

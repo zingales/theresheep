@@ -26,13 +26,13 @@ const Mason: FC<{ backendState: State }> = (props) => {
         <CharacterDisplay currentRole={'mason'} className={'Mason__image'} />
       </div>
 
-      <span className="Mason__column Mason__waiting-column">
+      <div className="Mason__column">
         <PlayersList
           players={allPlayersToRoles}
           selectedState={{}}
           setSelectedState={() => {}}
         />
-      </span>
+      </div>
     </div>
   );
 };

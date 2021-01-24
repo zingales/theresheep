@@ -29,7 +29,7 @@ const Hunter: FC<{ backendState: State }> = (props) => {
         <CharacterDisplay currentRole={'hunter'} className={'Hunter__image'} />
       </div>
 
-      <span className="Hunter__column Hunter__waiting-column">
+      <span className="Hunter__column">
         <PlayersList
           players={allPlayersToRoles}
           selectedState={{}}

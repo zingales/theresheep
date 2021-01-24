@@ -28,8 +28,8 @@ const Tanner: FC<{ backendState: State }> = (props) => {
         <CharacterDisplay currentRole={'tanner'} className={'Tanner__image'} />
       </div>
 
-      <span className="Tanner__column Tanner__waiting-column">
-        <span>
+      <span className="Tanner__column">
+        <span className="Tanner__waitingText">
           Waiting for other characters to finish their actions. Nothing for you
           to do
           <Elipsis />

@@ -32,7 +32,7 @@ const Villager: FC<{ backendState: State }> = (props) => {
         />
       </div>
 
-      <span className="Villager__column Villager__waiting-column">
+      <span className="Villager__column">
         <PlayersList
           players={allPlayersToRoles}
           selectedState={{}}

@@ -44,10 +44,11 @@ const PlayersList: FC<PlayersListProps> = (props) => {
             : undefined;
           return (
             <div
+              className="PlayersList__card-container"
               key={`player-card-parent-${idx}`}
               onClick={() => toggleChosen(playerName)}
             >
-              <div>{playerName}</div>
+              <div className="PlayersList__name">{playerName}</div>
               <div
                 key={`player-card-${idx}`}
                 className={classNames(
