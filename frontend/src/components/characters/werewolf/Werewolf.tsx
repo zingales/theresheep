@@ -97,11 +97,7 @@ const Werewolf: FC<{ backendState: State }> = (props) => {
               center={center}
             />
           ) : (
-            <PlayersList
-              players={allPlayersToRoles}
-              selectedState={{}}
-              setSelectedState={() => {}}
-            />
+            <PlayersList players={allPlayersToRoles} />
           )}
 
           {phase === 'night' && (

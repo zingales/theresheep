@@ -55,11 +55,7 @@ const Insomniac: FC<{ backendState: State }> = (props) => {
         />
       </div>
       <span className="Insomniac__column Insomniac__waiting-column">
-        <PlayersList
-          players={allPlayersToRoles}
-          selectedState={{}}
-          setSelectedState={() => {}}
-        />
+        <PlayersList players={allPlayersToRoles} />
       </span>
     </div>
   );

@@ -33,11 +33,7 @@ const Villager: FC<{ backendState: State }> = (props) => {
       </div>
 
       <span className="Villager__column">
-        <PlayersList
-          players={allPlayersToRoles}
-          selectedState={{}}
-          setSelectedState={() => {}}
-        />
+        <PlayersList players={allPlayersToRoles} />
         {phase === 'night' && (
           <span>
             Waiting for other characters to finish their actions. Nothing for

@@ -109,11 +109,12 @@ const Seer: FC<{ backendState: State }> = (props) => {
           setChosenState={setCenterChosenState}
           center={center}
         />
-        <div className="Seer__box-header">Choose who to switch</div>
+        <div className="Seer__box-header">Choose a player to see</div>
         <PlayersList
           players={allPlayersToRoles}
           selectedState={playerSelectedState}
           setSelectedState={setPlayerSelectedState}
+          numToSelect={actionPrompt !== '' ? 1 : 0}
         />
 
         {backendState.phase === 'night' && (

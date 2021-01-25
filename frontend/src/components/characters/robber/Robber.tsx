@@ -91,6 +91,7 @@ const Robber: FC<{ backendState: State }> = (props) => {
               ? undefined
               : { [switchedPlayer]: 'robber' }
           }
+          numToSelect={actionPrompt !== '' ? 1 : 0}
         />
 
         {backendState.phase === 'night' && (

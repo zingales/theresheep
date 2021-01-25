@@ -30,11 +30,7 @@ const Hunter: FC<{ backendState: State }> = (props) => {
       </div>
 
       <span className="Hunter__column">
-        <PlayersList
-          players={allPlayersToRoles}
-          selectedState={{}}
-          setSelectedState={() => {}}
-        />
+        <PlayersList players={allPlayersToRoles} />
         {phase === 'night' && (
           <span>
             Waiting for other characters to finish their actions. Nothing for

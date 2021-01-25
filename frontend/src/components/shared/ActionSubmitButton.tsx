@@ -23,7 +23,7 @@ const ActionSubmitButton: FC<Props> = (props) => {
       </Button>
       {disabled && (
         <span className="ActionSubmitButton__prompt">
-          It's not your turn yet <Elipsis />
+          It's not your turn <Elipsis />
         </span>
       )}
     </span>

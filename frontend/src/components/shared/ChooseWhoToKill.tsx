@@ -33,7 +33,6 @@ const ChooseWhoToKill: FC<ChooseWhoToKillProps> = (props) => {
     // strongly dislke this cast. SO told me to do it https://stackoverflow.com/questions/58675993/typescript-react-select-onchange-handler-type-error
     const chosenPlayer = event.target.value as string;
     setChosenPlayer(chosenPlayer);
-    console.log(chosenPlayer);
     await nominateToKill(gameId, playerId, chosenPlayer);
   };
   return (
@@ -46,7 +45,9 @@ const ChooseWhoToKill: FC<ChooseWhoToKillProps> = (props) => {
         onChange={handleChange}
       >
         {killOptions.map((playerName) => (
-          <MenuItem value={playerName}>{playerName}</MenuItem>
+          <MenuItem key={`kill-options-${playerName}`} value={playerName}>
+            {playerName}
+          </MenuItem>
         ))}
       </Select>
     </FormControl>

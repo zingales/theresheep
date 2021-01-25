@@ -27,11 +27,7 @@ const Mason: FC<{ backendState: State }> = (props) => {
       </div>
 
       <div className="Mason__column">
-        <PlayersList
-          players={allPlayersToRoles}
-          selectedState={{}}
-          setSelectedState={() => {}}
-        />
+        <PlayersList players={allPlayersToRoles} />
       </div>
     </div>
   );

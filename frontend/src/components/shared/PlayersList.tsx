@@ -7,31 +7,49 @@ import CharacterDisplay from './CharacterDisplay';
 
 type PlayersListProps = {
   players: { [playerName: string]: Role | null };
-  selectedState: { [playerName: string]: boolean };
+  selectedState?: { [playerName: string]: boolean };
 
-  setSelectedState: React.Dispatch<
+  setSelectedState?: React.Dispatch<
     // type of setFoo in const [foo, setFoo] = useState();
     React.SetStateAction<{
       [playerName: string]: boolean;
     }>
   >;
   playerOverride?: { [playerName: string]: Role };
+
+  numToSelect?: number;
 };
 const PlayersList: FC<PlayersListProps> = (props) => {
   const {
     players,
-    selectedState,
-    setSelectedState,
+    selectedState: _selectedState,
+    setSelectedState: _setSelectedState,
     playerOverride: _playersOverride,
+    numToSelect: _numToSelect,
   } = props;
   const playersOverride = _playersOverride || {};
+  const numToSelect = _numToSelect || 0;
+  const selectedState = _selectedState || {};
+  const setSelectedState = _setSelectedState || (() => {});
 
   const toggleChosen = (playerName: string) => {
     setSelectedState((currentSelectedState) => {
-      return {
-        ...currentSelectedState,
-        ...{ [playerName]: !currentSelectedState[playerName] },
-      };
+      const currentSelectedStateCopy = { ...currentSelectedState };
+      currentSelectedStateCopy[playerName] = !currentSelectedStateCopy[
+        playerName
+      ];
+      const currentlySelectedPlayers = Object.entries(currentSelectedStateCopy)
+        .filter(([, isSelected]) => isSelected)
+        .map(([playerName]) => playerName);
+
+      if (currentlySelectedPlayers.length > numToSelect) {
+        const playerToUnselect = currentlySelectedPlayers.filter(
+          (selectedPlayer) => selectedPlayer !== playerName,
+        )[0];
+        currentSelectedStateCopy[playerToUnselect] = false;
+      }
+
+      return currentSelectedStateCopy;
     });
   };
 
@@ -53,7 +71,9 @@ const PlayersList: FC<PlayersListProps> = (props) => {
                 key={`player-card-${idx}`}
                 className={classNames(
                   'PlayersList__card',
-                  role !== null && 'no-hover',
+                  numToSelect > 0 &&
+                    role === null &&
+                    'PlayersList__card--selectable',
                   role !== null && 'no-background',
                   selectedState[playerName] && 'PlayersList__card--border',
                 )}

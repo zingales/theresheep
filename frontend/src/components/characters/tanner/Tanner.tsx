@@ -34,11 +34,7 @@ const Tanner: FC<{ backendState: State }> = (props) => {
           to do
           <Elipsis />
         </span>
-        <PlayersList
-          players={allPlayersToRoles}
-          selectedState={{}}
-          setSelectedState={() => {}}
-        />
+        <PlayersList players={allPlayersToRoles} />
       </span>
     </div>
   );
