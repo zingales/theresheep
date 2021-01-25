@@ -81,6 +81,7 @@ const Drunk: FC<{ backendState: State }> = (props) => {
             chosenState={centerChosenState}
             setChosenState={setCenterChosenState}
             center={center}
+            numToSelect={actionPrompt !== '' ? 1 : 0}
           />
 
           {phase === 'night' && (

@@ -95,6 +95,7 @@ const Werewolf: FC<{ backendState: State }> = (props) => {
               chosenState={centerChosenState}
               setChosenState={setCenterChosenState}
               center={center}
+              numToSelect={actionPrompt === '' ? 0 : 1}
             />
           ) : (
             <PlayersList players={allPlayersToRoles} />

@@ -33,6 +33,9 @@ const PlayersList: FC<PlayersListProps> = (props) => {
   const setSelectedState = _setSelectedState || (() => {});
 
   const toggleChosen = (playerName: string) => {
+    if (numToSelect === 0) {
+      return;
+    }
     setSelectedState((currentSelectedState) => {
       const currentSelectedStateCopy = { ...currentSelectedState };
       currentSelectedStateCopy[playerName] = !currentSelectedStateCopy[

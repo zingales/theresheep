@@ -108,6 +108,7 @@ const Seer: FC<{ backendState: State }> = (props) => {
           chosenState={centerChosenState}
           setChosenState={setCenterChosenState}
           center={center}
+          numToSelect={actionPrompt !== '' ? 2 : 0}
         />
         <div className="Seer__box-header">Choose a player to see</div>
         <PlayersList

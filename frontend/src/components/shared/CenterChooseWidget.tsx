@@ -9,11 +9,11 @@ type CenterChooseWidgetProps = {
   chosenState: boolean[];
   setChosenState: React.Dispatch<React.SetStateAction<boolean[]>>;
   center: (Role | null)[];
+  numToSelect: number;
 };
 
 const CenterChooseWidget: FC<CenterChooseWidgetProps> = (props) => {
-  // what i really want here is a set, but i don't think js lets me do that
-  const { chosenState, setChosenState, center } = props;
+  const { chosenState, setChosenState, center, numToSelect } = props;
 
   const { gameId, playerId } = useParams<{
     gameId: string;
@@ -29,12 +29,24 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = (props) => {
     return null;
   }
 
-  const toggleChosen = (idx: number) =>
+  const toggleChosen = (idx: number) => {
+    if (numToSelect === 0) {
+      return;
+    }
     setChosenState((oldState) => {
       const newState = [...oldState];
       newState[idx] = !newState[idx];
+      const numChosen = newState.filter((x) => x).length;
+      if (numChosen > numToSelect) {
+        const idxToUnselect = newState
+          .map((val, idx2) => [val, idx2] as const)
+          .filter(([val, idx2]) => val && idx2 !== idx)
+          .map(([, idx2]) => idx2)[0];
+        newState[idxToUnselect] = false;
+      }
       return newState;
     });
+  };
 
   return (
     <div>
@@ -45,6 +57,7 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = (props) => {
               onClick={() => toggleChosen(idx)}
               className={classNames(
                 'CenterChooseWidget__center-card',
+                numToSelect > 0 && 'CenterChooseWidget__center-card--hover',
                 chosenState[idx] && 'CenterChooseWidget__center-card--border',
               )}
             >
@@ -53,7 +66,7 @@ const CenterChooseWidget: FC<CenterChooseWidgetProps> = (props) => {
               ) : (
                 <CharacterDisplay
                   currentRole={role}
-                  className={'CenterChooseWidget__center-card no-hover'}
+                  className={classNames('CenterChooseWidget__center-card')}
                 />
               )}
             </div>
