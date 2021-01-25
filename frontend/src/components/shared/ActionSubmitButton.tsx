@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
 import { ActionPrompt } from 'types';
 import { Button } from '@material-ui/core';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import './ActionSubmitButton.scss';
+import Elipsis from 'components/shared/Elipsis';
 
 type Props = {
   onClick: () => void;
@@ -11,11 +12,20 @@ const ActionSubmitButton: FC<Props> = (props) => {
   const { onClick, actionPrompt } = props;
   const disabled = actionPrompt === '';
   return (
-    <span>
-      <Button onClick={onClick} disabled={disabled}>
-        {disabled ? 'Waiting' : 'Submit'}
-        {disabled && <CircularProgress />}
+    <span className="ActionSubmitButton">
+      <Button
+        className="ActionSubmit__button"
+        variant="contained"
+        onClick={onClick}
+        disabled={disabled}
+      >
+        Submit
       </Button>
+      {disabled && (
+        <span className="ActionSubmitButton__prompt">
+          It's not your turn <Elipsis />
+        </span>
+      )}
     </span>
   );
 };

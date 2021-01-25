@@ -118,3 +118,15 @@ func (am *ActionManager) NominateToKill(player *Player) string {
 	)
 	return nomination
 }
+
+func (am *ActionManager) BlockingChooseWhoToKill(player *Player) string {
+	playerNames := am.game.PlayerNames()
+	nomination := player.input.BlockingChooseWhoToKill(playerNames)
+
+	am.AddEventOneAffect(
+		player,
+		NominatesToKill,
+		&PlayerRolePair{Name: nomination, Role: -1},
+	)
+	return nomination
+}

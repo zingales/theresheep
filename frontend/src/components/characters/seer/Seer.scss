@@ -25,18 +25,17 @@
     @include column;
   }
 
+  &__box-header {
+    margin-top: 16px; // only seer needs this because it has two widgets in the right column
+    @include boxHeader;
+  }
+
   &__image {
     align-self: center;
     width: auto;
     height: $imgHeight;
     -webkit-filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
     filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
-  }
-
-  &__waiting-column {
-    display: flex;
-    font-size: 32px;
-    align-items: center;
-    justify-content: center;
+    margin-bottom: 32px;
   }
 }

@@ -102,16 +102,20 @@ const Seer: FC<{ backendState: State }> = (props) => {
         <CharacterDisplay currentRole={'seer'} className={'Seer__image'} />
       </div>
 
-      <span className="Seer__column Seer__waiting-column">
+      <span className="Seer__column">
+        <div className="Seer__box-header">Choose card from the center</div>
         <CenterChooseWidget
           chosenState={centerChosenState}
           setChosenState={setCenterChosenState}
           center={center}
+          numToSelect={actionPrompt !== '' ? 2 : 0}
         />
+        <div className="Seer__box-header">Choose a player to see</div>
         <PlayersList
           players={allPlayersToRoles}
           selectedState={playerSelectedState}
           setSelectedState={setPlayerSelectedState}
+          numToSelect={actionPrompt !== '' ? 1 : 0}
         />
 
         {backendState.phase === 'night' && (

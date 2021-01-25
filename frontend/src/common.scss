@@ -12,5 +12,19 @@ $imgHeight: 275px;
   display: flex;
   flex-direction: column;
   height: calc(100% - #{$colTopPadding} - #{$colBottomPadding});
-  padding: #{$colTopPadding} 72px #{$colBottomPadding} 72px;
+  min-width: 0;
+
+  &:nth-child(1) {
+    padding: #{$colTopPadding} 16px #{$colBottomPadding} 72px;
+  }
+
+  &:nth-child(2) {
+    padding: #{$colTopPadding} 72px #{$colBottomPadding} 16px;
+  }
+}
+
+@mixin boxHeader {
+  @include boldPrompt;
+  border-bottom: solid 1px #d0d0d0;
+  margin-bottom: 16px;
 }

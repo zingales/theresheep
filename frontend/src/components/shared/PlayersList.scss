@@ -1,4 +1,4 @@
-$centerCardHeight: 200px;
+$cardHeight: 120px;
 $cardAspectRatio: 200.75 / 275;
 
 .PlayersList {
@@ -8,16 +8,23 @@ $cardAspectRatio: 200.75 / 275;
 
   &__cards-row {
     display: flex;
+    flex-wrap: wrap;
   }
 
   &__prompt-row {
     margin-top: 10px;
   }
 
+  &__card-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   &__card {
-    margin: 5px;
-    height: $centerCardHeight;
-    width: $centerCardHeight * $cardAspectRatio;
+    margin: 5px 16px 32px 0;
+    height: $cardHeight;
+    width: $cardHeight * $cardAspectRatio;
     border-radius: 20px;
     color: white;
 
@@ -25,7 +32,9 @@ $cardAspectRatio: 200.75 / 275;
     align-items: center;
     justify-content: center;
 
-    font-size: $centerCardHeight * 0.6;
+    font-size: $cardHeight * 0.6;
+
+    border: 5px solid transparent; // included so that when border appears it doesn't push anything over
     &--border {
       border: 5px solid yellow;
     }
@@ -33,14 +42,14 @@ $cardAspectRatio: 200.75 / 275;
     &--oldRole {
       opacity: 0.5;
     }
+
+    &--selectable:hover {
+      cursor: pointer;
+      transform: scale(1.05);
+    }
   }
 
   &__card:not(.no-background) {
     background-color: #444;
-  }
-
-  &__card:not(.no-hover):hover {
-    cursor: pointer;
-    transform: scale(1.05);
   }
 }

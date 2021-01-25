@@ -33,7 +33,7 @@ $cardAspectRatio: 200.75 / 275;
     }
   }
 
-  &__center-card:not(.no-hover):hover {
+  &__center-card--hover:hover {
     cursor: pointer;
     transform: scale(1.05);
   }

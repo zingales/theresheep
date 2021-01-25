@@ -1,0 +1,9 @@
+.ActionSubmitButton {
+  display: flex;
+  align-items: center;
+  margin: 16px 0;
+
+  &__prompt {
+    margin-left: 16px;
+  }
+}

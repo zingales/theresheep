@@ -13,9 +13,11 @@ type UserInput interface {
 	ChooseCenterCard(string) int
 	ChoosePlayer(string, []string) string
 	DoesChoosePlayerInsteadOfCenter(string) bool
+	BlockingChooseWhoToKill([]string) string
 	Prompt() string
 	ReceiveMessage(msgType string, msgBody interface{}) error
 	GetType() string
+	GetExpecting() string
 }
 
 type RandomUserInput struct{}
@@ -50,6 +52,16 @@ func (input *RandomUserInput) Prompt() string {
 
 func (input *RandomUserInput) ReceiveMessage(msgType string, msgBody interface{}) error {
 	return nil
+}
+
+func (input *RandomUserInput) BlockingChooseWhoToKill(playerNames []string) string {
+	num := rand.Intn(len(playerNames))
+	log.Printf("randomly choosing player %d", num)
+	return playerNames[num]
+}
+
+func (input *RandomUserInput) GetExpecting() string {
+	return ""
 }
 
 type ConsoleUserInput struct{}
@@ -105,12 +117,33 @@ func (input *ConsoleUserInput) ChoosePlayer(additionalInfo string, playerNames [
 	return playerNames[num]
 }
 
+func (input *ConsoleUserInput) BlockingChooseWhoToKill(playerNames []string) string {
+	fmt.Println("Names")
+	for i := 0; i < len(playerNames); i++ {
+		fmt.Printf("%d: %s\n", i, playerNames[i])
+	}
+	text, err := readFromConsole(" Choose a player by entering the coresponding number? ")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	num, err := strconv.Atoi(text)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return playerNames[num]
+}
+
 func (input *ConsoleUserInput) Prompt() string {
 	return ""
 }
 
 func (input *ConsoleUserInput) ReceiveMessage(msgType string, msgBody interface{}) error {
 	return nil
+}
+
+func (input *ConsoleUserInput) GetExpecting() string {
+	return ""
 }
 
 func readFromConsole(prompt string) (string, error) {

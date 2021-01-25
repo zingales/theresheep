@@ -81,6 +81,7 @@ const Drunk: FC<{ backendState: State }> = (props) => {
             chosenState={centerChosenState}
             setChosenState={setCenterChosenState}
             center={center}
+            numToSelect={actionPrompt !== '' ? 1 : 0}
           />
 
           {phase === 'night' && (
@@ -89,8 +90,7 @@ const Drunk: FC<{ backendState: State }> = (props) => {
           {phase === 'day' && (
             <PlayersList
               players={allPlayersToRoles}
-              selectedState={{}}
-              setSelectedState={() => {}}
+              numToSelect={actionPrompt !== '' ? 1 : 0}
             />
           )}
         </div>

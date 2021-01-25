@@ -81,7 +81,7 @@ const Robber: FC<{ backendState: State }> = (props) => {
         />
       </div>
 
-      <span className="Robber__column Robber__waiting-column">
+      <span className="Robber__column">
         <PlayersList
           players={allPlayersToRoles}
           selectedState={playerSelectedState}
@@ -91,6 +91,7 @@ const Robber: FC<{ backendState: State }> = (props) => {
               ? undefined
               : { [switchedPlayer]: 'robber' }
           }
+          numToSelect={actionPrompt !== '' ? 1 : 0}
         />
 
         {backendState.phase === 'night' && (

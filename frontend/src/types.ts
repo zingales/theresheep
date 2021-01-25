@@ -18,6 +18,7 @@ export type ActionPrompt =
   | 'choose-center-card'
   | 'choose-player'
   | 'choose-player-instead-of-center'
+  | 'blocking-nominate-who-to-kill'
   | ''; // indicates no action is expected
 
 // state as it comes in from backend. This is different from State as

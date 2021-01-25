@@ -77,6 +77,7 @@ const TroubleMaker: FC<{ backendState: State }> = (props) => {
               players={otherPlayersToRoles}
               selectedState={playerSelectedState}
               setSelectedState={setPlayerSelectedState}
+              numToSelect={actionPrompt !== '' ? 2 : 0}
             />
           }
 

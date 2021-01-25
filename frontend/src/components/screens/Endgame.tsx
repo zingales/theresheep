@@ -27,7 +27,7 @@ const Endgame: FC<{ backendState: State }> = (props) => {
           <div className="EndGame__info-item">Current Role</div>
         </div>
         {allPlayers.map((playerName) => (
-          <div className="EndGame__info-row">
+          <div key={`endgame-info-${playerName}`} className="EndGame__info-row">
             <div className="EndGame__info-item">{playerName}</div>
             <div className="EndGame__info-item">{killMap[playerName]}</div>
             <div className="EndGame__info-item">
